@@ -1,62 +1,63 @@
 const mongoose = require("mongoose");
 //const bcrypt = require("bcryptjs");
 //const jwt = require("jsonwebtoken");
-const articleSchema = new mongoose.Schema({
-  url: {
-    type: String,
-    required: true,
+const articleSchema = new mongoose.Schema(
+  {
+    url: {
+      type: String,
+      required: true,
+    },
+    dateTime: {
+      type: String,
+      required: true,
+    },
+    author: [
+      {
+        type: String,
+        required: true,
+      },
+    ],
+    title: [
+      {
+        type: String,
+        required: true,
+      },
+    ],
+    mainText: [
+      {
+        type: String,
+        required: true,
+      },
+    ],
+    imgUrl: [
+      {
+        type: String,
+        required: true,
+      },
+    ],
+    sentiments: [
+      {
+        neg: {
+          type: Number,
+          required: true,
+        },
+        neu: {
+          type: Number,
+          required: true,
+        },
+        pos: {
+          type: Number,
+          required: true,
+        },
+        compound: {
+          type: Number,
+          required: true,
+        },
+      },
+    ],
   },
-  dateTime: [
-    {
-      type: String,
-      required: true,
-    },
-  ],
-  author: [
-    {
-      type: String,
-      required: true,
-    },
-  ],
-  title: [
-    {
-      type: String,
-      required: true,
-    },
-  ],
-  mainText: [
-    {
-      type: String,
-      required: true,
-    },
-  ],
-  imgUrl: [
-    {
-      type: String,
-      required: true,
-    },
-  ],
-  sentiments: [
-    {
-      neg: {
-        type: Number,
-        required: true,
-      },
-      neu: {
-        type: Number,
-        required: true,
-      },
-      pos: {
-        type: Number,
-        required: true,
-      },
-      compound: {
-        type: Number,
-        required: true,
-      },
-    },
-  ],
-},{collection: 'Articles'});
+  { collection: "Articles" }
+);
 
 // userSchema.pre("save", async function (next) {
 //   if (this.isModified("password")) {

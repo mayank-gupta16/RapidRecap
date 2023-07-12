@@ -11,9 +11,11 @@ router.get("/", async (req, res) => {
     res.send("Hello world from router");
     const article = await Article.find({}).sort({
       dateTime: -1,
+      "sentiments.compound": -1,
     });
-
-    console.log(article);
+    article.map((ele) => {
+      console.log(`${ele.dateTime} and ${ele.sentiments}`);
+    });
   } catch (error) {
     console.log(error);
   }
