@@ -16,7 +16,10 @@
     "bootstrap": "^5.3.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.8.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.14.1",
+    "react-spring": "^9.7.2",
+    "use-3d-effect": "^1.1.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.14",
