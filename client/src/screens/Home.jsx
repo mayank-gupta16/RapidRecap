@@ -1,9 +1,10 @@
+import Timeline from "../components/Timeline";
 const Home = () => {
   return (
     <div>
-      Home
+      <Timeline />
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
