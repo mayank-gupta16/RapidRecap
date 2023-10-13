@@ -7,6 +7,7 @@ import Navbar from "./components/Navbar";
 import Home from "./screens/Home";
 import About from "./screens/About";
 import News from "./screens/News";
+import Contact from "./screens/Contact";
 const App = () => {
   return (
     <>
@@ -15,6 +16,7 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/news" element={<News />} />
+        <Route path="/contact" element={<Contact />} />
       </Routes>
     </>
   );

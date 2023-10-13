@@ -291,3 +291,36 @@ section {
       display: none;
   }
 }
+
+.timeline-container .intro{
+  margin-left: 20rem;
+  z-index: 10000;
+  .short{
+    max-width: 450px;
+    margin-left: 32rem;
+  }
+  .info {
+      max-width: 450px;
+    }
+}
+
+@media only screen and (max-width: 1023px){
+  .timeline-container .intro{
+    margin-left: 12rem;
+    .short {
+        max-width: 450px;
+        margin-left: 0;
+      }
+  }
+}
+
+@media only screen and (max-width: 767px){
+  .timeline-container .intro {
+      margin-left: 7rem;
+  
+      .short {
+        max-width: 450px;
+        margin-left: 0;
+      }
+    }
+}
