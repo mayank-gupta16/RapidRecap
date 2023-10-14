@@ -8,6 +8,7 @@ import Home from "./screens/Home";
 import About from "./screens/About";
 import News from "./screens/News";
 import Contact from "./screens/Contact";
+import Footer from "./components/Footer";
 const App = () => {
   return (
     <>
@@ -18,6 +19,7 @@ const App = () => {
         <Route path="/news" element={<News />} />
         <Route path="/contact" element={<Contact />} />
       </Routes>
+      <Footer />
     </>
   );
 };
