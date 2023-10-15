@@ -7,10 +7,10 @@ import Navbar from "./components/Navbar";
 import Home from "./screens/Home";
 import About from "./screens/About";
 import News from "./screens/News";
-
 import Sigin from "./screens/Sigin";
 import Register from "./screens/Register";
 import Contact from "./screens/Contact";
+import Footer from "./components/Footer";
 
 const App = () => {
   return (
@@ -24,6 +24,7 @@ const App = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/contact" element={<Contact />} />
       </Routes>
+      <Footer />
     </>
   );
 };
