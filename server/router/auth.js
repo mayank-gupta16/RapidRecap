@@ -6,18 +6,21 @@ const router = express.Router();
 require("../db/conn");
 const Article = require("../model/userSchema");
 
-router.get("/", async (req, res) => {
+router.get("/api", async (req, res) => {
+  const { page = 1, pageSize = 9 } = req.query;
   try {
-    res.send("Hello world from router");
+    //res.send("Hello world from router");
     const article = await Article.find({}).sort({
       dateTime: -1,
       "sentiments.compound": -1,
-    });
-    article.map((ele) => {
-      console.log(`${ele.dateTime} and ${ele.sentiments}`);
-    });
+    }).skip((page - 1) * pageSize).limit(9);
+    // article.map(async (ele) => {
+    //   console.log(`${ele.imgURL}`);
+    // });
+    //res.json(JSON.stringify(article));
+    res.send(article);
   } catch (error) {
-    console.log(error);
+    console.log(error.message);
   }
 });
 
