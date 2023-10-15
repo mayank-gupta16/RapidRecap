@@ -41,7 +41,7 @@ const Card = ({newsNumber, data}) => {
         ref={cardWrapper}
         onClick={() =>
           window.open(
-            `https://www.moneycontrol.com/news/business/mcdonalds-india-north-and-east-commissions-3-2-mw-solar-plant-10918321.html`,
+            `${data.url}`,
             "_blank"
           )
         }

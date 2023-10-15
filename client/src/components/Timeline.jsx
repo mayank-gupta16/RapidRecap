@@ -27,11 +27,11 @@ const Timeline = ({data}) => {
         </div>
         <div className="row item-container">
           {data.map((item, id)=>{
-            return <>
+            return (
             <div className="col-md-6 col-lg-4 item" key={id}>
             <TimelineItem newsNumber = {id} data = {item}/>
           </div>
-          </>
+            );
           })}
           {/* <div className="col-md-6 col-lg-4 item">
             <TimelineItem />
