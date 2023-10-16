@@ -7,7 +7,7 @@ const Navbar = () => {
     <nav className="navbar navbar-expand-lg navbar-light bg-light px-5">
       <div className="container-fluid">
         <NavLink to="/" className="navbar-brand">
-          Rapid Recap
+        📻  Rapid Recap
         </NavLink>
         <button
           className="navbar-toggler"
@@ -29,17 +29,12 @@ const Navbar = () => {
             </li>
             <li className="nav-item">
               <NavLink to="/About" className="nav-link">
-                About
+                About Us
               </NavLink>
             </li>
             <li className="nav-item">
               <NavLink to="/contact" className="nav-link">
-                Contact
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink to="/news" className="nav-link">
-                News
+                Contact Us
               </NavLink>
             </li>
             <li className="nav-item">
@@ -49,7 +44,7 @@ const Navbar = () => {
             </li>
             <li className="nav-item">
               <NavLink to="/signin" className="nav-link">
-                Signin
+                Sign In
               </NavLink>
             </li>
           </ul>

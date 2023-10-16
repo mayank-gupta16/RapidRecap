@@ -11,7 +11,7 @@ const Contact = () => {
     color: isHovered ? "#6c757d" : "#f9f9f9",
   };
   return (
-    <div>
+    <div style={{minHeight:"77vh"}}>
       <div className="container-fluid px-5 my-5">
         <div className="row justify-content-center">
           <div className="col-xl-10">

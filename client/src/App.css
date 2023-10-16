@@ -159,7 +159,7 @@ section {
   transition: 0.5s;
   transform: translateY(800px);
 }
-@media only screen and (max-width: 1622px){
+@media only screen and (max-width: 1440px){
   .contents p{
     display: none;
   }
@@ -293,7 +293,7 @@ section {
 }
 
 .timeline-container .intro{
-  margin-left: 20rem;
+  margin-left: 23rem;
   z-index: 10000;
   .short{
     max-width: 450px;
