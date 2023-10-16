@@ -9,24 +9,17 @@ const Home = () => {
   async function fetchData() {
     try {
       const response = await axios.get(`/api?page=${page}&pageSize=9`);
-      //response.data.map((ele)=> console.log(ele.imgURL));
-      //const result = await response.json();
-      //console.log(response.data);
-      //response.data.map((it)=>console.log(it));
+
       setItems((prev)=> [...prev,...response.data]);
       setLoad(false);
-      //console.log(data);
-      // Handle the response data here
+
     } catch (error) {
       // Handle errors
+      console.log(error.message);
     }
   }
 
   const handleScroll = async () =>{
-    console.log(`scrollHeight` + document.documentElement.scrollHeight);
-    console.log(`innerHeight` + window.innerHeight);
-    console.log(`scrollTop` + document.documentElement.scrollTop);
-
     try {
       if(window.innerHeight+document.documentElement.scrollTop + 1>document.documentElement.scrollHeight){
         setLoad(true);
