@@ -11,7 +11,7 @@ const Contact = () => {
     color: isHovered ? "#6c757d" : "#f9f9f9",
   };
   return (
-    <div style={{minHeight:"77vh"}}>
+    <div style={{ minHeight: "77vh" }}>
       <div className="container-fluid px-5 my-5">
         <div className="row justify-content-center">
           <div className="col-xl-10">
@@ -47,13 +47,20 @@ const Contact = () => {
                       </p>
                     </div>
 
-                    <form id="contactForm">
+                    <form
+                      id="contactForm"
+                      action="https://formspree.io/f/mgejrpqk"
+                      method="POST"
+                    >
                       <div className="form-floating mb-3">
                         <input
                           className="form-control"
                           id="name"
                           type="text"
+                          name="name"
                           placeholder="Name"
+                          autoComplete="off"
+                          required
                           style={{
                             backgroundColor: "#1a1527",
                             borderColor: "#6c757d",
@@ -68,7 +75,10 @@ const Contact = () => {
                           className="form-control"
                           id="emailAddress"
                           type="email"
+                          name="email"
                           placeholder="Email Address"
+                          autoComplete="off"
+                          required
                           style={{
                             backgroundColor: "#1a1527",
                             borderColor: "#6c757d",
@@ -83,7 +93,10 @@ const Contact = () => {
                           className="form-control"
                           id="message"
                           type="text"
+                          name="message"
                           placeholder="Message"
+                          autoComplete="off"
+                          required
                           style={{
                             height: "10rem",
                             backgroundColor: "#1a1527",

@@ -26,7 +26,7 @@ const Timeline = ({data}) => {
         </div>
         <div className="row item-container">
           {data.map((item, id)=>{
-            console.log(item.dateTime);
+            //console.log(item.dateTime);
             return (
             <div className="col-md-6 col-lg-4 item" key={id}>
             <TimelineItem newsNumber = {id} data = {item}/>

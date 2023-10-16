@@ -5,7 +5,7 @@ const bcrypt = require("bcryptjs");
 // Handle login route
 router.post('/login', async (req, res) => {
   // Implement login logic here
-  console.log(req.body);
+  //console.log(req.body);
   const { email, password } = req.body;
 
   if (!email || !password)
