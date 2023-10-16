@@ -1,85 +1,61 @@
 const mongoose = require("mongoose");
-//const bcrypt = require("bcryptjs");
-//const jwt = require("jsonwebtoken");
-const articleSchema = new mongoose.Schema(
-  {
-    url: {
-      type: String,
-      required: true,
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const userSchema = new mongoose.Schema(
+    {
+      firstName: {
+        type: String,
+        required: true,
+      },
+      lastName: {
+        type: String,
+        required: true,
+      },
+      email: {
+        type: String,
+        required: true,
+        unique: true,
+      },
+      phone: 
+        {
+          type: Number,
+          required: true,
+        },
+      password: 
+        {
+          type: String,
+          required: true,
+        },
+        cpassword: 
+            {
+            type: String,
+            required: true,
+        },
     },
-    dateTime: {
-      type: String,
-      required: true,
-    },
-    author: [
-      {
-        type: String,
-        required: true,
-      },
-    ],
-    title: [
-      {
-        type: String,
-        required: true,
-      },
-    ],
-    mainText: [
-      {
-        type: String,
-        required: true,
-      },
-    ],
-    imgUrl: [
-      {
-        type: String,
-        required: true,
-      },
-    ],
-    sentiments: [
-      {
-        neg: {
-          type: Number,
-          required: true,
-        },
-        neu: {
-          type: Number,
-          required: true,
-        },
-        pos: {
-          type: Number,
-          required: true,
-        },
-        compound: {
-          type: Number,
-          required: true,
-        },
-      },
-    ],
-  },
-  { collection: "Articles" }
-);
+    { collection: "Users" }
+  );
 
-// userSchema.pre("save", async function (next) {
-//   if (this.isModified("password")) {
-//     //console.log(this.password);
-//     //console.log("hii from bcrypt");
-//     const pass = this.password;
-//     this.password = await bcrypt.hash(pass, 12);
-//     this.cpassword = await bcrypt.hash(pass, 12);
-//   }
-//   next();
-// });
+userSchema.pre("save", async function (next) {
+  if (this.isModified("password")) {
+    //console.log(this.password);
+    //console.log("hii from bcrypt");
+    const pass = this.password;
+    this.password = await bcrypt.hash(pass, 12);
+    this.cpassword = await bcrypt.hash(pass, 12);
+  }
+  next();
+});
 
-// userSchema.methods.generateAuthToken = async function () {
-//   try {
-//     let token = jwt.sign({ _id: this._id }, process.env.SECRET_KEY);
-//     this.tokens = this.tokens.concat({ token });
-//     await this.save();
-//     return token;
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
+userSchema.methods.generateAuthToken = async function () {
+  try {
+    let token = jwt.sign({ _id: this._id }, process.env.SECRET_KEY);
+    // this.tokens = this.tokens.concat({ token });
+    // await this.save();
+    return token;
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
 // userSchema.methods.addMessage = async function ({
 //   name,
@@ -95,7 +71,7 @@ const articleSchema = new mongoose.Schema(
 //     console.log(error);
 //   }
 // };
+  
+const User = mongoose.model("USER", userSchema);
 
-const Article = mongoose.model("ARTICLE", articleSchema);
-
-module.exports = Article;
+module.exports = User;

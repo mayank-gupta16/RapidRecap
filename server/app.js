@@ -6,7 +6,7 @@ const app = express();
 require("./db/conn");
 app.use(express.json());
 const PORT = process.env.PORT;
-app.use(require("./router/auth"));
+app.use("/api",require("./router/auth"));
 
 
 app.listen(PORT, () => {

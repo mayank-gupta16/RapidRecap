@@ -2,7 +2,6 @@ import { Slide } from "@mui/material";
 import { useRef } from "react";
 
 const Card = ({newsNumber, data}) => {
-  //const summary = `nd produces its world-famous French Fries in a zero-water discharge facility in India, significantly reducing water consumption.   McDonald's India North and East on Thursday said it has installed a solar plant of 3.2 MW capacity, which is expected to generate an annual output of 4.2 million units of power.McDonald's franchise for North and East has invested Rs 14 crore in the plant, which will result in the reduction of 3,822 tonnes of CO2 emissions annually, said a statement.Commenting over the initiative, Chairman Sanjeev Agrawal said, "We are stepping up our sustainability efforts with the installation of Delhi's BRPL (BSES Rajdhani Power Ltd) largest solar power plant which has already enabled 24 percent of our Delhi restaurants running on solar energy." McDonald's India North and East is also taking steps to reduce greenhouse gas, keep waste out of nature and preserve natural resources such as FSC-certified paper-based packaging, responsible sourcing etc.The brand produces its world-famous French Fries in a zero-water discharge facility in India, significantly reducing water consumption.It uses cooking oil and is repurposed into biodiesel, which is known to have lower carbon emissions than conventional fuel.McDonald's restaurants in North and East of India are operated by Connaught Plaza Restaurants Pvt Ltd.`;
   const cardWrapper = useRef(null);
   const card = useRef(null);
   const project_meta = useRef(null);
@@ -68,14 +67,13 @@ const Card = ({newsNumber, data}) => {
               <img
                 src={data.imgURL[0]}
                 alt=""
-                // style={{ opacity: "0.5" }}
               />
             </div>
             <div className="contents">
               <h2> Click here to know More </h2>
               <p>
-                {data.mainText[0].length > 300
-                  ? `${data.mainText[0].substring(0, 300)}...`
+                {data.mainText[0].length > 135
+                  ? `${data.mainText[0].substring(0, 135)}...`
                   : data.mainText[0]}
               </p>
             </div>

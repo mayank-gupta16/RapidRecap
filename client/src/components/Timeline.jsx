@@ -1,7 +1,6 @@
 import TimelineItem from "./TimelineItem";
 
 const Timeline = ({data}) => {
-  //useEffect(()=>{console.log(data)},[]);
   return (
     <div className="px-5">
       <div className="timeline-container">
@@ -27,42 +26,13 @@ const Timeline = ({data}) => {
         </div>
         <div className="row item-container">
           {data.map((item, id)=>{
+            //console.log(item.dateTime);
             return (
             <div className="col-md-6 col-lg-4 item" key={id}>
             <TimelineItem newsNumber = {id} data = {item}/>
           </div>
             );
           })}
-          {/* <div className="col-md-6 col-lg-4 item">
-            <TimelineItem />
-          </div>
-          <div className="col-md-6 col-lg-4 item">
-            <TimelineItem />
-          </div>
-          <div className="col-md-6 col-lg-4 item">
-            <TimelineItem />
-          </div>
-          <div className="col-md-6 col-lg-4 item">
-            <TimelineItem />
-          </div>
-          <div className="col-md-6 col-lg-4 item">
-            <TimelineItem />
-          </div>
-          <div className="col-md-6 col-lg-4 item">
-            <TimelineItem />
-          </div>
-          <div className="col-md-6 col-lg-4 item">
-            <TimelineItem />
-          </div>
-          <div className="col-md-6 col-lg-4 item">
-            <TimelineItem />
-          </div>
-          <div className="col-md-6 col-lg-4 item">
-            <TimelineItem />
-          </div>
-          <div className="col-md-6 col-lg-4 item">
-            <TimelineItem />
-          </div> */}
         </div>
       </div>
     </div>
