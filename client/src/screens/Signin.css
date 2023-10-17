@@ -22,12 +22,13 @@ h1 {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 80vh;
 }
 
 .login-container {
   position: relative;
   width: 22.2rem;
+  bottom: 90px;
 }
 .form-container {
   border: 1px solid hsla(0, 0%, 65%, 0.158);
