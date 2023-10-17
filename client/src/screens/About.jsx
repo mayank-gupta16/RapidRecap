@@ -8,7 +8,6 @@ export default function About() {
         rel="stylesheet"
         href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"
       />
-
       <div className="about mt-3">
         <h1>Our Team</h1>
         <p>Meet our awesome team!</p>

@@ -50,11 +50,6 @@ const Navbar = () => {
               </NavLink>
             </li>
             {state.show ? <li className="nav-item">
-              <NavLink to="/register" className="nav-link">
-                Register
-              </NavLink>
-            </li> : ""}
-            {state.show ? <li className="nav-item">
               <NavLink to="/signin" className="nav-link">
                 Sign In
               </NavLink>

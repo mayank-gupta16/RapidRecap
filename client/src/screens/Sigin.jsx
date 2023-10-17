@@ -65,7 +65,7 @@ export default function Sigin() {
               </button>
             </form>
             <div className="register-forget opacity">
-              <NavLink to="/register">Sign Up</NavLink>
+              <NavLink to="/register">Create an account</NavLink>
               <a href="">Forgot Password ?</a>
             </div>
           </div>
