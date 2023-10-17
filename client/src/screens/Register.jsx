@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./Register.css";
 import axios from 'axios';
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 export default function Register() {
   const [data, setData] = useState({
     firstName: "",
@@ -73,7 +73,7 @@ export default function Register() {
               </form>
               <div className="r-forget opacity">
                 <h6>
-                  Already a Member ?<a href=""> Login Here</a>
+                  Already a Member ?<NavLink to="/signin"> Login Here</NavLink>
                 </h6>
               </div>
             </div>

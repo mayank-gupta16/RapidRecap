@@ -1,8 +1,20 @@
-import React from "react";
+import React , {useContext, useEffect} from "react";
 import { NavLink } from "react-router-dom";
 import "./Navbar.css";
+import { AppContext } from '../contextAPI/appContext';
+import axios from 'axios';
 
 const Navbar = () => {
+  const { state, dispatch } = useContext(AppContext);
+  useEffect(()=>{console.log(state.show)},[state.show]);
+  const handleLogout = async() => {
+    try {
+      await axios.post('/api/logout');
+      dispatch({type: "SHOW"});
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light px-5">
       <div className="container-fluid">
@@ -37,16 +49,21 @@ const Navbar = () => {
                 Contact Us
               </NavLink>
             </li>
-            <li className="nav-item">
+            {state.show ? <li className="nav-item">
               <NavLink to="/register" className="nav-link">
                 Register
               </NavLink>
-            </li>
-            <li className="nav-item">
+            </li> : ""}
+            {state.show ? <li className="nav-item">
               <NavLink to="/signin" className="nav-link">
                 Sign In
               </NavLink>
-            </li>
+            </li> : ""}
+            {!state.show ?<li className="nav-item" >
+              <button className="nav-link" onClick={handleLogout}>
+                Logout
+              </button>
+            </li> : ""}
           </ul>
         </div>
       </div>

@@ -3,16 +3,17 @@ const User = require("../model/userSchema");
 const Authenticate = async (req,res,next) => {
     try { 
         const token = req.cookies.jwtoken;
-        const verifyToken = jwt.verify(token, process.env.SECRET_KEY);
-
-        const rootUser = await User.findOne({_id:verifyToken._id, "tokens.token":token});
-        if(!rootUser) {throw new Error('User Not Found')}
-         
-        req.token = token;
-        req.rootUser = rootUser;
-        req.userID = rootUser._id;
-
-        next();
+        jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+            if (err) {
+              return res.status(401).json({ message: 'Token is not valid' });
+            }
+        
+            // If the token is valid, attach the user data to the request object
+            req.user = decoded;
+            //console.log(req.user);
+            // Continue with the next middleware or route handler
+            next();
+          });
        
     } catch (error) {
         res.status(401).send("Unauthorized: No Token Provided");
