@@ -1,6 +1,5 @@
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
-//import "../node_modules/bootstrap/dist/js/bootstrap.bundle";
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js";
 import Navbar from "./components/Navbar";
@@ -11,6 +10,7 @@ import Sigin from "./screens/Sigin";
 import Register from "./screens/Register";
 import Contact from "./screens/Contact";
 import Footer from "./components/Footer";
+
 
 const App = () => {
   return (

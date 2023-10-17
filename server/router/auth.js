@@ -1,17 +1,19 @@
 const express = require("express");
 const authRouter = express.Router();
 //const authenticate = require("../middleware/authenticate");
-
+const cookieParser = require('cookie-parser');
+authRouter.use(cookieParser());
 const articleRoutes = require("./routes/articles");
 const registerRoutes = require("./routes/register");
 const loginRoutes = require("./routes/signin");
+const showStateRoutes = require("./routes/showState");
+const logoutRoutes = require("./routes/logout");
 authRouter.use(articleRoutes);
 authRouter.use(registerRoutes);
 authRouter.use(loginRoutes);
+authRouter.use(showStateRoutes);
+authRouter.use(logoutRoutes);
 
-// authRouter.get("/api/about",authenticate,(req, res) => {
-//   res.send(req.rootUser);
-// });
 
 // authRouter.post("/api/contact",authenticate, async (req, res) => {
 //  try {
@@ -36,9 +38,6 @@ authRouter.use(loginRoutes);
 
 // });
 
-// authRouter.get("/api/logout",authenticate,(req, res) => {
-//   res.clearCookie('jwtoken',{path : '/'});
-//   res.status(201).send("User Logout");
-// });
+
 
 module.exports = authRouter;
