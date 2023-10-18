@@ -6,7 +6,7 @@ import axios from 'axios';
 
 const Navbar = () => {
   const { state, dispatch } = useContext(AppContext);
-  useEffect(()=>{console.log(state.show)},[state.show]);
+  useEffect(()=>{},[state.show]);
   const handleLogout = async() => {
     try {
       await axios.post('/api/logout');
