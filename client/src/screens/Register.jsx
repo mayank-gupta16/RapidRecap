@@ -33,7 +33,8 @@ export default function Register() {
         throw new Error("Registration Failed");
       }
     } catch (error) {
-      console.log(error.message);
+      alert(`registration failed : ${error.response.data.error}`);
+      //console.log(error);
     }
   };
   return (
