@@ -77,10 +77,11 @@ To get the project up and running, follow these steps:
   npm run dev
   ```
 
-## Additional Information
+### Future Goals
+The project has several exciting future goals, including:
 
-- The client application was built using Vite.
-- A home page with pagination was implemented to enable infinite scrolling.
-- The project utilizes various React hooks, including useState, useContext, useEffect, useRef, and useReducer.
+More Personalized News View: Implement user-specific preferences and personalized news recommendations to enhance the user experience.
 
-Feel free to explore and contribute to this project. If you have any questions or suggestions, please don't hesitate to reach out to the collaborators mentioned above. Happy coding!
+Profile View: Develop user profiles that allow users to customize their preferences, save articles, and track their reading history.
+
+These are just a few of the potential enhancements for Rapid Recap. We encourage contributors and developers to join the project and help us achieve these goals. If you have any questions or suggestions, please don't hesitate to reach out to the collaborators mentioned above. Happy coding!
