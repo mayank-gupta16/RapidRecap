@@ -77,11 +77,12 @@ To get the project up and running, follow these steps:
   npm run dev
   ```
 
-### Future Goals
+## Future Goals
+
 The project has several exciting future goals, including:
 
-More Personalized News View: Implement user-specific preferences and personalized news recommendations to enhance the user experience.
+- **More Personalized News View:** Implement user-specific preferences and personalized news recommendations to enhance the user experience.
 
-Profile View: Develop user profiles that allow users to customize their preferences, save articles, and track their reading history.
+- **Profile View:** Develop user profiles that allow users to customize their preferences, save articles, and track their reading history.
 
 These are just a few of the potential enhancements for Rapid Recap. We encourage contributors and developers to join the project and help us achieve these goals. If you have any questions or suggestions, please don't hesitate to reach out to the collaborators mentioned above. Happy coding!
