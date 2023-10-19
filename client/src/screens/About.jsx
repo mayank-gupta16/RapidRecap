@@ -8,8 +8,66 @@ export default function About() {
         rel="stylesheet"
         href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"
       />
-
-      <div className="about mt-3">
+      <div className="about mt-4">
+        <h1>Future Goals</h1>
+        <p>
+          "Our future goals are to innovate, inspire, and make a positive impact
+          on the world through cutting-edge technologies and creative
+          solutions."
+        </p>
+        <div
+          id="carouselExampleFade"
+          className="carousel slide carousel-fade"
+          data-bs-ride="carousel"
+          style={{ objectFit: "contain !important" }}
+        >
+          <div className="carousel-inner" id="carousel">
+            <div className="carousel-caption" style={{ zIndex: "10" }}>
+              <div className="d-flex justify-content-center"></div>
+            </div>
+            <div className="carousel-item active">
+              <img
+                src="img\Future goals 1.png"
+                className="d-block w-100"
+                alt="..."
+              />
+            </div>
+            <div className="carousel-item">
+              <img
+                src="img\Future goals 2.png"
+                className="d-block w-100"
+                alt="..."
+              />
+            </div>
+          </div>
+          <button
+            className="carousel-control-prev"
+            type="button"
+            data-bs-target="#carouselExampleFade"
+            data-bs-slide="prev"
+          >
+            <span
+              className="carousel-control-prev-icon"
+              aria-hidden="true"
+            ></span>
+            <span className="visually-hidden">Previous</span>
+          </button>
+          <button
+            className="carousel-control-next"
+            type="button"
+            data-bs-target="#carouselExampleFade"
+            data-bs-slide="next"
+          >
+            <span
+              className="carousel-control-next-icon"
+              aria-hidden="true"
+            ></span>
+            <span className="visually-hidden">Next</span>
+          </button>
+        </div>
+      </div>
+      {/* ...............................................Our Team............................................................. */}
+      <div className="about mt-5">
         <h1>Our Team</h1>
         <p>Meet our awesome team!</p>
       </div>

@@ -1,11 +1,15 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Timeline from "../components/Timeline";
 import axios from 'axios';
 import Loading from "../components/Loading";
+import { AppContext } from "../contextAPI/appContext";
+import { useNavigate } from "react-router-dom";
 const Home = () => {
+  const {state,dispatch} = useContext(AppContext);
   const [items, setItems] = useState([]);
   const [page,setPage] = useState(1);
   const [load, setLoad] = useState(true);
+  const navigate = useNavigate();
   async function fetchData() {
     try {
       const response = await axios.get(`/api?page=${page}&pageSize=9`);
@@ -30,6 +34,15 @@ const Home = () => {
     }
   }
 
+  const handleLoginAlert = () => {
+    if(state.show===true){
+      navigate("/signin");
+    }
+  };
+
+  useEffect(()=>{
+    handleLoginAlert();
+  },[state.show]);
   useEffect(()=>{
     fetchData();
   },[page]);

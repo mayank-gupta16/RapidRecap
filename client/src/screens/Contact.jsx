@@ -1,7 +1,11 @@
-import React, { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useRef } from "react";
+import { AppContext } from "../contextAPI/appContext";
+import { useNavigate } from "react-router-dom";
 
 const Contact = () => {
+  const navigate = useNavigate();
+  const {state,dispatch} = useContext(AppContext);
   const button = useRef(null);
   const [isHovered, setIsHovered] = useState(false);
   const buttonStyle = {
@@ -10,6 +14,15 @@ const Contact = () => {
     transition: "all 0.3s ease-in-out",
     color: isHovered ? "#6c757d" : "#f9f9f9",
   };
+  const handleLoginAlert = () => {
+    if(state.show===true){
+      navigate("/signin");
+    }
+  };
+
+  useEffect(()=>{
+    handleLoginAlert();
+  },[state.show]);
   return (
     <div style={{ minHeight: "77vh" }}>
       <div className="container-fluid px-5 my-5">
