@@ -26,14 +26,14 @@ export default function About() {
             </div>
             <div className="carousel-item active">
               <img
-                src="public\images\Future goals 1.png"
+                src="images\Future goals 1.png"
                 className="d-block w-100"
                 alt="..."
               />
             </div>
             <div className="carousel-item">
               <img
-                src="public\images\Future goals 2.png"
+                src="images\Future goals 2.png"
                 className="d-block w-100"
                 alt="..."
               />
@@ -78,7 +78,7 @@ export default function About() {
               I developed the UI and back-end of RapidRecap using MERN Stack.
             </p>
           </div>
-          <img src="public\images\Subrat.jpeg" alt="Subrat Gupta" />
+          <img src="images\Subrat.jpeg" alt="Subrat Gupta" />
           <figcaption>
             <h3>Subrat Gupta</h3>
             <br />
@@ -104,7 +104,7 @@ export default function About() {
               I developed the UI and back-end of RapidRecap using MERN Stack.
             </p>
           </div>
-          <img src="public\images\Saransh.jpg" alt="" />
+          <img src="images\Saransh.jpg" alt="" />
           <figcaption>
             <h3>Saransh Mittal</h3>
             <br />
@@ -128,7 +128,7 @@ export default function About() {
             <h3>Data Scientist</h3>
             <p>I developed python servers to do web scrapping.</p>
           </div>
-          <img src="public\images\Mayank.jpeg" alt="" />
+          <img src="images\Mayank.jpeg" alt="" />
           <figcaption>
             <h3>Mayank Gupta</h3>
             <br />

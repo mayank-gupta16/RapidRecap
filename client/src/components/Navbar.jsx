@@ -54,7 +54,7 @@ const Navbar = () => {
                 Sign In
               </NavLink>
             </li> : ""}
-            {!state.show ?<li className="nav-item" >
+            {!state.show ?<li className="nav-item d-flex justify-content-center" >
               <button className="nav-link" onClick={handleLogout}>
                 Logout
               </button>
