@@ -1,4 +1,3 @@
-import React from "react";
 import "./About.css";
 
 export default function About() {
@@ -11,9 +10,9 @@ export default function About() {
       <div className="about mt-4">
         <h1>Future Goals</h1>
         <p>
-          "Our future goals are to innovate, inspire, and make a positive impact
+          {`"`}Our future goals are to innovate, inspire, and make a positive impact
           on the world through cutting-edge technologies and creative
-          solutions."
+          solutions.{`"`}
         </p>
         <div
           id="carouselExampleFade"
@@ -27,14 +26,14 @@ export default function About() {
             </div>
             <div className="carousel-item active">
               <img
-                src="img\Future goals 1.png"
+                src="public\images\Future goals 1.png"
                 className="d-block w-100"
                 alt="..."
               />
             </div>
             <div className="carousel-item">
               <img
-                src="img\Future goals 2.png"
+                src="public\images\Future goals 2.png"
                 className="d-block w-100"
                 alt="..."
               />
@@ -79,7 +78,7 @@ export default function About() {
               I developed the UI and back-end of RapidRecap using MERN Stack.
             </p>
           </div>
-          <img src="img\Subrat.jpeg" alt="Subrat Gupta" />
+          <img src="public\images\Subrat.jpeg" alt="Subrat Gupta" />
           <figcaption>
             <h3>Subrat Gupta</h3>
             <br />
@@ -105,7 +104,7 @@ export default function About() {
               I developed the UI and back-end of RapidRecap using MERN Stack.
             </p>
           </div>
-          <img src="img\Saransh.jpg" alt="" />
+          <img src="public\images\Saransh.jpg" alt="" />
           <figcaption>
             <h3>Saransh Mittal</h3>
             <br />
@@ -129,7 +128,7 @@ export default function About() {
             <h3>Data Scientist</h3>
             <p>I developed python servers to do web scrapping.</p>
           </div>
-          <img src="img\Mayank.jpeg" alt="" />
+          <img src="public\images\Mayank.jpeg" alt="" />
           <figcaption>
             <h3>Mayank Gupta</h3>
             <br />

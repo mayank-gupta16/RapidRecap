@@ -20,7 +20,10 @@ const initialState = {
     show: await showState(),
     // ...
   };
-
+  // async function init() {
+  //   initialState.show = ;
+  // }
+  // init();
 export const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
