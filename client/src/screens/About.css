@@ -11,8 +11,20 @@ body {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  height: 100vh;
+}
+  
+@media (min-width: 768px) and (max-width: 1220px) {
+  .container {
+    height: 150vh !important;
+  }
 }
 
+@media (max-width: 768px) {
+  .container {
+    height: 200vh !important;
+  }
+}
 .about {
   width: 87%;
   margin: auto;
@@ -85,3 +97,4 @@ img {
   background-color: #9ba4b5;
   text-decoration: none;
 }
+
