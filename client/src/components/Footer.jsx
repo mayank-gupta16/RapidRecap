@@ -1,5 +1,3 @@
-import React from "react";
-
 const Footer = () => {
   return (
     <>
@@ -13,7 +11,12 @@ const Footer = () => {
       >
         <ul className="nav justify-content-center border-bottom pb-3 mb-3">
           <li className="nav-item">
-            <a href="#" className="nav-link px-2 " style={{ color: "#f9f9f9" }}>
+            <a
+              href="#"
+              target="_blank"
+              className="nav-link px-2 "
+              style={{ color: "#f9f9f9" }}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -27,7 +30,12 @@ const Footer = () => {
             </a>
           </li>
           <li className="nav-item">
-            <a href="#" className="nav-link px-2 " style={{ color: "#f9f9f9" }}>
+            <a
+              href="https://github.com/mayank-gupta16/RapidRecap"
+              target="_blank"
+              className="nav-link px-2 "
+              style={{ color: "#f9f9f9" }}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -41,7 +49,12 @@ const Footer = () => {
             </a>
           </li>
           <li className="nav-item">
-            <a href="#" className="nav-link px-2 " style={{ color: "#f9f9f9" }}>
+            <a
+              href="#"
+              target="_blank"
+              className="nav-link px-2 "
+              style={{ color: "#f9f9f9" }}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"

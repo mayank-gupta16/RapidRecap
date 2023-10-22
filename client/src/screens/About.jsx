@@ -10,8 +10,8 @@ export default function About() {
       <div className="about mt-4">
         <h1>Future Goals</h1>
         <p>
-          {`"`}Our future goals are to innovate, inspire, and make a positive impact
-          on the world through cutting-edge technologies and creative
+          {`"`}Our future goals are to innovate, inspire, and make a positive
+          impact on the world through cutting-edge technologies and creative
           solutions.{`"`}
         </p>
         <div
@@ -26,6 +26,7 @@ export default function About() {
             </div>
             <div className="carousel-item active">
               <img
+                rel="preload"
                 src="images\Future goals 1.png"
                 className="d-block w-100"
                 alt="..."
@@ -33,6 +34,7 @@ export default function About() {
             </div>
             <div className="carousel-item">
               <img
+                rel="preload"
                 src="images\Future goals 2.png"
                 className="d-block w-100"
                 alt="..."
@@ -78,7 +80,7 @@ export default function About() {
               I developed the UI and back-end of RapidRecap using MERN Stack.
             </p>
           </div>
-          <img src="images\Subrat.jpeg" alt="Subrat Gupta" />
+          <img rel="preload" src="images\Subrat.jpeg" alt="Subrat Gupta" />
           <figcaption>
             <h3>Subrat Gupta</h3>
             <br />
@@ -104,7 +106,7 @@ export default function About() {
               I developed the UI and back-end of RapidRecap using MERN Stack.
             </p>
           </div>
-          <img src="images\Saransh.jpg" alt="" />
+          <img rel="preload" src="images\Saransh.jpg" alt="" />
           <figcaption>
             <h3>Saransh Mittal</h3>
             <br />
@@ -128,7 +130,7 @@ export default function About() {
             <h3>Data Scientist</h3>
             <p>I developed python servers to do web scrapping.</p>
           </div>
-          <img src="images\Mayank.jpeg" alt="" />
+          <img rel="preload" src="images\Mayank.jpeg" alt="" />
           <figcaption>
             <h3>Mayank Gupta</h3>
             <br />
