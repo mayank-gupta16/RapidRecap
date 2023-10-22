@@ -294,7 +294,7 @@ section {
 
 .timeline-container .intro{
   margin-left: 23rem;
-  z-index: 10000;
+  z-index: 1500;
   .short{
     max-width: 450px;
     margin-left: 32rem;

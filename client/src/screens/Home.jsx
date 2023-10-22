@@ -4,6 +4,8 @@ import axios from 'axios';
 import Loading from "../components/Loading";
 import { AppContext } from "../contextAPI/appContext";
 import { useNavigate } from "react-router-dom";
+import Modal from "../../Modal";
+import News from "./News";
 const Home = () => {
   const {state,dispatch} = useContext(AppContext);
   const [items, setItems] = useState([]);
@@ -53,6 +55,7 @@ const Home = () => {
   },[])
   return (
     <div>
+      {state.modal && (<Modal onClose={()=>dispatch({type:"showModal", payloadModal:false})}><News/></Modal>)}
       <Timeline data={items}/>
       {load && <Loading/>}
     </div>

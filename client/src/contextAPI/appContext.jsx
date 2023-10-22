@@ -18,6 +18,8 @@ async function showState(){
 const initialState = {
     // Define your initial state properties here
     show: await showState(),
+    modal: false,
+    news:{},
     // ...
   };
   // async function init() {

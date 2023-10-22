@@ -1,7 +1,9 @@
 import { Slide } from "@mui/material";
-import { useRef } from "react";
+import { useRef, useContext } from "react";
+import { AppContext } from "../contextAPI/appContext";
 
 const Card = ({newsNumber, data}) => {
+  const {state,dispatch} = useContext(AppContext);
   const cardWrapper = useRef(null);
   const card = useRef(null);
   const project_meta = useRef(null);
@@ -38,11 +40,15 @@ const Card = ({newsNumber, data}) => {
       <div
         className="cardWrapper"
         ref={cardWrapper}
-        onClick={() =>
-          window.open(
-            `${data.url}`,
-            "_blank"
-          )
+        onClick={() =>{
+          // window.open(
+          //   `${data.url}`,
+          //   "_blank"
+          // )
+          //console.log(`hi`);
+          dispatch({type: "showModal" ,payloadModal: true});
+          dispatch({type: "setNews", payloadNews: data});
+        }
         }
         onMouseMove={mousemove}
         onMouseLeave={mouseleave}
