@@ -14,7 +14,7 @@ const Home = () => {
   const navigate = useNavigate();
   async function fetchData() {
     try {
-      const response = await axios.get(`/api?page=${page}&pageSize=9`);
+      const response = await axios.get(`/api/articles?page=${page}&pageSize=9`);
 
       setItems((prev)=> [...prev,...response.data]);
       setLoad(false);

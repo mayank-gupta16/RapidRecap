@@ -9,7 +9,7 @@ const Navbar = () => {
   useEffect(()=>{},[state.show]);
   const handleLogout = async() => {
     try {
-      await axios.post('/api/logout');
+      await axios.post('/api/user/logout');
       dispatch({type: "SHOW"});
     } catch (error) {
       console.error(error.message);

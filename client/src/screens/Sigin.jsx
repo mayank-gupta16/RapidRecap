@@ -21,7 +21,7 @@ export default function Sigin() {
     e.preventDefault();
     try {
       //console.log(data);
-      const response = await axios.post(`/api/login`, data);
+      const response = await axios.post(`/api/user/login`, data);
       if (response.status === 201) {
         dispatch({ type: "UNSHOW" });
         alert("Logined Successfully");

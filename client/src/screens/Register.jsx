@@ -24,7 +24,7 @@ export default function Register() {
     e.preventDefault();
     try {
       //console.log(data);
-      const response = await axios.post(`/api/register`, data);
+      const response = await axios.post(`/api/user/register`, data);
       if (response.status === 201) {
         alert("Registered Successfully");
         navigate("/signin");

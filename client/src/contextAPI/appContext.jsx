@@ -4,7 +4,7 @@ import axios from 'axios';
 
 async function showState(){
   try {
-    const response = await axios.get(`/api/showState`);
+    const response = await axios.get(`/api/user/loginCheck`);
   if(response.status===201){
     return false;
   }
