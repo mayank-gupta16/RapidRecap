@@ -62,7 +62,7 @@ const Contact = () => {
 
                     <form
                       id="contactForm"
-                      action="https://formspree.io/f/mgejrpqk"
+                      action="https://formspree.io/f/xeqbnpqv"
                       method="POST"
                     >
                       <div className="form-floating mb-3">
@@ -70,7 +70,7 @@ const Contact = () => {
                           className="form-control"
                           id="name"
                           type="text"
-                          name="name"
+                          name="Name"
                           placeholder="Name"
                           autoComplete="off"
                           required
@@ -88,7 +88,7 @@ const Contact = () => {
                           className="form-control"
                           id="emailAddress"
                           type="email"
-                          name="email"
+                          name="Email"
                           placeholder="Email Address"
                           autoComplete="off"
                           required
@@ -106,7 +106,7 @@ const Contact = () => {
                           className="form-control"
                           id="message"
                           type="text"
-                          name="message"
+                          name="Message"
                           placeholder="Message"
                           autoComplete="off"
                           required
