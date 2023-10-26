@@ -12,7 +12,7 @@ const Footer = () => {
         <ul className="nav justify-content-center border-bottom pb-3 mb-3">
           <li className="nav-item">
             <a
-              href="#"
+              href="https://www.instagram.com/rapid.recap.2k23/"
               target="_blank"
               className="nav-link px-2 "
               style={{ color: "#f9f9f9" }}
@@ -50,7 +50,7 @@ const Footer = () => {
           </li>
           <li className="nav-item">
             <a
-              href="#"
+              href="https://www.linkedin.com/company/rapid-recap/"
               target="_blank"
               className="nav-link px-2 "
               style={{ color: "#f9f9f9" }}
