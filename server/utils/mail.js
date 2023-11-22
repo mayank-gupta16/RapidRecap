@@ -1,24 +1,44 @@
 const nodemailer = require("nodemailer");
+const { google } = require("googleapis");
+
+//These id's and secrets should come from .env file.
+const CLIENT_ID = process.env.CLIENT_ID;
+const CLEINT_SECRET = process.env.CLIENT_SECRET;
+const REDIRECT_URI = "https://developers.google.com/oauthplayground";
+const REFRESH_TOKEN = process.env.REFRESH_TOKEN;
+
+const oAuth2Client = new google.auth.OAuth2(
+  CLIENT_ID,
+  CLEINT_SECRET,
+  REDIRECT_URI
+);
+oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
+
 const generateOtp = () => {
-    let otp = "";
+  let otp = "";
   for (let i = 0; i <= 3; i++) {
     otp += Math.round(Math.random() * 9);
   }
   return otp;
 };
 
-const mailTransporter = () =>
-  nodemailer.createTransport({
-    host: "sandbox.smtp.mailtrap.io",
-    port: 2525,
+const mailTransporter = async () => {
+  const accessToken = await oAuth2Client.getAccessToken();
+  return nodemailer.createTransport({
+    service: "gmail",
     auth: {
-      user: process.env.MAILTRAP_USERNAME,
-      pass: process.env.MAILTRAP_PASSWORD,
+      type: "OAuth2",
+      user: "20ucs174@lnmiit.ac.in",
+      clientId: CLIENT_ID,
+      clientSecret: CLEINT_SECRET,
+      refreshToken: REFRESH_TOKEN,
+      accessToken: accessToken,
     },
   });
+};
 
-  const generateEmailTemplate = (code)=>{
-    return `<div style="font-family: Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2">
+const generateEmailTemplate = (code) => {
+  return `<div style="font-family: Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2">
     <div style="margin:50px auto;width:70%;padding:20px 0">
       <div style="border-bottom:1px solid #eee">
         <a href="" style="font-size:1.4em;color: #00466a;text-decoration:none;font-weight:600">Rapid Recap</a>
@@ -35,5 +55,5 @@ const mailTransporter = () =>
       </div>
     </div>
   </div>`;
-  }
+};
 module.exports = { generateOtp, mailTransporter, generateEmailTemplate };

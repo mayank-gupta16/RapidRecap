@@ -3,9 +3,13 @@ const router = express.Router();
 const User = require("../model/userSchema");
 const bcrypt = require("bcryptjs");
 const authenticate = require("../middleware/authenticate");
-const { generateOtp, mailTransporter, generateEmailTemplate } = require("../utils/mail");
+const {
+  generateOtp,
+  mailTransporter,
+  generateEmailTemplate,
+} = require("../utils/mail");
 const VerificationToken = require("../model/verificationToken");
-const {isValidObjectId} = require("mongoose");
+const { isValidObjectId } = require("mongoose");
 // Handle signup route
 router.post("/register", async (req, res) => {
   //console.log(req.body);
@@ -45,13 +49,14 @@ router.post("/register", async (req, res) => {
 
     await user.save();
 
-    mailTransporter().sendMail({
-      from: "rapid.recap@yahoo.com",
+    const transporter = await mailTransporter();
+    await transporter.sendMail({
+      from: "20ucs174@lnmiit.ac.in",
       to: user.email,
       subject: "OTP for verification",
+      text: `Your OTP for verification`,
       html: generateEmailTemplate(OTP),
     });
-
     return res.status(201).json({ message: "Registered Successfully" });
   } catch (err) {
     console.log(err.message);
@@ -98,43 +103,38 @@ router.get("/loginCheck", authenticate, (req, res) => {
 });
 
 router.post("/verifyEmail", async (req, res) => {
-  const {userid, otp} = req.body;
+  const { userid, otp } = req.body;
 
   try {
-    if(!userid || !otp.trim())
-      throw new Error("No user or otp provided");
-    if(!isValidObjectId(userid))
-      throw new Error("Invalid user");
+    if (!userid || !otp.trim()) throw new Error("No user or otp provided");
+    if (!isValidObjectId(userid)) throw new Error("Invalid user");
 
     const user = await User.findById(userid);
-    if(!user)
-      throw new Error("No user found");
+    if (!user) throw new Error("No user found");
 
-    if(user.verified)
-      throw new Error("User already verified");
-    
-    const token = await VerificationToken.findOne({owner: userid});
-    if(!token)
-      throw new Error("No token found");
-    
+    if (user.verified) throw new Error("User already verified");
+
+    const token = await VerificationToken.findOne({ owner: userid });
+    if (!token) throw new Error("No token found");
+
     const isMatch = await token.compareToken(otp);
 
-    if(!isMatch)
-      throw new Error("Invalid OTP");
+    if (!isMatch) throw new Error("Invalid OTP");
 
     user.verified = true;
     await VerificationToken.findByIdAndDelete(token._id);
     await user.save();
 
-    mailTransporter().sendMail({
-      from: "rapid.recap@yahoo.com",
+    const transporter = await mailTransporter();
+    await transporter.sendMail({
+      from: "20ucs174@lnmiit.ac.in",
       to: user.email,
       subject: "Welcom to Rapid Recap",
-      html: '<h1>Welcome to Rapid Recap. Your account has been verified successfully</h1>',
+      html: "<h1>Welcome to Rapid Recap. Your account has been verified successfully</h1>",
     });
-    res.status(201).json({message: "Email verified successfully"});
+    res.status(201).json({ message: "Email verified successfully" });
   } catch (error) {
-    console.log(error.message);
+    console.log(error);
     return res.status(422).json({ error: error.message });
   }
 });
