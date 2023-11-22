@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import "./Register.css";
 import axios from "axios";
 import { NavLink, useNavigate } from "react-router-dom";
+import Modal from "../../Modal";
+import EmailVerify from "./EmailVerify";
+import { AppContext } from "../contextAPI/appContext";
 
 export default function Register() {
-  
+  const { state, dispatch } = useContext(AppContext);
   const [data, setData] = useState({
     firstName: "",
     lastName: "",
@@ -26,8 +29,8 @@ export default function Register() {
       //console.log(data);
       const response = await axios.post(`/api/user/register`, data);
       if (response.status === 201) {
+        await dispatch({ type: "showModal", payloadModal: true });
         alert("Registered Successfully");
-        navigate("/signin");
       } else {
         alert("Registration Failed");
         throw new Error("Registration Failed");
@@ -39,6 +42,13 @@ export default function Register() {
   };
   return (
     <div>
+      {state.modal && (
+        <Modal
+          onClose={() => dispatch({ type: "showModal", payloadModal: false })}
+        >
+          <EmailVerify email={data.email} />
+        </Modal>
+      )}
       <section className="container">
         <div className="r-container">
           <div className="circle circle-one"></div>
@@ -100,7 +110,7 @@ export default function Register() {
                     placeholder="Password"
                   />
                 </div>
-                
+
                 <div className="col">
                   <input
                     name="cpassword"

@@ -16,7 +16,7 @@ oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
 
 const generateOtp = () => {
   let otp = "";
-  for (let i = 0; i <= 3; i++) {
+  for (let i = 0; i <= 5; i++) {
     otp += Math.round(Math.random() * 9);
   }
   return otp;

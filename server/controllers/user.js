@@ -103,14 +103,14 @@ router.get("/loginCheck", authenticate, (req, res) => {
 });
 
 router.post("/verifyEmail", async (req, res) => {
-  const { userid, otp } = req.body;
+  const { otp, email } = req.body;
 
   try {
+    const user = await User.findOne({ email: email });
+    if (!user) throw new Error("No user found");
+    const userid = user._id;
     if (!userid || !otp.trim()) throw new Error("No user or otp provided");
     if (!isValidObjectId(userid)) throw new Error("Invalid user");
-
-    const user = await User.findById(userid);
-    if (!user) throw new Error("No user found");
 
     if (user.verified) throw new Error("User already verified");
 
