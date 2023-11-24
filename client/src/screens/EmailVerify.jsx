@@ -46,6 +46,23 @@ const EmailVerify = ({ email }) => {
     return starredEmail;
   };
 
+  const resendOTP = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(`/api/user/resendOTP`, {
+        email: email,
+      });
+      if (response.status === 201) {
+        alert("OTP sent");
+      } else {
+        throw new Error("OTP sending failed");
+      }
+    } catch (error) {
+      alert("OTP sending failed");
+      console.log(error.message);
+    }
+  };
+
   return (
     <div>
       <form className="otp-form" name="otp-form">
@@ -103,7 +120,7 @@ const EmailVerify = ({ email }) => {
         </button>
 
         <p className="resend text-white mb-0">
-          Didn't receive code? <a href="">Request again</a>
+          Didn't receive code? <a onClick={resendOTP}>Request again</a>
         </p>
       </form>
     </div>

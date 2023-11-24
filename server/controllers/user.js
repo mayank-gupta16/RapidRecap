@@ -139,4 +139,33 @@ router.post("/verifyEmail", async (req, res) => {
   }
 });
 
+router.post("/resendOTP", async (req, res) => {
+  try {
+    const { email } = req.body;
+    const OTP = generateOtp();
+    const user = await User.findOne({ email: email });
+    const user_id = user._id;
+
+    if (!user_id) throw new Error("No user found");
+    const prevToken = await VerificationToken.findOne({ owner: user_id });
+    if (prevToken) await VerificationToken.findByIdAndDelete(prevToken._id);
+    const verificationToken = new VerificationToken({
+      owner: user._id,
+      token: OTP,
+    });
+    await verificationToken.save();
+    const transporter = await mailTransporter();
+    await transporter.sendMail({
+      from: "20ucs174@lnmiit.ac.in",
+      to: user.email,
+      subject: "OTP for verification",
+      text: `Your OTP for verification`,
+      html: generateEmailTemplate(OTP),
+    });
+    return res.status(201).json({ message: "OTP send Successfully" });
+  } catch (error) {
+    console.log(err.message);
+    return res.status(422).json({ error: error.message });
+  }
+});
 module.exports = router;
