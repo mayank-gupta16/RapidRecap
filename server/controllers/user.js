@@ -46,7 +46,8 @@ router.post("/register", async (req, res) => {
       token: OTP,
     });
     await verificationToken.save();
-
+    user.resetOtpCnt();
+    user.setOtpCntResetTime();
     await user.save();
 
     const transporter = await mailTransporter();
@@ -142,11 +143,21 @@ router.post("/verifyEmail", async (req, res) => {
 router.post("/resendOTP", async (req, res) => {
   try {
     const { email } = req.body;
-    const OTP = generateOtp();
     const user = await User.findOne({ email: email });
     const user_id = user._id;
-
     if (!user_id) throw new Error("No user found");
+    const otpCnt = user.otpCnt;
+    if (!user.otpCntResetTime || new Date() > user.otpCntResetTime) {
+      user.resetOtpCnt();
+      user.setOtpCntResetTime();
+      await user.save();
+    }
+    if (otpCnt >= 3) {
+      throw new Error("OTP limit exceeded");
+    }
+    const OTP = generateOtp();
+    user.incrementOtpCnt();
+    await user.save();
     const prevToken = await VerificationToken.findOne({ owner: user_id });
     if (prevToken) await VerificationToken.findByIdAndDelete(prevToken._id);
     const verificationToken = new VerificationToken({
@@ -164,7 +175,7 @@ router.post("/resendOTP", async (req, res) => {
     });
     return res.status(201).json({ message: "OTP send Successfully" });
   } catch (error) {
-    console.log(err.message);
+    console.log(error.message);
     return res.status(422).json({ error: error.message });
   }
 });

@@ -2,43 +2,49 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const userSchema = new mongoose.Schema(
-    {
-      firstName: {
-        type: String,
-        required: true,
-      },
-      lastName: {
-        type: String,
-        required: true,
-      },
-      email: {
-        type: String,
-        required: true,
-        unique: true,
-      },
-      phone: 
-        {
-          type: Number,
-          required: true,
-        },
-      password: 
-        {
-          type: String,
-          required: true,
-        },
-        cpassword: 
-            {
-            type: String,
-            required: true,
-        },
-        verified: {
-          type: Boolean,
-          default: false,
-          required: true,
-        },
+  {
+    firstName: {
+      type: String,
+      required: true,
     },
-    { collection: "Users" }
-  );
+    lastName: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    phone: {
+      type: Number,
+      required: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    cpassword: {
+      type: String,
+      required: true,
+    },
+    verified: {
+      type: Boolean,
+      default: false,
+      required: true,
+    },
+    otpCnt: {
+      type: Number,
+      default: 0,
+      required: true,
+    },
+    otpCntResetTime: {
+      type: Date,
+      default: null,
+    },
+  },
+  { collection: "Users" }
+);
 
 userSchema.pre("save", async function (next) {
   if (this.isModified("password")) {
@@ -57,7 +63,20 @@ userSchema.methods.generateAuthToken = async function () {
     console.log(error.message);
   }
 };
-  
+userSchema.methods.incrementOtpCnt = function () {
+  this.otpCnt++;
+};
+userSchema.methods.resetOtpCnt = function () {
+  this.otpCnt = 0;
+  this.otpCntResetTime = null;
+};
+
+userSchema.methods.setOtpCntResetTime = function () {
+  const resetTime = new Date();
+  resetTime.setMinutes(resetTime.getMinutes() + 60); // Adjust the time as needed
+  this.otpCntResetTime = resetTime;
+};
+
 const User = mongoose.model("USER", userSchema);
 
 module.exports = User;

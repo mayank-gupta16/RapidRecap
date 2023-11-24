@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./EmailVerify.css";
 import axios from "axios";
+import { Otptimer } from "otp-timer-ts";
 import { NavLink, useNavigate } from "react-router-dom";
 const EmailVerify = ({ email }) => {
   const navigate = useNavigate();
@@ -47,19 +48,17 @@ const EmailVerify = ({ email }) => {
   };
 
   const resendOTP = async (e) => {
-    e.preventDefault();
+    //e.preventDefault();
     try {
       const response = await axios.post(`/api/user/resendOTP`, {
         email: email,
       });
       if (response.status === 201) {
         alert("OTP sent");
-      } else {
-        throw new Error("OTP sending failed");
       }
     } catch (error) {
-      alert("OTP sending failed");
-      console.log(error.message);
+      alert(error.response.data.error);
+      console.log(error.response.data.error);
     }
   };
 
@@ -118,10 +117,9 @@ const EmailVerify = ({ email }) => {
         <button onClick={submitOTP} className="btn btn-primary my-3">
           Verify
         </button>
-
-        <p className="resend text-white mb-0">
-          Didn't receive code? <a onClick={resendOTP}>Request again</a>
-        </p>
+        <div></div>
+        <p className="resend text-white mb-0">Didn't receive code?</p>
+        <Otptimer minutes={0} seconds={5} onResend={resendOTP} />
       </form>
     </div>
   );
