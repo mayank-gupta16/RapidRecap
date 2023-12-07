@@ -1,6 +1,7 @@
 # Rapid Recap - News Aggregator App
 
 Rapid Recap is a News Aggregator application built using the MERN (MongoDB, Express, React, Node.js) stack. It scrapes news from various websites using background job processing via a Python server, stores the data in MongoDB, and presents it to users through a user-friendly MERN web application.
+Link: [Rapid Recap](http://20.197.51.23/)
 
 ## Collaborators
 
