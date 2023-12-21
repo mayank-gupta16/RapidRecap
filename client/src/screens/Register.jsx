@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import "./Register.css";
 import axios from "axios";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -40,6 +40,13 @@ export default function Register() {
       //console.log(error);
     }
   };
+
+  useEffect(() => {
+    if (state.show === false) {
+      navigate("/");
+    }
+  }, []);
+
   return (
     <div>
       {state.modal && (

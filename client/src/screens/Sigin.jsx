@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import "./Signin.css";
 import axios from "axios";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -23,6 +23,7 @@ export default function Sigin() {
       //console.log(data);
       const response = await axios.post(`/api/user/login`, data);
       if (response.status === 201) {
+        await dispatch({ type: "showModal", payloadModal: false });
         dispatch({ type: "UNSHOW" });
         alert("Logined Successfully");
         navigate("/");
@@ -35,6 +36,13 @@ export default function Sigin() {
       console.log(error.message);
     }
   };
+
+  useEffect(() => {
+    if (state.show === false) {
+      navigate("/");
+    }
+  }, []);
+
   return (
     <div>
       <div className="alert alert-warning" role="alert">

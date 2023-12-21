@@ -119,7 +119,7 @@ const EmailVerify = ({ email }) => {
         </button>
         <div></div>
         <p className="resend text-white mb-0">Didn't receive code?</p>
-        <Otptimer minutes={0} seconds={5} onResend={resendOTP} />
+        <Otptimer minutes={0} seconds={60} onResend={resendOTP} />
       </form>
     </div>
   );
