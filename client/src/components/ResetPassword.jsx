@@ -1,13 +1,16 @@
 import React, { useState, useContext } from "react";
 import { AppContext } from "../contextAPI/appContext";
 import axios from "axios";
+import Loading from "./Loading";
 
 const ResetPassword = ({ email }) => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const { state, dispatch } = useContext(AppContext);
+  const [load, setLoad] = useState(false); //for loading spinner
 
   const handleResetPassword = async () => {
+    setLoad(true);
     if (newPassword !== confirmPassword) {
       alert("Passwords do not match");
       return;
@@ -27,6 +30,8 @@ const ResetPassword = ({ email }) => {
     } catch (error) {
       alert(error.response.data.error);
       console.log(error.response.data.error);
+    } finally {
+      setLoad(false);
     }
   };
 
@@ -73,6 +78,7 @@ const ResetPassword = ({ email }) => {
       >
         Reset Password
       </button>
+      <div className="mt-3">{load && <Loading />}</div>
     </div>
   );
 };

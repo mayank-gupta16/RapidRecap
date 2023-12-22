@@ -137,7 +137,15 @@ export default function Register() {
             </form>
             <div className="r-forget opacity">
               <h6>
-                Already a Member ?<NavLink to="/signin"> Login Here</NavLink>
+                Already a Member ?
+                <NavLink
+                  type="button"
+                  className="w-50 btn btn-success p-1 rounded-2 mt-2"
+                  to="/signin"
+                >
+                  {" "}
+                  Login Here
+                </NavLink>
               </h6>
             </div>
           </div>

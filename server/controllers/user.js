@@ -148,6 +148,8 @@ router.post("/verifyEmail", async (req, res) => {
 router.post("/resendOTP", async (req, res) => {
   try {
     const { email } = req.body;
+    if (!email)
+      throw new Error("No email provided : Write the Email in the email field");
     const user = await User.findOne({ email: email });
     const user_id = user._id;
     if (!user_id) throw new Error("No user found");

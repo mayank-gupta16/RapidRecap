@@ -7,13 +7,14 @@ import { alertTitleClasses } from "@mui/material";
 import EmailVerify from "../components/EmailVerify";
 import Modal from "./Modal";
 import ResetPassword from "../components/resetPassword";
+import Loading from "../components/Loading";
 export default function Sigin() {
   const { state, dispatch } = useContext(AppContext);
   const [data, setData] = useState({
     email: "",
     password: "",
   });
-
+  const [load, setLoad] = useState(false); //for loading spinner
   const navigate = useNavigate();
 
   const inputHandler = (e) => {
@@ -25,6 +26,7 @@ export default function Sigin() {
     e.preventDefault();
     try {
       //console.log(data);
+      setLoad(true);
       const response = await axios.post(`/api/user/login`, data);
       if (response.status === 201) {
         //await dispatch({ type: "showModal", payloadModal: false });
@@ -38,11 +40,14 @@ export default function Sigin() {
     } catch (error) {
       alert("Login Failed");
       console.log(error.message);
+    } finally {
+      setLoad(false);
     }
   };
 
   const forgotPassword = async () => {
     try {
+      setLoad(true);
       const response = await axios.post(`/api/user/resendOTP`, {
         email: data.email,
       });
@@ -61,6 +66,8 @@ export default function Sigin() {
     } catch (error) {
       alert(error.response.data.error);
       console.error(error.response.data.error);
+    } finally {
+      setLoad(false);
     }
   };
 
@@ -112,9 +119,24 @@ export default function Sigin() {
                 SUBMIT
               </button>
             </form>
-            <div className="register-forget opacity">
-              <NavLink to="/register">Create an account</NavLink>
-              <button onClick={forgotPassword}>Forgot Password ?</button>
+            <div className="register-forget opacity d-flex flex-column gap-3">
+              <div className="d-flex justify-content-around gap-2">
+                <NavLink
+                  type="button"
+                  className="w-50 btn btn-success p-1 rounded-2"
+                  to="/register"
+                >
+                  Create an account
+                </NavLink>
+                <button
+                  type="button"
+                  className="w-50 btn btn-danger p-1 rounded-2"
+                  onClick={forgotPassword}
+                >
+                  Forgot Password ?
+                </button>
+              </div>
+              <div>{load && <Loading />}</div>
             </div>
           </div>
           <div className="circle circle-two"></div>
