@@ -5,6 +5,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import Modal from "./Modal";
 import EmailVerify from "../components/EmailVerify";
 import { AppContext } from "../contextAPI/appContext";
+import Loading from "../components/Loading";
 
 export default function Register() {
   const { state, dispatch } = useContext(AppContext);
@@ -16,6 +17,7 @@ export default function Register() {
     password: "",
     cpassword: "",
   });
+  const [load, setLoad] = useState(false); //for loading spinner
   const navigate = useNavigate();
 
   const inputHandler = (e) => {
@@ -24,6 +26,7 @@ export default function Register() {
   };
 
   const handleSubmit = async (e) => {
+    setLoad(true);
     e.preventDefault();
     try {
       //console.log(data);
@@ -38,6 +41,8 @@ export default function Register() {
     } catch (error) {
       alert(`registration failed : ${error.response.data.error}`);
       //console.log(error);
+    } finally {
+      setLoad(false);
     }
   };
 
@@ -131,7 +136,11 @@ export default function Register() {
                   />
                 </div>
               </div>
-              <button className="opacity mt-3 mb-0" type="submit">
+              <button
+                className="opacity mt-3 mb-0"
+                type="submit"
+                disabled={load}
+              >
                 SUBMIT
               </button>
             </form>
@@ -147,6 +156,7 @@ export default function Register() {
                   Login Here
                 </NavLink>
               </h6>
+              <div>{load && <Loading />}</div>
             </div>
           </div>
           <div className="circle circle-two"></div>

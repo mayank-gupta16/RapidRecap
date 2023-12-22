@@ -115,7 +115,11 @@ export default function Sigin() {
                 type="password"
                 placeholder="Password"
               />
-              <button className="opacity mt-3 mb-0" type="submit">
+              <button
+                className={`opacity mt-3 mb-0`}
+                disabled={load}
+                type="submit"
+              >
                 SUBMIT
               </button>
             </form>

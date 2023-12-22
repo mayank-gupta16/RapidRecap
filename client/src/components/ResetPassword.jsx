@@ -75,6 +75,7 @@ const ResetPassword = ({ email }) => {
       <button
         className="mt-5 bg-white rounded-2 border-0 p-2"
         onClick={handleResetPassword}
+        disabled={load}
       >
         Reset Password
       </button>

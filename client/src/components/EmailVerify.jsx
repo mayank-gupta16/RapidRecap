@@ -151,7 +151,11 @@ const EmailVerify = ({ email }) => {
             />
           ))}
         </div>
-        <button onClick={submitOTP} className="btn btn-primary my-3">
+        <button
+          onClick={submitOTP}
+          className="btn btn-primary my-3"
+          disabled={load}
+        >
           Verify
         </button>
         <p className="resend text-white mb-0">Didn't receive code?</p>
