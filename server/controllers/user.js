@@ -22,6 +22,9 @@ router.post("/register", async (req, res) => {
     const response = await User.findOne({ email: email });
     if (response)
       return res.status(422).json({ error: "Email already exists" });
+    if (password.length < 8)
+      throw new Error("Password should be of atleast 8 characters");
+
     if (password != cpassword)
       return res
         .status(422)
@@ -92,7 +95,6 @@ router.post("/login", async (req, res) => {
     console.log(err);
   }
 });
-
 router.post("/logout", authenticate, (req, res) => {
   res.clearCookie("jwtoken", { path: "/" });
   res.status(201).send("User Logout");
@@ -105,7 +107,7 @@ router.get("/loginCheck", authenticate, (req, res) => {
 
 router.post("/verifyEmail", async (req, res) => {
   const { otp, email } = req.body;
-
+  const forgotPassword = req.query.forgotPassword;
   try {
     const user = await User.findOne({ email: email });
     if (!user) throw new Error("No user found");
@@ -113,7 +115,8 @@ router.post("/verifyEmail", async (req, res) => {
     if (!userid || !otp.trim()) throw new Error("No user or otp provided");
     if (!isValidObjectId(userid)) throw new Error("Invalid user");
 
-    if (user.verified) throw new Error("User already verified");
+    if (user.verified && !forgotPassword)
+      throw new Error("User already verified");
 
     const token = await VerificationToken.findOne({ owner: userid });
     if (!token) throw new Error("No token found");
@@ -126,13 +129,15 @@ router.post("/verifyEmail", async (req, res) => {
     await VerificationToken.findByIdAndDelete(token._id);
     await user.save();
 
-    const transporter = await mailTransporter();
-    await transporter.sendMail({
-      from: "20ucs174@lnmiit.ac.in",
-      to: user.email,
-      subject: "Welcom to Rapid Recap",
-      html: "<h1>Welcome to Rapid Recap. Your account has been verified successfully</h1>",
-    });
+    if (!forgotPassword) {
+      const transporter = await mailTransporter();
+      await transporter.sendMail({
+        from: "20ucs174@lnmiit.ac.in",
+        to: user.email,
+        subject: "Welcom to Rapid Recap",
+        html: "<h1>Welcome to Rapid Recap. Your account has been verified successfully</h1>",
+      });
+    }
     res.status(201).json({ message: "Email verified successfully" });
   } catch (error) {
     console.log(error);
@@ -153,7 +158,10 @@ router.post("/resendOTP", async (req, res) => {
       await user.save();
     }
     if (otpCnt >= 3) {
-      throw new Error("OTP limit exceeded");
+      throw new Error(
+        "OTP limit exceeded, Try again after " +
+          user.otpCntResetTime.toLocalString
+      );
     }
     const OTP = generateOtp();
     user.incrementOtpCnt();
@@ -177,6 +185,28 @@ router.post("/resendOTP", async (req, res) => {
   } catch (error) {
     console.log(error.message);
     return res.status(422).json({ error: error.message });
+  }
+});
+
+router.post("/forgotPassword", async (req, res) => {
+  const { email, newPassword } = req.body;
+  try {
+    const user = await User.findOne({ email: email });
+    if (!user) throw new Error("No user found");
+    const isSamePassword = await bcrypt.compare(newPassword, user.password);
+    if (isSamePassword)
+      throw new Error("New password should be different from old password");
+    if (newPassword.length < 8)
+      throw new Error("Password should be of atleast 8 characters");
+
+    user.password = newPassword;
+    user.cpassword = newPassword;
+
+    await user.save();
+    res.status(201).json({ message: "Password changed successfully" });
+  } catch (error) {
+    console.log(error.message);
+    res.status(422).json({ error: error.message });
   }
 });
 module.exports = router;

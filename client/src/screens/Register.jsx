@@ -2,8 +2,8 @@ import { useState, useContext, useEffect } from "react";
 import "./Register.css";
 import axios from "axios";
 import { NavLink, useNavigate } from "react-router-dom";
-import Modal from "../../Modal";
-import EmailVerify from "./EmailVerify";
+import Modal from "./Modal";
+import EmailVerify from "../components/EmailVerify";
 import { AppContext } from "../contextAPI/appContext";
 
 export default function Register() {
@@ -115,6 +115,7 @@ export default function Register() {
                     value={data.password}
                     type="password"
                     placeholder="Password"
+                    minLength={8}
                   />
                 </div>
 
@@ -126,6 +127,7 @@ export default function Register() {
                     value={data.cpassword}
                     type="password"
                     placeholder="Confirm Password"
+                    minLength={8}
                   />
                 </div>
               </div>

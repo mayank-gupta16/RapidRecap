@@ -1,9 +1,12 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import "./EmailVerify.css";
 import axios from "axios";
 import { Otptimer } from "otp-timer-ts";
 import { NavLink, useNavigate } from "react-router-dom";
+import { AppContext } from "../contextAPI/appContext";
 const EmailVerify = ({ email }) => {
+  const { state, dispatch } = useContext(AppContext);
+  const forgetPassword = state.forgotPassword;
   const navigate = useNavigate();
   const [otp, setOtp] = useState({
     i1: "",
@@ -24,17 +27,28 @@ const EmailVerify = ({ email }) => {
     const otpValue = `${otp.i1}${otp.i2}${otp.i3}${otp.i4}${otp.i5}${otp.i6}`;
     const data = { otp: otpValue, email: email };
     try {
-      const response = await axios.post(`/api/user/verifyEmail`, data);
+      const response = await axios.post(
+        `/api/user/verifyEmail?forgotPassword=${forgetPassword}`,
+        data
+      );
       if (response.status === 201) {
         alert("Email Verified");
-        navigate("/signin");
-      } else {
-        alert("Email Verification Failed");
-        throw new Error("Email Verification Failed");
+        if (forgetPassword) {
+          //console.log(forgetPassword);
+          await dispatch({ type: "verifyEmail", payloadverifyEmail: false });
+
+          navigate("/signin");
+        } else {
+          // console.log(forgetPassword);
+          // console.log(state.modal);
+          await dispatch({ type: "showModal", payloadModal: false });
+          navigate("/signin");
+        }
       }
+      return;
     } catch (error) {
       alert("Email Verification Failed");
-      console.log(error.message);
+      console.log(error.response.data.error);
     }
     //console.log(otpValue);
   };

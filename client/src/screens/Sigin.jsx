@@ -3,6 +3,10 @@ import "./Signin.css";
 import axios from "axios";
 import { NavLink, useNavigate } from "react-router-dom";
 import { AppContext } from "../contextAPI/appContext";
+import { alertTitleClasses } from "@mui/material";
+import EmailVerify from "../components/EmailVerify";
+import Modal from "./Modal";
+import ResetPassword from "../components/resetPassword";
 export default function Sigin() {
   const { state, dispatch } = useContext(AppContext);
   const [data, setData] = useState({
@@ -23,7 +27,7 @@ export default function Sigin() {
       //console.log(data);
       const response = await axios.post(`/api/user/login`, data);
       if (response.status === 201) {
-        await dispatch({ type: "showModal", payloadModal: false });
+        //await dispatch({ type: "showModal", payloadModal: false });
         dispatch({ type: "UNSHOW" });
         alert("Logined Successfully");
         navigate("/");
@@ -37,14 +41,50 @@ export default function Sigin() {
     }
   };
 
+  const forgotPassword = async () => {
+    try {
+      const response = await axios.post(`/api/user/resendOTP`, {
+        email: data.email,
+      });
+      if (response.status === 201) {
+        let i = data.email.indexOf("@");
+
+        const starredEmail =
+          data.email.slice(0, 2) +
+          data.email.slice(2, i).replace(/./g, "*") +
+          data.email.slice(i);
+        await dispatch({ type: "forgotPassword", payloadForgotPassword: true });
+        await dispatch({ type: "verifyEmail", payloadverifyEmail: true });
+        alert("OTP sent to your email : " + starredEmail);
+      }
+      await dispatch({ type: "showModal", payloadModal: true });
+    } catch (error) {
+      alert(error.response.data.error);
+      console.error(error.response.data.error);
+    }
+  };
+
   useEffect(() => {
     if (state.show === false) {
       navigate("/");
     }
   }, []);
-
   return (
     <div>
+      {state.modal && state.forgotPassword && !state.verifyEmail && (
+        <Modal
+          onClose={() => dispatch({ type: "showModal", payloadModal: false })}
+        >
+          <ResetPassword email={data.email} />
+        </Modal>
+      )}
+      {state.modal && state.verifyEmail && (
+        <Modal
+          onClose={() => dispatch({ type: "showModal", payloadModal: false })}
+        >
+          <EmailVerify email={data.email} />
+        </Modal>
+      )}
       <div className="alert alert-warning" role="alert">
         You must log in to view this content.
       </div>
@@ -74,7 +114,7 @@ export default function Sigin() {
             </form>
             <div className="register-forget opacity">
               <NavLink to="/register">Create an account</NavLink>
-              <a href="">Forgot Password ?</a>
+              <button onClick={forgotPassword}>Forgot Password ?</button>
             </div>
           </div>
           <div className="circle circle-two"></div>
