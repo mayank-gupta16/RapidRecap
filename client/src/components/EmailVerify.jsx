@@ -2,9 +2,10 @@ import { useState, useContext, useRef } from "react";
 import "./EmailVerify.css";
 import axios from "axios";
 import { Otptimer } from "otp-timer-ts";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { AppContext } from "../contextAPI/appContext";
 import Loading from "./Loading";
+import { Box } from "@chakra-ui/react";
 const EmailVerify = ({ email }) => {
   const { state, dispatch } = useContext(AppContext);
   const forgetPassword = state.forgotPassword;
@@ -29,15 +30,20 @@ const EmailVerify = ({ email }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    if (value === "+") {
+      return;
+    }
     if (otp[name] !== "" && value !== "") {
       return;
     }
-    setOtp({ ...otp, [name]: value });
-
-    if (value !== "" && /^[0-9]$/.test(value)) {
-      const nextInput =
-        name === "i6" ? null : refs[`i${parseInt(name[1], 10) + 1}`];
-      nextInput && nextInput.current.focus();
+    if (/^\d*$/.test(value)) {
+      // Update the state if it's a whole number
+      setOtp({ ...otp, [name]: value });
+      if (value !== "" && /^[0-9]$/.test(value)) {
+        const nextInput =
+          name === "i6" ? null : refs[`i${parseInt(name[1], 10) + 1}`];
+        nextInput && nextInput.current.focus();
+      }
     }
   };
 
@@ -104,14 +110,16 @@ const EmailVerify = ({ email }) => {
   const handlePaste = (e) => {
     e.preventDefault();
     const pastedData = e.clipboardData.getData("text/plain").slice(0, 6);
-    setOtp({
-      i1: pastedData[0] || "",
-      i2: pastedData[1] || "",
-      i3: pastedData[2] || "",
-      i4: pastedData[3] || "",
-      i5: pastedData[4] || "",
-      i6: pastedData[5] || "",
-    });
+    if (/^\d*$/.test(pastedData)) {
+      setOtp({
+        i1: pastedData[0] || "",
+        i2: pastedData[1] || "",
+        i3: pastedData[2] || "",
+        i4: pastedData[3] || "",
+        i5: pastedData[4] || "",
+        i6: pastedData[5] || "",
+      });
+    }
   };
 
   const handleKeyDown = (e) => {
@@ -128,8 +136,8 @@ const EmailVerify = ({ email }) => {
   };
 
   return (
-    <div>
-      <form className="otp-form" name="otp-form">
+    <div className="otp-form">
+      <form name="otp-form">
         <div className="title">
           <h3>OTP VERIFICATION</h3>
           <p className="info">An otp has been sent to {showEmail()}</p>
@@ -158,8 +166,16 @@ const EmailVerify = ({ email }) => {
         >
           Verify
         </button>
-        <p className="resend text-white mb-0">Didn't receive code?</p>
-        <Otptimer minutes={0} seconds={60} onResend={resendOTP} />
+        <p className="resend mb-0">Didn't receive code?</p>
+        <Box>
+          <Otptimer
+            buttonText="Resend OTP"
+            buttonContainerClass="btn btn-danger"
+            minutes={0}
+            seconds={60}
+            onResend={resendOTP}
+          />
+        </Box>
       </form>
       <div className="mt-3">{load && <Loading />}</div>
     </div>

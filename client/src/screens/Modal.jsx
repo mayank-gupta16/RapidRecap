@@ -28,7 +28,14 @@ export default function Modal({ children, onClose }) {
       <div style={MODAL_STYLES}>
         <button
           className="btn bg-danger fs-4"
-          style={{ marginLeft: "90%", marginTop: "-35px" }}
+          style={{
+            marginLeft: "90%",
+            marginTop: "-35px",
+            zIndex: 2001,
+            position: "absolute",
+            top: "10px",
+            right: "10px",
+          }}
           onClick={onClose}
         >
           X
