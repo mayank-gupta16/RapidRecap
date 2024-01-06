@@ -3,7 +3,6 @@ import "./Signin.css";
 import axios from "axios";
 import { NavLink, useNavigate } from "react-router-dom";
 import { AppContext } from "../contextAPI/appContext";
-import { alertTitleClasses } from "@mui/material";
 import EmailVerify from "../components/EmailVerify";
 import Modal from "./Modal";
 import ResetPassword from "../components/resetPassword";
@@ -78,7 +77,7 @@ export default function Sigin() {
   }, []);
   return (
     <div>
-      {state.modal && state.forgotPassword && !state.verifyEmail && (
+      {(state.modal && state.forgotPassword && !state.verifyEmail) || (
         <Modal
           onClose={() => dispatch({ type: "showModal", payloadModal: false })}
         >

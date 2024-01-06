@@ -20,6 +20,7 @@
     "bootstrap-icons": "^1.11.1",
     "framer-motion": "^10.17.0",
     "jquery": "^3.7.1",
+    "lodash": "^4.17.21",
     "otp-timer-ts": "^3.0.1",
     "react": "^18.2.0",
     "react-bootstrap": "^2.8.0",

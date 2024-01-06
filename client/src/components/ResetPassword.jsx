@@ -1,13 +1,26 @@
 import React, { useState, useContext } from "react";
 import { AppContext } from "../contextAPI/appContext";
 import axios from "axios";
-import Loading from "./Loading";
+import { throttle } from "lodash";
+
+import {
+  useToast,
+  Button,
+  Input,
+  InputGroup,
+  InputRightElement,
+} from "@chakra-ui/react";
 
 const ResetPassword = ({ email }) => {
+  const toast = useToast();
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const { state, dispatch } = useContext(AppContext);
   const [load, setLoad] = useState(false); //for loading spinner
+  const [show, setShow] = useState({
+    new_p: false,
+    confirm_p: false,
+  });
 
   const handleResetPassword = async () => {
     setLoad(true);
@@ -21,14 +34,28 @@ const ResetPassword = ({ email }) => {
         email,
         newPassword,
       });
-      //console.log(response);
+
       if (response.status === 201) {
-        alert("Password Reset Successfully");
+        toast({
+          title: "Password Reset Successfully",
+          //description: ,
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
+        //alert("Password Reset Successfully");
         dispatch({ type: "forgotPassword", payloadForgotPassword: false });
         dispatch({ type: "showModal", payloadModal: false });
       }
     } catch (error) {
-      alert(error.response.data.error);
+      toast({
+        //title: ,
+        description: error.response.data.error,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+      //alert(error.response.data.error);
       console.log(error.response.data.error);
     } finally {
       setLoad(false);
@@ -36,51 +63,91 @@ const ResetPassword = ({ email }) => {
   };
 
   return (
-    <div>
-      <h2>Reset Password</h2>
-      <div className="d-flex flex-column gap-3 mt-3">
-        <div className="d-grid">
-          <div className="row">
-            <div className="col-6 d-flex">
-              <label className="ms-auto me-4">New Password:</label>
+    <>
+      <div className="h-100 d-flex flex-column justify-content-center align-items-center text-white">
+        <h2>Reset Password</h2>
+        <div className="d-flex flex-column gap-3 mt-3">
+          <div className="d-grid">
+            <div className="row">
+              <div className="col-6 d-flex">
+                <label className="ms-auto me-4 text-white">New Password:</label>
+              </div>
+              <div className="col-6 d-flex">
+                <InputGroup size="md">
+                  <Input
+                    pr="4.5rem"
+                    type={show.new_p ? "text" : "password"}
+                    placeholder="Enter password"
+                    minLength={8}
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                  />
+                  <InputRightElement width="4.5rem">
+                    <Button
+                      h="1.75rem"
+                      size="sm"
+                      name="new_p"
+                      onClick={(e) =>
+                        setShow({
+                          ...show,
+                          [e.target.name]: !show[e.target.name],
+                        })
+                      }
+                    >
+                      {show.new_p ? "Hide" : "Show"}
+                    </Button>
+                  </InputRightElement>
+                </InputGroup>
+              </div>
             </div>
-            <div className="col-6 d-flex">
-              <input
-                className="me-auto"
-                type="password"
-                minLength={8}
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-              />
+          </div>
+          <div className="d-grid">
+            <div className="row">
+              <div className="col-6 d-flex">
+                <label className="ms-auto me-4 text-white">
+                  Confirm Password:
+                </label>
+              </div>
+              <div className="col-6 d-flex">
+                <InputGroup size="md">
+                  <Input
+                    pr="4.5rem"
+                    type={show.confirm_p ? "text" : "password"}
+                    placeholder="Enter password"
+                    minLength={8}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                  />
+                  <InputRightElement width="4.5rem">
+                    <Button
+                      h="1.75rem"
+                      size="sm"
+                      name="confirm_p"
+                      onClick={(e) =>
+                        setShow({
+                          ...show,
+                          [e.target.name]: !show[e.target.name],
+                        })
+                      }
+                    >
+                      {show.confirm_p ? "Hide" : "Show"}
+                    </Button>
+                  </InputRightElement>
+                </InputGroup>
+              </div>
             </div>
           </div>
         </div>
-        <div className="d-grid">
-          <div className="row">
-            <div className="col-6 d-flex">
-              <label className="ms-auto me-4">Confirm Password:</label>
-            </div>
-            <div className="col-6 d-flex">
-              <input
-                className="me-auto"
-                type="password"
-                minLength={8}
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-              />
-            </div>
-          </div>
-        </div>
+        <Button
+          colorScheme="messenger"
+          className="mt-5 rounded-2"
+          onClick={throttle(handleResetPassword, 5000)}
+          isLoading={load}
+        >
+          Reset Password
+        </Button>
       </div>
-      <button
-        className="mt-5 bg-white rounded-2 border-0 p-2"
-        onClick={handleResetPassword}
-        disabled={load}
-      >
-        Reset Password
-      </button>
-      <div className="mt-3">{load && <Loading />}</div>
-    </div>
+    </>
   );
 };
 
