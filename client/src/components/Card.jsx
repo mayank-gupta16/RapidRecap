@@ -69,7 +69,7 @@ const Card = ({ newsNumber, data }) => {
             <div className="img-box">
               <img src={data.imgURL[0]} alt="" />
             </div>
-            <div className="contents">
+            <div className="contents text-white">
               <h2> Click here to know More </h2>
               <p>
                 {data.mainText[0].length > 135
