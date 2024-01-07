@@ -1,4 +1,4 @@
-import { useState, useContext, useRef } from "react";
+import { useState, useContext, useRef, useEffect, useCallback } from "react";
 import "./EmailVerify.css";
 import axios from "axios";
 import { Otptimer } from "otp-timer-ts";
@@ -6,7 +6,10 @@ import { useNavigate } from "react-router-dom";
 import { AppContext } from "../contextAPI/appContext";
 import Loading from "./Loading";
 import { Box } from "@chakra-ui/react";
+import { useToast } from "@chakra-ui/react";
+import { throttle } from "lodash";
 const EmailVerify = ({ email }) => {
+  const toast = useToast();
   const { state, dispatch } = useContext(AppContext);
   const forgetPassword = state.forgotPassword;
   const [load, setLoad] = useState(false); //for loading spinner
@@ -48,6 +51,8 @@ const EmailVerify = ({ email }) => {
   };
 
   const submitOTP = async (e) => {
+    console.log(email);
+    console.log(otp);
     e.preventDefault();
     const otpValue = `${otp.i1}${otp.i2}${otp.i3}${otp.i4}${otp.i5}${otp.i6}`;
     const data = { otp: otpValue, email: email };
@@ -58,7 +63,13 @@ const EmailVerify = ({ email }) => {
         data
       );
       if (response.status === 201) {
-        alert("Email Verified");
+        toast({
+          title: "Email Verified",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
+        //alert("Email Verified");
         if (forgetPassword) {
           //console.log(forgetPassword);
           await dispatch({ type: "verifyEmail", payloadverifyEmail: false });
@@ -70,10 +81,19 @@ const EmailVerify = ({ email }) => {
           await dispatch({ type: "showModal", payloadModal: false });
           navigate("/signin");
         }
+      } else {
+        throw new Error("Email Verification Failed");
       }
       return;
     } catch (error) {
-      alert("Email Verification Failed");
+      toast({
+        title: "Email Verification Failed",
+        description: error.response.data.error,
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+      //alert("Email Verification Failed");
       console.log(error.response.data.error);
     } finally {
       setLoad(false);
@@ -97,10 +117,22 @@ const EmailVerify = ({ email }) => {
         email: email,
       });
       if (response.status === 201) {
-        alert("OTP sent");
+        toast({
+          title: "OTP sent",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
       }
     } catch (error) {
-      alert(error.response.data.error);
+      toast({
+        title: "OTP sending failed",
+        description: error.response.data.error,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+
       console.log(error.response.data.error);
     } finally {
       setLoad(false);
@@ -135,6 +167,10 @@ const EmailVerify = ({ email }) => {
     }
   };
 
+  const submitOTPThrottled = useCallback(throttle(submitOTP, 1000), [otp]);
+  useEffect(() => {
+    return () => submitOTPThrottled.cancel();
+  }, []);
   return (
     <div className="otp-form">
       <form name="otp-form">
@@ -160,13 +196,13 @@ const EmailVerify = ({ email }) => {
           ))}
         </div>
         <button
-          onClick={submitOTP}
+          onClick={submitOTPThrottled}
           className="btn btn-primary my-3"
           disabled={load}
         >
           Verify
         </button>
-        <p className="resend mb-0">Didn't receive code?</p>
+        <p className="resend mb-2">Didn't receive code?</p>
         <Box>
           <Otptimer
             buttonText="Resend OTP"
@@ -174,6 +210,8 @@ const EmailVerify = ({ email }) => {
             minutes={0}
             seconds={60}
             onResend={resendOTP}
+            textStyle={{ color: "white" }}
+            timerStyle={{ color: "white" }}
           />
         </Box>
       </form>

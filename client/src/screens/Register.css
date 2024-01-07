@@ -62,7 +62,7 @@ h6 {
   -webkit-animation: wobble 0.3s ease-in;
 }
 
-.r-container form button {
+/* .r-container form button {
   background-color: var(--primary-color);
   color: var(--color);
   display: block;
@@ -94,7 +94,7 @@ h6 {
   -moz-transform: scale(1.02);
   -ms-transform: scale(1.02);
   -o-transform: scale(1.02);
-}
+} */
 
 .circle {
   width: 8rem;

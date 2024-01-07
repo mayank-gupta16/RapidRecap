@@ -1,19 +1,24 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useCallback } from "react";
 import "./Signin.css";
 import axios from "axios";
 import { NavLink, useNavigate } from "react-router-dom";
 import { AppContext } from "../contextAPI/appContext";
 import EmailVerify from "../components/EmailVerify";
 import Modal from "./Modal";
-import ResetPassword from "../components/resetPassword";
-import Loading from "../components/Loading";
+import ResetPassword from "../components/ResetPassword";
+import { throttle } from "lodash";
+import { useToast, Button } from "@chakra-ui/react";
 export default function Sigin() {
+  const toast = useToast();
   const { state, dispatch } = useContext(AppContext);
   const [data, setData] = useState({
     email: "",
     password: "",
   });
-  const [load, setLoad] = useState(false); //for loading spinner
+  const [load, setLoad] = useState({
+    submitLoad: false,
+    forgotLoad: false,
+  }); //for loading spinner
   const navigate = useNavigate();
 
   const inputHandler = (e) => {
@@ -24,29 +29,37 @@ export default function Sigin() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      //console.log(data);
-      setLoad(true);
+      setLoad({ submitLoad: true, forgotLoad: false });
       const response = await axios.post(`/api/user/login`, data);
       if (response.status === 201) {
-        //await dispatch({ type: "showModal", payloadModal: false });
         dispatch({ type: "UNSHOW" });
-        alert("Logined Successfully");
+        toast({
+          title: "Logined Successfully",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
         navigate("/");
       } else {
-        alert("Login Failed");
         throw new Error("Login Failed");
       }
     } catch (error) {
-      alert("Login Failed");
+      toast({
+        title: "Login Failed",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
       console.log(error.message);
     } finally {
-      setLoad(false);
+      setLoad({ submitLoad: false, forgotLoad: false });
     }
   };
 
   const forgotPassword = async () => {
+    console.log("forgotPassword");
     try {
-      setLoad(true);
+      setLoad({ submitLoad: false, forgotLoad: true });
       const response = await axios.post(`/api/user/resendOTP`, {
         email: data.email,
       });
@@ -59,14 +72,26 @@ export default function Sigin() {
           data.email.slice(i);
         await dispatch({ type: "forgotPassword", payloadForgotPassword: true });
         await dispatch({ type: "verifyEmail", payloadverifyEmail: true });
-        alert("OTP sent to your email : " + starredEmail);
+        toast({
+          title: "OTP sent to your email",
+          description: starredEmail,
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
+        //alert("OTP sent to your email : " + starredEmail);
       }
       await dispatch({ type: "showModal", payloadModal: true });
     } catch (error) {
-      alert(error.response.data.error);
+      toast({
+        description: error.response.data.error,
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
       console.error(error.response.data.error);
     } finally {
-      setLoad(false);
+      setLoad({ submitLoad: false, forgotLoad: false });
     }
   };
 
@@ -75,9 +100,25 @@ export default function Sigin() {
       navigate("/");
     }
   }, []);
+
+  const handleForgotPasswordThrottled = useCallback(
+    throttle(forgotPassword, 1000),
+    [data.email]
+  );
+
+  useEffect(() => {
+    return () => handleForgotPasswordThrottled.cancel();
+  }, [handleForgotPasswordThrottled]);
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      // If Enter key is pressed, submit the form
+      handleSubmit(e);
+    }
+  };
   return (
     <div>
-      {(state.modal && state.forgotPassword && !state.verifyEmail) || (
+      {state.modal && state.forgotPassword && !state.verifyEmail && (
         <Modal
           onClose={() => dispatch({ type: "showModal", payloadModal: false })}
         >
@@ -99,7 +140,7 @@ export default function Sigin() {
           <div className="circle circle-one"></div>
           <div className="form-container">
             <h1 className="opacity">LOG-IN</h1>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} onKeyDown={handleKeyPress}>
               <input
                 onChange={inputHandler}
                 name="email"
@@ -114,32 +155,37 @@ export default function Sigin() {
                 type="password"
                 placeholder="Password"
               />
-              <button
-                className={`opacity mt-3 mb-0`}
-                disabled={load}
+              <Button
+                isLoading={load.submitLoad}
+                loadingText="Submitting"
+                colorScheme="teal"
+                variant="outline"
                 type="submit"
+                size="lg"
+                w={"100%"}
               >
-                SUBMIT
-              </button>
+                Submit
+              </Button>
             </form>
             <div className="register-forget opacity d-flex flex-column gap-3">
               <div className="d-flex justify-content-around gap-2">
                 <NavLink
                   type="button"
-                  className="w-50 btn btn-success p-1 rounded-2"
+                  className="w-50 btn btn-success p-2 rounded-2"
                   to="/register"
                 >
                   Create an account
                 </NavLink>
-                <button
-                  type="button"
-                  className="w-50 btn btn-danger p-1 rounded-2"
-                  onClick={forgotPassword}
+                <Button
+                  isLoading={load.forgotLoad}
+                  variant="solid"
+                  w="50%"
+                  colorScheme="red"
+                  onClick={handleForgotPasswordThrottled}
                 >
                   Forgot Password ?
-                </button>
+                </Button>
               </div>
-              <div>{load && <Loading />}</div>
             </div>
           </div>
           <div className="circle circle-two"></div>

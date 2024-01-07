@@ -107,6 +107,7 @@ router.get("/loginCheck", authenticate, (req, res) => {
 
 router.post("/verifyEmail", async (req, res) => {
   const { otp, email } = req.body;
+  //console.log(req.body);
   const forgotPassword = req.query.forgotPassword;
   try {
     const user = await User.findOne({ email: email });

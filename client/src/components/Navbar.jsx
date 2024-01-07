@@ -1,17 +1,36 @@
-import {useContext, useEffect} from "react";
+import { useContext, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import "./Navbar.css";
-import { AppContext } from '../contextAPI/appContext';
-import axios from 'axios';
+import { AppContext } from "../contextAPI/appContext";
+import axios from "axios";
+import { useToast } from "@chakra-ui/react";
 
 const Navbar = () => {
+  const toast = useToast();
   const { state, dispatch } = useContext(AppContext);
-  useEffect(()=>{},[state.show]);
-  const handleLogout = async() => {
+  useEffect(() => {}, [state.show]);
+  const handleLogout = async () => {
     try {
-      await axios.post('/api/user/logout');
-      dispatch({type: "SHOW"});
+      const response = await axios.post("/api/user/logout");
+      if (response.status === 201) {
+        toast({
+          title: "Logout Successfull",
+          //description: ,
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
+        dispatch({ type: "SHOW" });
+      } else {
+        throw new Error("Logout Failed");
+      }
     } catch (error) {
+      toast({
+        title: "Logout Failed",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
       console.error(error.message);
     }
   };
@@ -19,7 +38,7 @@ const Navbar = () => {
     <nav className="navbar navbar-expand-lg navbar-light bg-light px-5">
       <div className="container-fluid">
         <NavLink to="/" className="navbar-brand">
-        📻  Rapid Recap
+          📻 Rapid Recap
         </NavLink>
         <button
           className="navbar-toggler"
@@ -49,16 +68,24 @@ const Navbar = () => {
                 Contact Us
               </NavLink>
             </li>
-            {state.show ? <li className="nav-item">
-              <NavLink to="/signin" className="nav-link">
-                Sign In
-              </NavLink>
-            </li> : ""}
-            {!state.show ?<li className="nav-item d-flex justify-content-center" >
-              <button className="nav-link" onClick={handleLogout}>
-                Logout
-              </button>
-            </li> : ""}
+            {state.show ? (
+              <li className="nav-item">
+                <NavLink to="/signin" className="nav-link">
+                  Sign In
+                </NavLink>
+              </li>
+            ) : (
+              ""
+            )}
+            {!state.show ? (
+              <li className="nav-item d-flex justify-content-center">
+                <button className="nav-link" onClick={handleLogout}>
+                  Logout
+                </button>
+              </li>
+            ) : (
+              ""
+            )}
           </ul>
         </div>
       </div>

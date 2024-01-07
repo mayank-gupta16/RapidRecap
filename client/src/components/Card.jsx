@@ -1,9 +1,9 @@
-import { Slide } from "@mui/material";
+import { Slide } from "@chakra-ui/react";
 import { useRef, useContext } from "react";
 import { AppContext } from "../contextAPI/appContext";
 
-const Card = ({newsNumber, data}) => {
-  const {state,dispatch} = useContext(AppContext);
+const Card = ({ newsNumber, data }) => {
+  const { state, dispatch } = useContext(AppContext);
   const cardWrapper = useRef(null);
   const card = useRef(null);
   const project_meta = useRef(null);
@@ -40,24 +40,21 @@ const Card = ({newsNumber, data}) => {
       <div
         className="cardWrapper"
         ref={cardWrapper}
-        onClick={() =>{
+        onClick={() => {
           // window.open(
           //   `${data.url}`,
           //   "_blank"
           // )
           //console.log(`hi`);
-          dispatch({type: "showModal" ,payloadModal: true});
-          dispatch({type: "setNews", payloadNews: data});
-        }
-        }
+          dispatch({ type: "showModal", payloadModal: true });
+          dispatch({ type: "setNews", payloadNews: data });
+        }}
         onMouseMove={mousemove}
         onMouseLeave={mouseleave}
       >
         <div className="project-meta" ref={project_meta}>
           <div className=" projects">
-            <span className="block-reveal__text">
-              {data.title}
-            </span>
+            <span className="block-reveal__text">{data.title}</span>
           </div>
           <div className="divider"></div>
           <div className="project-nav">
@@ -67,13 +64,10 @@ const Card = ({newsNumber, data}) => {
             </span>
           </div>
         </div>
-        <Slide direction="right" in={true} mountOnEnter unmountOnExit>
+        <Slide direction="left" in={true} unmountOnExit>
           <div className="cards" ref={card}>
             <div className="img-box">
-              <img
-                src={data.imgURL[0]}
-                alt=""
-              />
+              <img src={data.imgURL[0]} alt="" />
             </div>
             <div className="contents">
               <h2> Click here to know More </h2>

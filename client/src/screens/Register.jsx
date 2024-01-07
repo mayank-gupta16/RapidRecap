@@ -1,13 +1,16 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useCallback } from "react";
 import "./Register.css";
 import axios from "axios";
 import { NavLink, useNavigate } from "react-router-dom";
 import Modal from "./Modal";
 import EmailVerify from "../components/EmailVerify";
 import { AppContext } from "../contextAPI/appContext";
-import Loading from "../components/Loading";
+//import Loading from "../components/Loading";
+import { Button, useToast } from "@chakra-ui/react";
+import _ from "lodash";
 
 export default function Register() {
+  const toast = useToast();
   const { state, dispatch } = useContext(AppContext);
   const [data, setData] = useState({
     firstName: "",
@@ -26,6 +29,7 @@ export default function Register() {
   };
 
   const handleSubmit = async (e) => {
+    console.log(data);
     setLoad(true);
     e.preventDefault();
     try {
@@ -33,13 +37,23 @@ export default function Register() {
       const response = await axios.post(`/api/user/register`, data);
       if (response.status === 201) {
         await dispatch({ type: "showModal", payloadModal: true });
-        alert("Registered Successfully");
+        toast({
+          title: "Registered Successfully",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
       } else {
-        alert("Registration Failed");
         throw new Error("Registration Failed");
       }
     } catch (error) {
-      alert(`registration failed : ${error.response.data.error}`);
+      toast({
+        title: "Registration Failed",
+        description: error.response.data.error,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
       //console.log(error);
     } finally {
       setLoad(false);
@@ -52,6 +66,20 @@ export default function Register() {
     }
   }, []);
 
+  const handleSubmitThrottled = useCallback(_.throttle(handleSubmit, 1000), [
+    data,
+  ]);
+
+  useEffect(() => {
+    return () => handleSubmitThrottled.cancel();
+  }, [handleSubmitThrottled]);
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      // If Enter key is pressed, submit the form
+      handleSubmitThrottled(e);
+    }
+  };
   return (
     <div>
       {state.modal && (
@@ -66,7 +94,7 @@ export default function Register() {
           <div className="circle circle-one"></div>
           <div className="form-container">
             <h1 className="opacity">Welcome!</h1>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmitThrottled} onKeyDown={handleKeyPress}>
               <div className="row">
                 <div className="col">
                   <input
@@ -136,13 +164,24 @@ export default function Register() {
                   />
                 </div>
               </div>
-              <button
+              <Button
+                isLoading={load}
+                loadingText="Submitting"
+                colorScheme="teal"
+                variant="outline"
+                type="submit"
+                size="lg"
+                w={"100%"}
+              >
+                Submit
+              </Button>
+              {/* <button
                 className="opacity mt-3 mb-0"
                 type="submit"
                 disabled={load}
               >
                 SUBMIT
-              </button>
+              </button> */}
             </form>
             <div className="r-forget opacity">
               <h6>
@@ -156,7 +195,7 @@ export default function Register() {
                   Login Here
                 </NavLink>
               </h6>
-              <div>{load && <Loading />}</div>
+              {/* <div>{load && <Loading />}</div> */}
             </div>
           </div>
           <div className="circle circle-two"></div>

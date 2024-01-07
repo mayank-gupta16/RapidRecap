@@ -1,8 +1,7 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect, useCallback } from "react";
 import { AppContext } from "../contextAPI/appContext";
 import axios from "axios";
 import { throttle } from "lodash";
-
 import {
   useToast,
   Button,
@@ -38,12 +37,11 @@ const ResetPassword = ({ email }) => {
       if (response.status === 201) {
         toast({
           title: "Password Reset Successfully",
-          //description: ,
           status: "success",
           duration: 5000,
           isClosable: true,
         });
-        //alert("Password Reset Successfully");
+
         dispatch({ type: "forgotPassword", payloadForgotPassword: false });
         dispatch({ type: "showModal", payloadModal: false });
       }
@@ -61,6 +59,15 @@ const ResetPassword = ({ email }) => {
       setLoad(false);
     }
   };
+
+  const handleResetPasswordThrottled = useCallback(
+    throttle(handleResetPassword, 1000),
+    [newPassword, confirmPassword]
+  );
+
+  useEffect(() => {
+    return () => handleResetPasswordThrottled.cancel();
+  }, [handleResetPasswordThrottled]);
 
   return (
     <>
@@ -141,7 +148,7 @@ const ResetPassword = ({ email }) => {
         <Button
           colorScheme="messenger"
           className="mt-5 rounded-2"
-          onClick={throttle(handleResetPassword, 5000)}
+          onClick={handleResetPasswordThrottled}
           isLoading={load}
         >
           Reset Password
