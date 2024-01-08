@@ -7,11 +7,12 @@ import {
   Grid,
   GridItem,
   Heading,
+  Highlight,
   Image,
   SimpleGrid,
   Text,
 } from "@chakra-ui/react";
-import { set } from "lodash";
+
 const Article = () => {
   const { id } = useParams();
   const [article, setArticle] = useState(null);
@@ -37,11 +38,30 @@ const Article = () => {
       <Grid templateColumns="2fr 1fr" gap={10} minH={"70vh"} p="80px">
         {article && (
           <GridItem w="100%">
-            <Heading align="left" letterSpacing={1} as="h3" fontSize="23px">
-              {article.title}
+            <Heading align="left" letterSpacing={1} as="h3" fontSize="25px">
+              <Highlight
+                query={article.title}
+                styles={{ px: "2", py: "1", rounded: "full", bg: "teal.100" }}
+              >
+                {article.title + " "}
+              </Highlight>
             </Heading>
-            <Heading align="left" letterSpacing={1} as="h4" fontSize="15px">
-              Author: {article.author}
+            <Heading
+              align="left"
+              letterSpacing={1}
+              as="h4"
+              fontSize="15px"
+              marginTop="20px"
+            >
+              <Highlight
+                query="Author:"
+                styles={{ px: "2", py: "1", rounded: "full", bg: "red.100" }}
+              >
+                Author:
+              </Highlight>
+              <span style={{ fontSize: "20px", marginLeft: "5px" }}>
+                {article.author}
+              </span>
             </Heading>
             {article.mainText.length == 3 ? (
               <Box marginTop={8}>
