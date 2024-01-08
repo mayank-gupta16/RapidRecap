@@ -1,11 +1,12 @@
 import { useContext, useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import "./Navbar.css";
 import { AppContext } from "../contextAPI/appContext";
 import axios from "axios";
 import { useToast } from "@chakra-ui/react";
 
 const Navbar = () => {
+  const navigate = useNavigate();
   const toast = useToast();
   const { state, dispatch } = useContext(AppContext);
   useEffect(() => {}, [state.show]);
@@ -21,6 +22,7 @@ const Navbar = () => {
           isClosable: true,
         });
         dispatch({ type: "SHOW" });
+        navigate("/signin");
       } else {
         throw new Error("Logout Failed");
       }

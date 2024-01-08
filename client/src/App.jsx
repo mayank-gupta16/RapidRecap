@@ -9,6 +9,7 @@ import Sigin from "./screens/Sigin";
 import Register from "./screens/Register";
 import Contact from "./screens/Contact";
 import Footer from "./components/Footer";
+import Article from "./screens/Article.jsx";
 
 const App = () => {
   return (
@@ -16,6 +17,7 @@ const App = () => {
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route exact path="/article/:id" element={<Article />} />
         <Route exact path="/about" element={<About />} />
         <Route exact path="/signin" element={<Sigin />} />
         <Route exact path="/register" element={<Register />} />
