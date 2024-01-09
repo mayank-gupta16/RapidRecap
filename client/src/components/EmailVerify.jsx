@@ -68,6 +68,7 @@ const EmailVerify = ({ email }) => {
           status: "success",
           duration: 5000,
           isClosable: true,
+          position: "top",
         });
         //alert("Email Verified");
         if (forgetPassword) {
@@ -92,6 +93,7 @@ const EmailVerify = ({ email }) => {
         status: "error",
         duration: 9000,
         isClosable: true,
+        position: "top",
       });
       //alert("Email Verification Failed");
       console.log(error.response.data.error);
@@ -122,6 +124,7 @@ const EmailVerify = ({ email }) => {
           status: "success",
           duration: 5000,
           isClosable: true,
+          position: "top",
         });
       }
     } catch (error) {
@@ -131,6 +134,7 @@ const EmailVerify = ({ email }) => {
         status: "error",
         duration: 5000,
         isClosable: true,
+        position: "top",
       });
 
       console.log(error.response.data.error);

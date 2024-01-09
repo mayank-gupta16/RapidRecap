@@ -38,6 +38,7 @@ export default function Sigin() {
           status: "success",
           duration: 5000,
           isClosable: true,
+          position: "top",
         });
         navigate("/");
       } else {
@@ -49,6 +50,7 @@ export default function Sigin() {
         status: "error",
         duration: 5000,
         isClosable: true,
+        position: "top",
       });
       console.log(error.message);
     } finally {
@@ -78,6 +80,7 @@ export default function Sigin() {
           status: "success",
           duration: 5000,
           isClosable: true,
+          position: "top",
         });
         //alert("OTP sent to your email : " + starredEmail);
       }
@@ -88,6 +91,7 @@ export default function Sigin() {
         status: "error",
         duration: 9000,
         isClosable: true,
+        position: "top",
       });
       console.error(error.response.data.error);
     } finally {

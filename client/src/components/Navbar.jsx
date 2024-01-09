@@ -20,6 +20,7 @@ const Navbar = () => {
           status: "success",
           duration: 5000,
           isClosable: true,
+          position: "top",
         });
         dispatch({ type: "SHOW" });
         navigate("/signin");
@@ -32,6 +33,7 @@ const Navbar = () => {
         status: "error",
         duration: 5000,
         isClosable: true,
+        position: "top",
       });
       console.error(error.message);
     }

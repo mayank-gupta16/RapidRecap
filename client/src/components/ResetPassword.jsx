@@ -40,6 +40,7 @@ const ResetPassword = ({ email }) => {
           status: "success",
           duration: 5000,
           isClosable: true,
+          position: "top",
         });
 
         dispatch({ type: "forgotPassword", payloadForgotPassword: false });
@@ -52,6 +53,7 @@ const ResetPassword = ({ email }) => {
         status: "error",
         duration: 5000,
         isClosable: true,
+        position: "top",
       });
       //alert(error.response.data.error);
       console.log(error.response.data.error);

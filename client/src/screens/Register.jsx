@@ -42,6 +42,7 @@ export default function Register() {
           status: "success",
           duration: 5000,
           isClosable: true,
+          position: "top",
         });
       } else {
         throw new Error("Registration Failed");
@@ -53,6 +54,7 @@ export default function Register() {
         status: "error",
         duration: 5000,
         isClosable: true,
+        position: "top",
       });
       //console.log(error);
     } finally {
