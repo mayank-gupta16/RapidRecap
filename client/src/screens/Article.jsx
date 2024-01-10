@@ -14,12 +14,14 @@ import {
   Text,
 } from "@chakra-ui/react";
 import Loading from "../components/Loading";
+import Quiz from "../components/Quiz";
 
 const Article = () => {
   const { id } = useParams();
   const [article, setArticle] = useState(null);
   const [latestNews, setLatestNews] = useState([]);
   const [load, setLoad] = useState(true);
+  const [showQuiz, setShowQuiz] = useState(false);
   const fetchArticle = async () => {
     try {
       const response = await axios.get(`/api/articles/${id}`);
@@ -39,6 +41,7 @@ const Article = () => {
   }, []);
   return (
     <>
+      {showQuiz ? <Quiz /> : null}
       {load ? (
         <Loading />
       ) : (
@@ -153,6 +156,7 @@ const Article = () => {
                 _hover={{ opacity: 0.8 }}
                 color="red.800"
                 bg="whiteAlpha.900"
+                onClick={() => setShowQuiz(!showQuiz)}
               >
                 Generate Quiz
               </Button>
