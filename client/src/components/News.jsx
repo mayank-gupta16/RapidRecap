@@ -1,10 +1,15 @@
-import { useRef, useContext } from "react";
+import { useRef, useContext, useEffect } from "react";
 import { AppContext } from "../contextAPI/appContext";
 import { Button, Image } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 const News = () => {
   const { state, dispatch } = useContext(AppContext);
   const data = state.news;
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (window.innerWidth < 768) navigate(`/article/${data._id}`);
+  }, [window.innerWidth]);
   return (
     <div className="d-flex justify-content-center flex-column align-items-center text-white">
       <Image src={data.imgURL[0]} style={{ width: "95%" }} />

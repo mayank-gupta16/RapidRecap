@@ -18,11 +18,8 @@ h1 {
   font-size: 2.5rem;
 }
 
-.container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 80vh;
+.container{
+  max-height: 80vh !important;
 }
 
 .login-container {
@@ -31,6 +28,7 @@ h1 {
   bottom: 90px;
 }
 .form-container {
+  margin-top: 15vh;
   border: 1px solid hsla(0, 0%, 65%, 0.158);
   box-shadow: 0 0 36px 1px rgba(0, 0, 0, 0.2);
   border-radius: 10px;
