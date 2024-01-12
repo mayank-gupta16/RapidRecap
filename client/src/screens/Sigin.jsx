@@ -8,6 +8,9 @@ import Modal from "./Modal";
 import ResetPassword from "../components/ResetPassword";
 import { throttle } from "lodash";
 import { useToast, Button } from "@chakra-ui/react";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import { GoogleLogin } from "@react-oauth/google";
+
 export default function Sigin() {
   const toast = useToast();
   const { state, dispatch } = useContext(AppContext);
@@ -190,6 +193,23 @@ export default function Sigin() {
                   Forgot Password ?
                 </Button>
               </div>
+              <Button
+                isLoading={load.forgotLoad}
+                variant="solid"
+                colorScheme="red"
+                onClick={handleForgotPasswordThrottled}
+              >
+                <GoogleOAuthProvider clientId="492859619634-m81f6tnro73fg6sflkuj0nemm1g6aecb.apps.googleusercontent.com">
+                  <GoogleLogin
+                    onSuccess={(credentialResponse) => {
+                      console.log(credentialResponse);
+                    }}
+                    onError={() => {
+                      console.log("Login Failed");
+                    }}
+                  />
+                </GoogleOAuthProvider>
+              </Button>
             </div>
           </div>
           <div className="circle circle-two"></div>
