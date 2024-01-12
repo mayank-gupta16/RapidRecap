@@ -100,9 +100,11 @@ router.post("/logout", authenticate, (req, res) => {
   res.status(201).send("User Logout");
 });
 
-router.get("/loginCheck", authenticate, (req, res) => {
+router.get("/loginCheck", authenticate, async (req, res) => {
   //console.log("auth");
-  res.status(201).send("valid token");
+  //console.log(req.user);
+  const user = await User.findById(req.user._id);
+  res.status(201).send(user);
 });
 
 router.post("/verifyEmail", async (req, res) => {
