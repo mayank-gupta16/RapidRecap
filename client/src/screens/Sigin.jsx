@@ -193,16 +193,39 @@ export default function Sigin() {
                   Forgot Password ?
                 </Button>
               </div>
-              <Button
-                isLoading={load.forgotLoad}
-                variant="solid"
-                colorScheme="red"
-                onClick={handleForgotPasswordThrottled}
-              >
+              <Button variant="solid" colorScheme="red">
                 <GoogleOAuthProvider clientId="492859619634-m81f6tnro73fg6sflkuj0nemm1g6aecb.apps.googleusercontent.com">
                   <GoogleLogin
-                    onSuccess={(credentialResponse) => {
-                      console.log(credentialResponse);
+                    onSuccess={async (credentialResponse) => {
+                      //console.log(credentialResponse);
+                      try {
+                        const response = await axios.post(
+                          "/api/user/handleGoogleLogin",
+                          { credentialResponse }
+                        );
+                        if (response.status === 201) {
+                          dispatch({ type: "UNSHOW" });
+                          toast({
+                            title: "Logined Successfully",
+                            status: "success",
+                            duration: 5000,
+                            isClosable: true,
+                            position: "top",
+                          });
+                          navigate("/");
+                        } else {
+                          throw new Error("Login Failed");
+                        }
+                      } catch (error) {
+                        console.log(error.response.data.error);
+                        toast({
+                          title: "Login Failed",
+                          status: "error",
+                          duration: 5000,
+                          isClosable: true,
+                          position: "top",
+                        });
+                      }
                     }}
                     onError={() => {
                       console.log("Login Failed");
