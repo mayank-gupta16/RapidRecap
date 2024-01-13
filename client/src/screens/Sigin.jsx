@@ -201,7 +201,7 @@ export default function Sigin() {
                       try {
                         const response = await axios.post(
                           "/api/user/handleGoogleLogin",
-                          { credentialResponse }
+                          credentialResponse
                         );
                         if (response.status === 201) {
                           dispatch({ type: "UNSHOW" });

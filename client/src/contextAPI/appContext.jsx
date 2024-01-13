@@ -22,6 +22,7 @@ const initialState = {
   news: {},
   forgotPassword: false,
   verifyEmail: false,
+  user: {},
   // ...
 };
 // async function init() {

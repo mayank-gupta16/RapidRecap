@@ -217,7 +217,8 @@ router.post("/forgotPassword", async (req, res) => {
 });
 
 router.post("/handleGoogleLogin", async (req, res) => {
-  const credential = req.body.credentialResponse.credential;
+  const credential = req.body.credential;
+  console.log(req.body);
   //console.log(credential);
   try {
     const userInfo = jwt.decode(credential);
@@ -228,7 +229,7 @@ router.post("/handleGoogleLogin", async (req, res) => {
       const name = userInfo.name.split(" ");
       user = new User({
         firstName: name[0],
-        lastName: name[1],
+        lastName: name[name.length - 1],
         // Add other necessary Google fields
         googleId: userInfo.sub,
         googleEmail: userInfo.email,
