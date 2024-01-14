@@ -218,7 +218,7 @@ router.post("/forgotPassword", async (req, res) => {
 
 router.post("/handleGoogleLogin", async (req, res) => {
   const credential = req.body.credential;
-  console.log(req.body);
+  //console.log(req.body);
   //console.log(credential);
   try {
     const userInfo = jwt.decode(credential);

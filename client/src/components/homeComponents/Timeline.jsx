@@ -1,6 +1,6 @@
 import TimelineItem from "./TimelineItem";
 
-const Timeline = ({data}) => {
+const Timeline = ({ data }) => {
   return (
     <div className="px-5">
       <div className="timeline-container">
@@ -25,12 +25,12 @@ const Timeline = ({data}) => {
           </div>
         </div>
         <div className="row item-container">
-          {data.map((item, id)=>{
+          {data.map((item, id) => {
             //console.log(item.dateTime);
             return (
-            <div className="col-md-6 col-lg-4 item" key={id}>
-            <TimelineItem newsNumber = {id} data = {item}/>
-          </div>
+              <div className="col-md-6 col-lg-4 item" key={id}>
+                <TimelineItem newsNumber={id} data={item} />
+              </div>
             );
           })}
         </div>

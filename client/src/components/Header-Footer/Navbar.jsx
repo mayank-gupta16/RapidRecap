@@ -1,7 +1,7 @@
 import { useContext, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import "./Navbar.css";
-import { AppContext } from "../contextAPI/appContext";
+import { AppContext } from "../../contextAPI/appContext";
 import axios from "axios";
 import { useToast } from "@chakra-ui/react";
 

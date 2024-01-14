@@ -13,8 +13,8 @@ import {
   SimpleGrid,
   Text,
 } from "@chakra-ui/react";
-import Loading from "../components/Loading";
-import Quiz from "../components/Quiz";
+import Loading from "../components/miscellaneous/Loading";
+import Quiz from "../components/articleComponents/Quiz";
 
 const Article = () => {
   const navigate = useNavigate();

@@ -13,7 +13,7 @@ import {
   Text,
   Box,
 } from "@chakra-ui/react";
-import quizData from "../assets/dummyQuizAPI";
+import quizData from "../../assets/dummyQuizAPI";
 
 const Quiz = () => {
   const { onClose } = useDisclosure();

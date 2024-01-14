@@ -3,7 +3,7 @@ import "./Register.css";
 import axios from "axios";
 import { NavLink, useNavigate } from "react-router-dom";
 import Modal from "./Modal";
-import EmailVerify from "../components/EmailVerify";
+import EmailVerify from "../components/authComponents/EmailVerify";
 import { AppContext } from "../contextAPI/appContext";
 //import Loading from "../components/Loading";
 import { Button, useToast } from "@chakra-ui/react";

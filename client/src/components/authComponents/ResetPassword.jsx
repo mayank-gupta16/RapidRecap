@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, useCallback } from "react";
-import { AppContext } from "../contextAPI/appContext";
+import { AppContext } from "../../contextAPI/appContext";
 import axios from "axios";
 import { throttle } from "lodash";
 import {
