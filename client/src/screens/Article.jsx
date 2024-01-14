@@ -56,7 +56,7 @@ const Article = () => {
   }, [article]);
   return (
     <>
-      {showQuiz ? <Quiz /> : null}
+      {showQuiz ? <Quiz article={article} /> : null}
       {load ? (
         <Loading />
       ) : (
@@ -226,7 +226,6 @@ const Article = () => {
                 {latestNews
                   .filter((_, idx) => idx + 1 < Math.floor(articleHeight / 100))
                   .map((item) => {
-                    console.log(articleHeight);
                     return (
                       <Box
                         minHeight="100px"
