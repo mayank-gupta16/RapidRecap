@@ -60,3 +60,28 @@
     transform: translate(-10px);
     box-shadow: 0 0 20px 4px #007bff;
 }
+
+@keyframes pulsate {
+    0% {
+        font-size: 55px;
+    }
+
+    50% {
+        font-size: 65px;
+    }
+
+    100% {
+        font-size: 55px;
+    }
+}
+
+.text-timer.pulsate {
+    animation: pulsate 0.5s infinite;
+    font-weight: bolder;
+    color: red;
+}
+
+.container-timer.pulsate {
+    position: relative;
+    transform: scale(55%);
+}

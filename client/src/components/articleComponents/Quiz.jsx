@@ -56,6 +56,13 @@ const Quiz = ({ article }) => {
     onClose();
   };
 
+  const handleTimerExhausted = () => {
+    console.log("Timer Exhausted!");
+    // Handle your logic when the timer is exhausted
+    // For example, submit the quiz or show a message
+    // You can add your own logic here
+  };
+
   return (
     <>
       <Modal isOpen={true} onClose={onClose} size={{ base: "full", md: "3xl" }}>
@@ -80,7 +87,10 @@ const Quiz = ({ article }) => {
             display={"flex"}
             alignItems={"center"}
           >
-            <Countdown />
+            <Countdown
+              initialTimer={60}
+              onTimerExhausted={handleTimerExhausted}
+            />
           </ModalHeader>
           <ModalCloseButton left={"10px"} right={"10px"} color={"white"} />
           <ModalBody
