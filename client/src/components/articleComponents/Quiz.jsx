@@ -19,6 +19,7 @@ import {
 } from "@chakra-ui/react";
 import "./Quiz.css";
 import quizData from "../../assets/dummyQuizAPI";
+import Countdown from "./Countdown";
 
 const Quiz = ({ article }) => {
   const { onClose } = useDisclosure();
@@ -72,7 +73,15 @@ const Quiz = ({ article }) => {
           minHeight={"75%"}
           borderRadius={{ md: "30px" }}
         >
-          <ModalHeader color={"white"}>2:50</ModalHeader>
+          <ModalHeader
+            maxHeight={"100px"}
+            p={0}
+            color={"white"}
+            display={"flex"}
+            alignItems={"center"}
+          >
+            <Countdown />
+          </ModalHeader>
           <ModalCloseButton left={"10px"} right={"10px"} color={"white"} />
           <ModalBody
             p={"15px"}
@@ -95,7 +104,6 @@ const Quiz = ({ article }) => {
                     value={64}
                     width={{ base: "100%", md: "75%" }}
                     marginBottom={"20px"}
-                    marginTop={"20px"}
                     borderRadius={"50px"}
                     colorScheme="purple"
                   />
