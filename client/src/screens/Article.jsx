@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import { TriangleDownIcon } from "@chakra-ui/icons";
+import { ArrowBackIcon, TriangleDownIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
@@ -12,24 +12,30 @@ import {
   Image,
   SimpleGrid,
   Text,
+  useDisclosure,
 } from "@chakra-ui/react";
-import Loading from "../components/Loading";
-import Quiz from "../components/Quiz";
+import Loading from "../components/miscellaneous/Loading";
+import Quiz from "../components/articleComponents/Quiz";
 
 const Article = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const navigate = useNavigate();
   const { id } = useParams();
   const [article, setArticle] = useState(null);
   const [latestNews, setLatestNews] = useState([]);
   const [load, setLoad] = useState(true);
   const [showQuiz, setShowQuiz] = useState(false);
   const [textHeight, setTextHeight] = useState(0);
+  const [articleHeight, setArticleHeight] = useState(0);
   const textRef = useRef();
+  const articleRef = useRef();
+
   const fetchArticle = async () => {
     try {
       const response = await axios.get(`/api/articles/${id}`);
-      const news = await axios.get(`/api/articles?page=1&pageSize=6`);
+      const news = await axios.get(`/api/articles?page=1&pageSize=9`);
       setLatestNews(news.data);
-      //console.log(response.data);
+      //console.log(news.data);
       setArticle(response.data);
     } catch (error) {
       // Handle errors
@@ -46,22 +52,43 @@ const Article = () => {
       //console.log(textRef.current.getBoundingClientRect().height);
       setTextHeight(textRef.current.getBoundingClientRect().height);
     }
+    if (articleRef.current) {
+      setArticleHeight(articleRef.current.getBoundingClientRect().height);
+    }
   }, [article]);
   return (
     <>
-      {showQuiz ? <Quiz /> : null}
+      {showQuiz ? (
+        <Quiz article={article} isOpen={isOpen} onClose={onClose} />
+      ) : null}
       {load ? (
         <Loading />
       ) : (
         <>
           <Grid
-            templateColumns="minmax(0, 2fr) 1fr"
+            templateColumns={
+              window.innerWidth > 820 ? "minmax(0, 9fr) 5fr" : "1fr"
+            }
             gap={10}
-            minH={"70vh"}
+            minH={"85vh"}
             p={{ base: "20px", md: "80px" }}
+            marginTop={{ base: "50px", md: "0px" }}
           >
             {article && (
               <GridItem w="100%">
+                <Box
+                  position={"absolute"}
+                  top={"6rem"}
+                  border={"solid"}
+                  p={1}
+                  borderRadius="5px"
+                  boxShadow="md"
+                  cursor="pointer"
+                  _hover={{ bg: "gray.200", color: "red.500" }}
+                  onClick={() => navigate(-1)}
+                >
+                  <ArrowBackIcon />
+                </Box>
                 <Heading
                   align="left"
                   letterSpacing={1}
@@ -96,7 +123,7 @@ const Article = () => {
                   </span>
                 </Heading>
                 {article.mainText.length == 3 ? (
-                  <Box marginTop={8}>
+                  <Box marginTop={8} ref={articleRef}>
                     <Text align="left" letterSpacing={1}>
                       {article.mainText[0]}
                     </Text>
@@ -109,6 +136,11 @@ const Article = () => {
                       height={"100%"}
                     >
                       <Image
+                        css={{
+                          "@media screen and (max-width: 1366px)": {
+                            display: "none",
+                          },
+                        }}
                         src={article.imgURL}
                         alt="Article Image"
                         borderRadius="md"
@@ -126,8 +158,13 @@ const Article = () => {
                     </Text>
                   </Box>
                 ) : (
-                  <Box marginTop={8}>
+                  <Box marginTop={8} ref={articleRef}>
                     <Image
+                      css={{
+                        "@media screen and (max-width: 1366px)": {
+                          display: "none",
+                        },
+                      }}
                       src={article.imgURL}
                       alt="Article Image"
                       borderRadius="md"
@@ -147,7 +184,14 @@ const Article = () => {
                 )}
               </GridItem>
             )}
-            <GridItem w="100%">
+            <GridItem
+              w="100%"
+              css={{
+                "@media screen and (max-width: 821px)": {
+                  display: "none",
+                },
+              }}
+            >
               <Box
                 style={{
                   border: "1px solid black",
@@ -174,7 +218,10 @@ const Article = () => {
                   _hover={{ opacity: 0.8 }}
                   color="red.800"
                   bg="whiteAlpha.900"
-                  onClick={() => setShowQuiz(!showQuiz)}
+                  onClick={() => {
+                    setShowQuiz(!showQuiz);
+                    onOpen();
+                  }}
                 >
                   Generate Quiz
                 </Button>
@@ -184,11 +231,11 @@ const Article = () => {
               </Heading>
               <SimpleGrid columns={1} spacing={5} marginTop={10}>
                 {latestNews
-                  .filter((_, idx) => idx < 2 * article.mainText.length)
+                  .filter((_, idx) => idx + 1 < Math.floor(articleHeight / 100))
                   .map((item) => {
                     return (
                       <Box
-                        height="80px"
+                        minHeight="100px"
                         key={item._id}
                         onClick={() => {
                           window.location.href = `/article/${item._id}`;
@@ -198,7 +245,7 @@ const Article = () => {
                       >
                         <Image
                           width="80px"
-                          height="78px"
+                          height={"100%"}
                           float="left"
                           src={item.imgURL}
                           alt="Article img"
@@ -209,6 +256,42 @@ const Article = () => {
                   })}
               </SimpleGrid>
             </GridItem>
+            <Box
+              css={{
+                "@media screen and (min-width: 821px)": {
+                  display: "none",
+                },
+              }}
+              style={{
+                border: "1px solid black",
+                padding: "1rem",
+              }}
+              borderRadius="md"
+              bg="red.100"
+              marginBottom="2rem"
+            >
+              <Text
+                fontSize="18px"
+                fontWeight="bold"
+                marginBottom="1rem"
+                letterSpacing={1}
+                color="blue.500" // Change the color here
+              >
+                Play Quiz to get to the LeaderBoard
+              </Text>
+              <Button
+                height="48px"
+                width="200px"
+                colorScheme="whiteAlpha"
+                borderRadius="xl"
+                _hover={{ opacity: 0.8 }}
+                color="red.800"
+                bg="whiteAlpha.900"
+                onClick={() => setShowQuiz(!showQuiz)}
+              >
+                Generate Quiz
+              </Button>
+            </Box>
           </Grid>
         </>
       )}

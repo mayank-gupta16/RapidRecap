@@ -1,11 +1,11 @@
 import { useContext, useEffect, useState } from "react";
-import Timeline from "../components/Timeline";
+import Timeline from "../components/homeComponents/Timeline";
 import axios from "axios";
-import Loading from "../components/Loading";
+import Loading from "../components/miscellaneous/Loading";
 import { AppContext } from "../contextAPI/appContext";
 import { useNavigate } from "react-router-dom";
 import Modal from "./Modal";
-import News from "../components/News";
+import News from "../components/articleComponents/News";
 const Home = () => {
   const { state, dispatch } = useContext(AppContext);
   const [items, setItems] = useState([]);

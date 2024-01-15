@@ -1,5 +1,5 @@
 import { useRef, useContext, useEffect } from "react";
-import { AppContext } from "../contextAPI/appContext";
+import { AppContext } from "../../contextAPI/appContext";
 import { Button, Image } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
 const News = () => {

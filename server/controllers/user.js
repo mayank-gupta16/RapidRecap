@@ -10,6 +10,7 @@ const {
 } = require("../utils/mail");
 const VerificationToken = require("../model/verificationToken");
 const { isValidObjectId } = require("mongoose");
+const jwt = require("jsonwebtoken");
 // Handle signup route
 router.post("/register", async (req, res) => {
   console.log(req.body);
@@ -100,9 +101,11 @@ router.post("/logout", authenticate, (req, res) => {
   res.status(201).send("User Logout");
 });
 
-router.get("/loginCheck", authenticate, (req, res) => {
+router.get("/loginCheck", authenticate, async (req, res) => {
   //console.log("auth");
-  res.status(201).send("valid token");
+  //console.log(req.user);
+  const user = await User.findById(req.user._id);
+  res.status(201).send(user);
 });
 
 router.post("/verifyEmail", async (req, res) => {
@@ -207,6 +210,40 @@ router.post("/forgotPassword", async (req, res) => {
 
     await user.save();
     res.status(201).json({ message: "Password changed successfully" });
+  } catch (error) {
+    console.log(error.message);
+    res.status(422).json({ error: error.message });
+  }
+});
+
+router.post("/handleGoogleLogin", async (req, res) => {
+  const credential = req.body.credential;
+  //console.log(req.body);
+  //console.log(credential);
+  try {
+    const userInfo = jwt.decode(credential);
+    let user = await User.findOne({ googleId: userInfo.sub });
+    //console.log(userInfo);
+    if (!user) {
+      // If not, create a new user with Google data
+      const name = userInfo.name.split(" ");
+      user = new User({
+        firstName: name[0],
+        lastName: name[name.length - 1],
+        // Add other necessary Google fields
+        googleId: userInfo.sub,
+        googleEmail: userInfo.email,
+        verified: true,
+      });
+      await user.save();
+    }
+
+    const token = await user.generateAuthToken();
+    res.cookie("jwtoken", token, {
+      expires: new Date(Date.now() + 2592000000),
+      httpOnly: true,
+    });
+    res.status(201).json({ message: "Google Login Successfull" });
   } catch (error) {
     console.log(error.message);
     res.status(422).json({ error: error.message });

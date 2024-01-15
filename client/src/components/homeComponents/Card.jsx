@@ -1,6 +1,6 @@
 import { Slide } from "@chakra-ui/react";
 import { useRef, useContext } from "react";
-import { AppContext } from "../contextAPI/appContext";
+import { AppContext } from "../../contextAPI/appContext";
 
 const Card = ({ newsNumber, data }) => {
   const { state, dispatch } = useContext(AppContext);

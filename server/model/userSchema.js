@@ -13,20 +13,16 @@ const userSchema = new mongoose.Schema(
     },
     email: {
       type: String,
-      required: true,
       unique: true,
     },
     phone: {
       type: Number,
-      required: true,
     },
     password: {
       type: String,
-      required: true,
     },
     cpassword: {
       type: String,
-      required: true,
     },
     verified: {
       type: Boolean,
@@ -36,10 +32,17 @@ const userSchema = new mongoose.Schema(
     otpCnt: {
       type: Number,
       default: 0,
-      required: true,
     },
     otpCntResetTime: {
       type: Date,
+      default: null,
+    },
+    googleId: {
+      type: String,
+      default: null,
+    },
+    googleEmail: {
+      type: String,
       default: null,
     },
   },
