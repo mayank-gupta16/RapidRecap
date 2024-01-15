@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./Countdown.css";
 import { Text } from "@chakra-ui/react";
 
-const Countdown = ({ initialTimer, onTimerExhausted }) => {
+const Countdown = ({ initialTimer, onTimerExhausted, submitted }) => {
   const [timer, setTimer] = useState(initialTimer);
   const [loadingPercent, setLoadingPercent] = useState(0);
   const [dot, setDot] = useState(360);
@@ -25,7 +25,7 @@ const Countdown = ({ initialTimer, onTimerExhausted }) => {
       });
     }, 1000);
 
-    if (timer === 0) {
+    if (timer === 0 || submitted) {
       onTimerExhausted();
       clearInterval(intervalId);
     }

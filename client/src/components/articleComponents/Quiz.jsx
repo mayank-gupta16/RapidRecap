@@ -6,7 +6,6 @@ import {
   ModalContent,
   ModalFooter,
   ModalOverlay,
-  useDisclosure,
   ModalCloseButton,
   Grid,
   GridItem,
@@ -16,13 +15,15 @@ import {
   Progress,
   Flex,
   ModalHeader,
+  Slide,
+  SlideFade,
+  Heading,
 } from "@chakra-ui/react";
 import "./Quiz.css";
 import quizData from "../../assets/dummyQuizAPI";
 import Countdown from "./Countdown";
 
-const Quiz = ({ article }) => {
-  const { onClose } = useDisclosure();
+const Quiz = ({ article, isOpen, onClose }) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState({});
 
@@ -39,7 +40,6 @@ const Quiz = ({ article }) => {
       ...prevAnswers,
       [currentQuestionIndex]: selectedOption,
     }));
-    handleNextQuestion();
   };
 
   const handleSubmitQuiz = () => {
@@ -53,7 +53,7 @@ const Quiz = ({ article }) => {
     });
 
     console.log("User Answers:", userAnswers);
-    onClose();
+    setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
   };
 
   const handleTimerExhausted = () => {
@@ -65,7 +65,11 @@ const Quiz = ({ article }) => {
 
   return (
     <>
-      <Modal isOpen={true} onClose={onClose} size={{ base: "full", md: "3xl" }}>
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        size={{ base: "full", md: "3xl" }}
+      >
         <ModalOverlay
           bg="blackAlpha.300"
           backdropFilter="blur(10px) hue-rotate(90deg)"
@@ -90,6 +94,7 @@ const Quiz = ({ article }) => {
             <Countdown
               initialTimer={60}
               onTimerExhausted={handleTimerExhausted}
+              submitted={currentQuestionIndex === totalQuestions}
             />
           </ModalHeader>
           <ModalCloseButton left={"10px"} right={"10px"} color={"white"} />
@@ -108,17 +113,20 @@ const Quiz = ({ article }) => {
                   justifyContent={"center"}
                   gap={"10px"}
                   alignItems={"center"}
+                  marginBottom={"20px"}
                 >
                   <Progress
                     hasStripe
-                    value={64}
+                    value={(currentQuestionIndex / totalQuestions) * 100}
                     width={{ base: "100%", md: "75%" }}
+                    height={"10px"}
                     marginBottom={"20px"}
                     borderRadius={"50px"}
                     colorScheme="purple"
+                    marginY={"auto"}
                   />
                   <Text marginY={"auto"} color={"white"} textAlign={"center"}>
-                    3/5
+                    {`${currentQuestionIndex} / ${totalQuestions}`}
                   </Text>
                 </Flex>
                 <Image
@@ -160,7 +168,11 @@ const Quiz = ({ article }) => {
                         whiteSpace="normal"
                         justifyContent={"flex-start"}
                         onClick={() => handleAnswer(optionKey)}
-                        bg="black"
+                        bg={
+                          userAnswers[currentQuestionIndex] === optionKey
+                            ? "white"
+                            : "black"
+                        }
                         variant={"outline"}
                         width={"80%"}
                         maxWidth={"400px"}
@@ -168,7 +180,11 @@ const Quiz = ({ article }) => {
                         height={"auto"}
                         px={2}
                         py={2}
-                        color={"white"}
+                        color={
+                          userAnswers[currentQuestionIndex] === optionKey
+                            ? "black"
+                            : "white"
+                        }
                         _hover={{ color: "black", bg: "white" }}
                       >
                         {`${optionText}`}
@@ -178,7 +194,27 @@ const Quiz = ({ article }) => {
                 </Grid>
               </>
             ) : (
-              <p>Quiz completed. Submit your answers!</p>
+              <SlideFade
+                direction="bottom"
+                in={isOpen}
+                offsetY="100px"
+                style={{ zIndex: 10 }}
+              >
+                <Heading
+                  as="h3"
+                  size="lg"
+                  color={"white"}
+                  position={"absolute"}
+                  top={"20%"}
+                  width={"75%"}
+                  left={"13%"}
+                >
+                  Quiz completed. Thank you for participating!
+                </Heading>
+                <Text color={"white"} fontSize={"30px"}>
+                  Score :
+                </Text>
+              </SlideFade>
             )}
           </ModalBody>
 
@@ -193,9 +229,6 @@ const Quiz = ({ article }) => {
                 Submit
               </Button>
             )}
-            <Button variant="ghost" onClick={onClose}>
-              Close
-            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

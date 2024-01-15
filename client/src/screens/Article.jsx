@@ -12,11 +12,13 @@ import {
   Image,
   SimpleGrid,
   Text,
+  useDisclosure,
 } from "@chakra-ui/react";
 import Loading from "../components/miscellaneous/Loading";
 import Quiz from "../components/articleComponents/Quiz";
 
 const Article = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
   const { id } = useParams();
   const [article, setArticle] = useState(null);
@@ -56,7 +58,9 @@ const Article = () => {
   }, [article]);
   return (
     <>
-      {showQuiz ? <Quiz article={article} /> : null}
+      {showQuiz ? (
+        <Quiz article={article} isOpen={isOpen} onClose={onClose} />
+      ) : null}
       {load ? (
         <Loading />
       ) : (
@@ -214,7 +218,10 @@ const Article = () => {
                   _hover={{ opacity: 0.8 }}
                   color="red.800"
                   bg="whiteAlpha.900"
-                  onClick={() => setShowQuiz(!showQuiz)}
+                  onClick={() => {
+                    setShowQuiz(!showQuiz);
+                    onOpen();
+                  }}
                 >
                   Generate Quiz
                 </Button>
