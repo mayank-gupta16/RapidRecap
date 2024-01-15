@@ -10,6 +10,7 @@ import Register from "./screens/Register";
 import Contact from "./screens/Contact";
 import Footer from "./components/Footer";
 import Article from "./screens/Article.jsx";
+import Profile from "./screens/Profile.jsx";
 
 const App = () => {
   return (
@@ -20,6 +21,7 @@ const App = () => {
         <Route exact path="/article/:id" element={<Article />} />
         <Route exact path="/about" element={<About />} />
         <Route exact path="/signin" element={<Sigin />} />
+        <Route exact path="/profile" element={<Profile />} />
         <Route exact path="/register" element={<Register />} />
         <Route exact path="/contact" element={<Contact />} />
         <Route path="*" element={<Navigate to="/" replace />} />

@@ -72,6 +72,11 @@ const Navbar = () => {
                 Contact Us
               </NavLink>
             </li>
+            <li className="nav-item">
+              <NavLink to="/profile" className="nav-link">
+                Profile
+              </NavLink>
+            </li>
             {state.show ? (
               <li className="nav-item">
                 <NavLink to="/signin" className="nav-link">

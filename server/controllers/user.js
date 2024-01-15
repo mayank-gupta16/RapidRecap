@@ -12,7 +12,7 @@ const VerificationToken = require("../model/verificationToken");
 const { isValidObjectId } = require("mongoose");
 // Handle signup route
 router.post("/register", async (req, res) => {
-  //console.log(req.body);
+  console.log(req.body);
   const { firstName, lastName, email, phone, password, cpassword } = req.body;
 
   if (!firstName || !email || !phone || !lastName || !password || !cpassword)
