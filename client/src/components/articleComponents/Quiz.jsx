@@ -26,6 +26,7 @@ import Countdown from "./Countdown";
 const Quiz = ({ article, isOpen, onClose }) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState({});
+  const [score, setScore] = useState(0);
 
   const totalQuestions = quizData.questions.length;
 
@@ -44,23 +45,25 @@ const Quiz = ({ article, isOpen, onClose }) => {
 
   const handleSubmitQuiz = () => {
     // You can handle the submission logic here using userAnswers state
+    // quizData.questions.forEach((question, index) => {
+    //   if (question.answer === userAnswers[index]) {
+    //     console.log(`question ${index + 1} : Correct Answer`);
+    //   } else {
+    //     console.log(`question ${index + 1} : Wrong Answer`);
+    //   }
+    // });
+
+    // For example, you can calculate the score here
+    // You can add your own logic here
+    let marks = 0;
     quizData.questions.forEach((question, index) => {
       if (question.answer === userAnswers[index]) {
-        console.log(`question ${index + 1} : Correct Answer`);
-      } else {
-        console.log(`question ${index + 1} : Wrong Answer`);
+        marks++;
       }
     });
-
-    console.log("User Answers:", userAnswers);
-    setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
-  };
-
-  const handleTimerExhausted = () => {
-    console.log("Timer Exhausted!");
-    // Handle your logic when the timer is exhausted
-    // For example, submit the quiz or show a message
-    // You can add your own logic here
+    setScore(marks);
+    //console.log("User Answers:", userAnswers);
+    setCurrentQuestionIndex(quizData.questions.length);
   };
 
   return (
@@ -92,8 +95,8 @@ const Quiz = ({ article, isOpen, onClose }) => {
             alignItems={"center"}
           >
             <Countdown
-              initialTimer={60}
-              onTimerExhausted={handleTimerExhausted}
+              initialTimer={10}
+              onTimerExhausted={handleSubmitQuiz}
               submitted={currentQuestionIndex === totalQuestions}
             />
           </ModalHeader>
@@ -197,22 +200,45 @@ const Quiz = ({ article, isOpen, onClose }) => {
               <SlideFade
                 direction="bottom"
                 in={isOpen}
-                offsetY="100px"
+                offsetY="20px"
                 style={{ zIndex: 10 }}
               >
                 <Heading
                   as="h3"
                   size="lg"
-                  color={"white"}
-                  position={"absolute"}
-                  top={"20%"}
-                  width={"75%"}
-                  left={"13%"}
+                  color="white"
+                  position="absolute"
+                  top="20%"
+                  width="75%"
+                  left="50%"
+                  transform="translateX(-50%)"
+                  textAlign="center"
                 >
                   Quiz completed. Thank you for participating!
                 </Heading>
-                <Text color={"white"} fontSize={"30px"}>
-                  Score :
+                <Text
+                  color="white"
+                  fontSize="30px"
+                  textAlign="center"
+                  marginTop="2"
+                >
+                  Score: {`${score} / ${totalQuestions}`}
+                </Text>
+                <Text
+                  color="white"
+                  fontSize="30px"
+                  textAlign="center"
+                  marginTop="2"
+                >
+                  Percentage: {`${(score / totalQuestions) * 100} %`}
+                </Text>
+                <Text
+                  color="white"
+                  fontSize="30px"
+                  textAlign="center"
+                  marginTop="2"
+                >
+                  Percentile: {`85 %`}
                 </Text>
               </SlideFade>
             )}

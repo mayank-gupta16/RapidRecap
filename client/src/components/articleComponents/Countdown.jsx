@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./Countdown.css";
-import { Text } from "@chakra-ui/react";
+import { Box, Heading, Text } from "@chakra-ui/react";
 
 const Countdown = ({ initialTimer, onTimerExhausted, submitted }) => {
   const [timer, setTimer] = useState(initialTimer);
@@ -44,7 +44,7 @@ const Countdown = ({ initialTimer, onTimerExhausted, submitted }) => {
 
   return (
     <>
-      {timer ? (
+      {timer && !submitted ? (
         <div className={`container-timer ${isPulsating ? "pulsate" : ""}`}>
           <div className={`text-timer ${isPulsating ? "pulsate" : ""}`}>
             {text}
@@ -58,10 +58,16 @@ const Countdown = ({ initialTimer, onTimerExhausted, submitted }) => {
             <circle strokeDashoffset={loadingPercent} cx="70" cy="70" r="70" />
           </svg>
         </div>
-      ) : (
+      ) : timer === 0 ? (
         <Text fontWeight={"50px"} fontSize={"25px"} color={"red"}>
           Time's Up
         </Text>
+      ) : (
+        <Box marginTop={"20px"}>
+          <Heading as="h6" fontSize={"30px"} color={"green"}>
+            Submitted in {`${60 - timer} Secs`}
+          </Heading>
+        </Box>
       )}
     </>
   );
