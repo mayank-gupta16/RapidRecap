@@ -226,35 +226,59 @@ const Article = () => {
                   Generate Quiz
                 </Button>
               </Box>
-              <Heading as="h3" fontSize="23px" color="white" letterSpacing={1}>
-                <TriangleDownIcon color="red.500" /> Latest Articles
-              </Heading>
-              <SimpleGrid columns={1} spacing={5} marginTop={10}>
-                {latestNews
-                  .filter((_, idx) => idx + 1 < Math.floor(articleHeight / 100))
-                  .map((item) => {
-                    return (
-                      <Box
-                        minHeight="100px"
-                        key={item._id}
-                        onClick={() => {
-                          window.location.href = `/article/${item._id}`;
-                        }}
-                        style={{ cursor: "pointer" }}
-                        className="border-2 border-danger"
-                      >
-                        <Image
-                          width="80px"
-                          height={"100%"}
-                          float="left"
-                          src={item.imgURL}
-                          alt="Article img"
-                        />
-                        <Text>{item.title}</Text>
-                      </Box>
-                    );
-                  })}
-              </SimpleGrid>
+              <Box
+                boxShadow={"0 100px 200px rgba(0, 0, 0, 1.1)"}
+                borderRadius={"15px"}
+                p={1}
+              >
+                <Heading
+                  as="h3"
+                  fontSize="23px"
+                  color="white"
+                  letterSpacing={1}
+                >
+                  <TriangleDownIcon color="red.500" /> Latest Articles
+                </Heading>
+
+                <SimpleGrid
+                  columns={1}
+                  marginTop={5}
+                  display={"flex"}
+                  flexDirection={"column"}
+                  alignItems={"center"}
+                >
+                  {latestNews
+                    .filter(
+                      (_, idx) => idx + 1 < Math.floor(articleHeight / 100)
+                    )
+                    .map((item) => {
+                      return (
+                        <Box
+                          minHeight="100px"
+                          key={item._id}
+                          onClick={() => {
+                            window.location.href = `/article/${item._id}`;
+                          }}
+                          style={{ cursor: "pointer" }}
+                          borderTop={"1px solid lightblue"}
+                          p={2}
+                          w={"90%"}
+                          display={"flex"}
+                          alignItems={"center"}
+                        >
+                          <Image
+                            width="80px"
+                            height={"100%"}
+                            float="left"
+                            src={item.imgURL}
+                            alt="Article img"
+                          />
+                          <Text>{item.title}</Text>
+                        </Box>
+                      );
+                    })}
+                </SimpleGrid>
+              </Box>
             </GridItem>
             <Box
               css={{
