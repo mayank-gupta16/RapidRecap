@@ -1,10 +1,7 @@
-const express = require("express");
-const router = express.Router();
 const natural = require("natural");
-
 const Article = require("../model/articleSchema");
 
-router.get("/", async (req, res) => {
+const allArticles = async (req, res) => {
   const { page = 1, pageSize = 9 } = req.query;
   try {
     const article = await Article.find({})
@@ -23,9 +20,9 @@ router.get("/", async (req, res) => {
   } catch (error) {
     console.log(error.message);
   }
-});
+};
 
-router.get("/:id", async (req, res) => {
+const getArticle = async (req, res) => {
   const { id } = req.params;
   try {
     const article = await Article.findById(id);
@@ -52,6 +49,6 @@ router.get("/:id", async (req, res) => {
   } catch (error) {
     console.log(error.message);
   }
-});
+};
 
-module.exports = router;
+module.exports = { allArticles, getArticle };

@@ -54,6 +54,12 @@ const articleSchema = new mongoose.Schema(
         },
       },
     ],
+    quizzes: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "QUIZ",
+      },
+    ],
   },
   { collection: "Articles" }
 );

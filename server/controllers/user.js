@@ -1,8 +1,5 @@
-const express = require("express");
-const router = express.Router();
 const User = require("../model/userSchema");
 const bcrypt = require("bcryptjs");
-const authenticate = require("../middleware/authenticate");
 const {
   generateOtp,
   mailTransporter,
@@ -11,8 +8,8 @@ const {
 const VerificationToken = require("../model/verificationToken");
 const { isValidObjectId } = require("mongoose");
 const jwt = require("jsonwebtoken");
-// Handle signup route
-router.post("/register", async (req, res) => {
+
+const registerUser = async (req, res) => {
   console.log(req.body);
   const { firstName, lastName, email, phone, password, cpassword } = req.body;
 
@@ -66,9 +63,9 @@ router.post("/register", async (req, res) => {
   } catch (err) {
     console.log(err.message);
   }
-});
+};
 
-router.post("/login", async (req, res) => {
+const loginUser = async (req, res) => {
   // Implement login logic here
   //console.log(req.body);
   const { email, password } = req.body;
@@ -83,7 +80,7 @@ router.post("/login", async (req, res) => {
       return res.status(422).json({ error: "Invalid Credentials" });
 
     const isMatch = await bcrypt.compare(password, findUser.password);
-    if (!isMatch) return res.status(422).json({ error: "Invalid Credentials" });
+    if (!isMatch) return res.status(401).json({ error: "Invalid Credentials" });
     const token = await findUser.generateAuthToken();
     // console.log(token);
     res.cookie("jwtoken", token, {
@@ -95,20 +92,26 @@ router.post("/login", async (req, res) => {
   } catch (err) {
     console.log(err);
   }
-});
-router.post("/logout", authenticate, (req, res) => {
-  res.clearCookie("jwtoken", { path: "/" });
-  res.status(201).send("User Logout");
-});
+};
 
-router.get("/loginCheck", authenticate, async (req, res) => {
+const logoutUser = async (req, res) => {
+  try {
+    res.clearCookie("jwtoken", { path: "/" });
+    res.status(201).send("User Logout");
+  } catch (error) {
+    console.log(error.message);
+    res.status(422).json({ error: error.message });
+  }
+};
+
+const loginCheck = async (req, res) => {
   //console.log("auth");
   //console.log(req.user);
   const user = await User.findById(req.user._id);
   res.status(201).send(user);
-});
+};
 
-router.post("/verifyEmail", async (req, res) => {
+const verifyUser = async (req, res) => {
   const { otp, email } = req.body;
   //console.log(req.body);
   const forgotPassword = req.query.forgotPassword;
@@ -147,9 +150,9 @@ router.post("/verifyEmail", async (req, res) => {
     console.log(error);
     return res.status(422).json({ error: error.message });
   }
-});
+};
 
-router.post("/resendOTP", async (req, res) => {
+const resendOTP = async (req, res) => {
   try {
     const { email } = req.body;
     if (!email)
@@ -192,9 +195,9 @@ router.post("/resendOTP", async (req, res) => {
     console.log(error.message);
     return res.status(422).json({ error: error.message });
   }
-});
+};
 
-router.post("/forgotPassword", async (req, res) => {
+const forgotPassword = async (req, res) => {
   const { email, newPassword } = req.body;
   try {
     const user = await User.findOne({ email: email });
@@ -214,9 +217,9 @@ router.post("/forgotPassword", async (req, res) => {
     console.log(error.message);
     res.status(422).json({ error: error.message });
   }
-});
+};
 
-router.post("/handleGoogleLogin", async (req, res) => {
+const handleGoogleLogin = async (req, res) => {
   const credential = req.body.credential;
   //console.log(req.body);
   //console.log(credential);
@@ -248,5 +251,15 @@ router.post("/handleGoogleLogin", async (req, res) => {
     console.log(error.message);
     res.status(422).json({ error: error.message });
   }
-});
-module.exports = router;
+};
+//module.exports = router;
+module.exports = {
+  registerUser,
+  loginUser,
+  logoutUser,
+  loginCheck,
+  verifyUser,
+  resendOTP,
+  forgotPassword,
+  handleGoogleLogin,
+};
