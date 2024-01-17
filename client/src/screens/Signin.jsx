@@ -49,13 +49,13 @@ export default function Sigin() {
       }
     } catch (error) {
       toast({
-        title: "Login Failed",
+        title: error.response.data.error,
         status: "error",
         duration: 5000,
         isClosable: true,
         position: "top",
       });
-      console.log(error.message);
+      console.log(error.response.data.error);
     } finally {
       setLoad({ submitLoad: false, forgotLoad: false });
     }
