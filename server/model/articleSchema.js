@@ -10,24 +10,21 @@ const articleSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    author: [
-      {
-        type: String,
-        required: true,
-      },
-    ],
-    title: [
-      {
-        type: String,
-        required: true,
-      },
-    ],
-    mainText: [
-      {
-        type: String,
-        required: true,
-      },
-    ],
+    author: {
+      type: String,
+      required: true,
+    },
+
+    title: {
+      type: String,
+      required: true,
+    },
+
+    mainText: {
+      type: String,
+      required: true,
+    },
+
     imgUrl: [
       {
         type: String,
@@ -54,12 +51,10 @@ const articleSchema = new mongoose.Schema(
         },
       },
     ],
-    quizzes: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "QUIZ",
-      },
-    ],
+    quiz: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "QUIZ",
+    },
   },
   { collection: "Articles" }
 );

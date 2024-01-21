@@ -45,6 +45,12 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
+    quizzes: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "QUIZ",
+      },
+    ],
   },
   { collection: "Users" }
 );

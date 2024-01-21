@@ -11,35 +11,99 @@ const quizSchema = new mongoose.Schema({
       score: { type: Number },
     },
   ],
-  questions: [
-    {
-      question: {
-        type: String,
-        required: true,
-      },
-      options: {
-        a: {
+  para1: {
+    questions: [
+      {
+        question: {
+          type: String,
+          required: true,
+        },
+        options: {
+          a: {
+            type: String,
+          },
+          b: {
+            type: String,
+          },
+          c: {
+            type: String,
+          },
+          d: {
+            type: String,
+          },
+        },
+        answer: {
+          type: String,
+          required: true,
+        },
+        explanation: {
           type: String,
         },
-        b: {
+      },
+    ],
+  },
+  para2: {
+    questions: [
+      {
+        question: {
           type: String,
+          required: true,
         },
-        c: {
+        options: {
+          a: {
+            type: String,
+          },
+          b: {
+            type: String,
+          },
+          c: {
+            type: String,
+          },
+          d: {
+            type: String,
+          },
+        },
+        answer: {
           type: String,
+          required: true,
         },
-        d: {
+        explanation: {
           type: String,
         },
       },
-      answer: {
-        type: String,
-        required: true,
+    ],
+  },
+  para3: {
+    questions: [
+      {
+        question: {
+          type: String,
+          required: true,
+        },
+        options: {
+          a: {
+            type: String,
+          },
+          b: {
+            type: String,
+          },
+          c: {
+            type: String,
+          },
+          d: {
+            type: String,
+          },
+        },
+        answer: {
+          type: String,
+          required: true,
+        },
+        explanation: {
+          type: String,
+        },
       },
-      explanation: {
-        type: String,
-      },
-    },
-  ],
+    ],
+  },
 });
 
 const Quiz = mongoose.model("QUIZ", quizSchema);
