@@ -35,7 +35,7 @@ const getArticle = async (req, res) => {
     }
     const tokenizer = new natural.SentenceTokenizer();
     // Use natural language processing to tokenize sentences
-    const sentences = tokenizer.tokenize(article.mainText[0]);
+    const sentences = tokenizer.tokenize(article.mainText);
 
     // Break the sentences into three paragraphs
     const paragraphLength = Math.ceil(sentences.length / 3);
@@ -45,17 +45,25 @@ const getArticle = async (req, res) => {
       const paragraph = sentences.slice(i, i + paragraphLength).join(" ");
       paragraphs.push(paragraph);
     }
-    article.mainText = paragraphs;
+    //console.log(paragraphs);
+    //article.mainText = paragraphs;
+    const newArticle = {
+      title: article.title,
+      mainText: paragraphs,
+      author: article.author,
+      imgURL: article.imgURL[0],
+      _id: article._id,
+    };
     //console.log(article.mainText);
     //console.log(article);
-    res.status(201).send(article);
+    res.status(201).send(newArticle);
   } catch (error) {
     console.log(error.message);
   }
 };
 
 const getQuiz = async (req, res) => {
-  const { articleId } = req.body;
+  const { articleId } = req.params;
   //console.log(articleId);
   try {
     if (!articleId) {
@@ -75,8 +83,10 @@ const getQuiz = async (req, res) => {
     }
 
     if (article.quiz) {
+      //console.log("Quiz already exists");
       const quizId = article.quiz;
-      const quiz = await genQuiz({ quizId, title });
+      const fullQuiz = await Quiz.findById(quizId);
+      const quiz = genQuiz({ fullQuiz, title });
       if (quiz.questions.length <= 2) {
         throw new Error("Article is too short for a quiz");
       }
@@ -89,12 +99,13 @@ const getQuiz = async (req, res) => {
     const prompt = `Title: ${title}\n Author: ${author}\n\n ${mainText}\n\n`;
     const instructions = `Instructions:
                           1. Break the article into 3 paragraphs.
-                          2. Generate minimum 3 and maximum 5 questions from each paragraph.
+                          2. Generate minimum 2 and maximum 5 questions from each paragraph.
                           3. Each question should have 4 options.
                           4. Each question should have a correct answer.
                           5. Each answer should have an explanation.
-                          6. Nothing should be outside of the article provided
-                          7. Return response in following JSON object format:
+                          6. Nothing should be outside of the article provided(important)
+                          7. Every question should be unique.
+                          8. Return response in following JSON object format:
                             {
                               title: "Title of the article",                                 
                               para1 :
@@ -154,7 +165,7 @@ const getQuiz = async (req, res) => {
                             }`;
     let result = await model.generateContent(prompt + instructions);
     const response = await result.response;
-    const text = response.text();
+    const text = await response.text();
     //console.log(text);
     const textWithoutBackticks = text.replace(/`/g, "");
     //console.log(textWithoutBackticks);
@@ -170,7 +181,8 @@ const getQuiz = async (req, res) => {
     article.quiz = newQuiz._id;
     await article.save();
     const quizId = newQuiz._id;
-    const quiz = await genQuiz({ quizId, title });
+    const fullQuiz = await Quiz.findById(quizId);
+    const quiz = genQuiz({ fullQuiz, title });
     if (quiz.questions.length <= 2) {
       throw new Error("Article is too short for a quiz");
     }
