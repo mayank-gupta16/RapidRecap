@@ -1,68 +1,75 @@
 const data = {
-  title:
-    "Bengaluru auto driver gives 'ultimatum' to woman after sending 2 messages: 'Time is over'",
+  title: "McDonald's India North and East commissions 3.2 MW solar plant",
   questions: [
     {
-      question: "What was the main message the auto driver sent to the woman?",
       options: {
-        a: "He had arrived at her location.",
-        b: "He was waiting for her.",
-        c: "He gave her an ultimatum to come out.",
-        d: "He asked her to cancel the ride.",
+        a: "1.2 MW",
+        b: "3.2 MW",
+        c: "4.2 MW",
+        d: "3.8 MW",
       },
-      answer: "a",
-      explanation:
-        "The first message the auto driver sent was 'I've arrived', which indicates that he had reached the woman's location.",
-    },
-    {
-      question: "What is the tone of the auto driver's message 'time is over'?",
-      options: {
-        a: "Friendly and understanding.",
-        b: "Impatient and demanding.",
-        c: "Helpful and informative.",
-        d: "Confused and unsure.",
-      },
+      question:
+        "What is the capacity of the solar plant installed by McDonald's India North and East?",
       answer: "b",
       explanation:
-        "The message 'time is over' is short and abrupt, and it suggests that the auto driver is not willing to wait any longer. This implies an impatient and demanding tone.",
+        "McDonald's India North and East has installed a solar plant of 3.2 MW capacity.",
+      _id: "65ac9f8a2e217239ccc0a85e",
     },
     {
-      question:
-        "Is this incident representative of a wider trend of auto driver behavior in Bengaluru?",
       options: {
-        a: "Yes, there have been many similar reports.",
-        b: "No, this is an isolated incident.",
-        c: "It is difficult to say for sure.",
-        d: "This is not a common occurrence.",
+        a: "Using cooking oil that is repurposed into biodiesel",
+        b: "Using FSC-certified paper-based packaging",
+        c: "Sourcing ingredients from local suppliers",
+        d: "Using renewable energy sources",
       },
+      question:
+        "What is one specific example of McDonald's India North and East's efforts to reduce greenhouse gas emissions?",
       answer: "a",
       explanation:
-        "The article mentions that there have been a rise in the number of incidents involving auto drivers in Bengaluru. This suggests that the incident described in the article is not an isolated case.",
+        "McDonald's India North and East uses cooking oil that is repurposed into biodiesel, which is known to have lower carbon emissions than conventional fuel.",
+      _id: "65ac9f8a2e217239ccc0a863",
     },
     {
+      options: {
+        a: "Connaught Plaza Restaurants Pvt Ltd",
+        b: "McDonald's India North and East",
+        c: "McDonald's India",
+        d: "McDonald's Corporation",
+      },
       question:
-        "What is the potential impact of such incidents on users' trust in auto services?",
-      options: {
-        a: "It could lead to increased reliance on ride-hailing apps.",
-        b: "It could discourage people from using autos altogether.",
-        c: "It could have no significant impact.",
-        d: "It could improve the quality of auto service.",
-      },
-      answer: "b",
+        "What is the name of the company that operates McDonald's restaurants in North and East of India?",
+      answer: "a",
       explanation:
-        "The article mentions that the woman who shared the story on Twitter captioned her tweet 'Booked an auto today. The driver gave me an ultimatum'. This suggests that the incident had a negative impact on her experience and could make her less likely to use autos in the future.",
+        "McDonald's restaurants in North and East of India are operated by Connaught Plaza Restaurants Pvt Ltd.",
+      _id: "65ac9f8a2e217239ccc0a864",
     },
     {
-      question: "What is a possible lesson or takeaway from this story?",
       options: {
-        a: "Always be on time when booking an auto.",
-        b: "Communicate clearly with auto drivers to avoid misunderstandings.",
-        c: "Be prepared for unprofessional behavior from some auto drivers.",
-        d: "Avoid using autos altogether and opt for public transportation.",
+        a: "Reducing greenhouse gas emissions",
+        b: "Keeping waste out of nature",
+        c: "Preserving natural resources",
+        d: "All of the above",
       },
-      answer: "c",
+      question:
+        "What other sustainability efforts is McDonald's India North and East taking?",
+      answer: "d",
       explanation:
-        "The story highlights the fact that some auto drivers in Bengaluru may behave unprofessionally. While it is important to be on time and communicate clearly, it is also important to be prepared for the possibility of encountering unprofessional behavior.",
+        "McDonald's India North and East is taking steps to reduce greenhouse gas, keep waste out of nature and preserve natural resources.",
+      _id: "65ac9f8a2e217239ccc0a862",
+    },
+    {
+      options: {
+        a: "Using cooking oil that is repurposed into biodiesel",
+        b: "Using FSC-certified paper-based packaging",
+        c: "Sourcing ingredients from local suppliers",
+        d: "Using renewable energy sources",
+      },
+      question:
+        "What is one specific example of McDonald's India North and East's efforts to reduce greenhouse gas emissions?",
+      answer: "a",
+      explanation:
+        "McDonald's India North and East uses cooking oil that is repurposed into biodiesel, which is known to have lower carbon emissions than conventional fuel.",
+      _id: "65ac9f8a2e217239ccc0a863",
     },
   ],
 };

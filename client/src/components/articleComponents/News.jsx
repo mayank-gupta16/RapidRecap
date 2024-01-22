@@ -16,9 +16,9 @@ const News = () => {
       <div style={{ width: "80%" }}>
         <h1 className="mt-2 mb-5">{data.title}</h1>
         <p className="mb-4">
-          {data.mainText[0].length > 1000
-            ? `${data.mainText[0].substring(0, 1000)}...`
-            : data.mainText[0]}
+          {data.mainText.length > 1000
+            ? `${data.mainText.substring(0, 1000)}...`
+            : data.mainText}
         </p>
         <Link to={`/article/${data._id}`}>
           <Button colorScheme="teal">Source</Button>

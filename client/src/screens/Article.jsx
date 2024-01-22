@@ -4,7 +4,6 @@ import axios from "axios";
 import { ArrowBackIcon, TriangleDownIcon } from "@chakra-ui/icons";
 import {
   Box,
-  Button,
   Grid,
   GridItem,
   Heading,
@@ -16,6 +15,7 @@ import {
 } from "@chakra-ui/react";
 import Loading from "../components/miscellaneous/Loading";
 import Quiz from "../components/articleComponents/Quiz";
+import GenerateQuizButton from "../components/articleComponents/GenerateQuizButton";
 
 const Article = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -32,8 +32,9 @@ const Article = () => {
 
   const fetchArticle = async () => {
     try {
-      const response = await axios.get(`/api/articles/${id}`);
+      const response = await axios.get(`/api/articles/article/${id}`);
       const news = await axios.get(`/api/articles?page=1&pageSize=9`);
+      //console.log(response.data);
       setLatestNews(news.data);
       //console.log(news.data);
       setArticle(response.data);
@@ -192,40 +193,12 @@ const Article = () => {
                 },
               }}
             >
-              <Box
-                style={{
-                  border: "1px solid black",
-                  padding: "1rem",
+              <GenerateQuizButton
+                onClick={() => {
+                  setShowQuiz(!showQuiz);
+                  onOpen();
                 }}
-                borderRadius="md"
-                bg="red.100"
-                marginBottom="2rem"
-              >
-                <Text
-                  fontSize="18px"
-                  fontWeight="bold"
-                  marginBottom="1rem"
-                  letterSpacing={1}
-                  color="blue.500" // Change the color here
-                >
-                  Play Quiz to get to the LeaderBoard
-                </Text>
-                <Button
-                  height="48px"
-                  width="200px"
-                  colorScheme="whiteAlpha"
-                  borderRadius="xl"
-                  _hover={{ opacity: 0.8 }}
-                  color="red.800"
-                  bg="whiteAlpha.900"
-                  onClick={() => {
-                    setShowQuiz(!showQuiz);
-                    onOpen();
-                  }}
-                >
-                  Generate Quiz
-                </Button>
-              </Box>
+              />
               <Box
                 boxShadow={"0 100px 200px rgba(0, 0, 0, 1.1)"}
                 borderRadius={"15px"}
@@ -249,7 +222,9 @@ const Article = () => {
                 >
                   {latestNews
                     .filter(
-                      (_, idx) => idx + 1 < Math.floor(articleHeight / 100)
+                      (_, idx) =>
+                        idx < Math.floor(articleHeight / 100) &&
+                        _._id !== article._id
                     )
                     .map((item) => {
                       return (
@@ -280,42 +255,17 @@ const Article = () => {
                 </SimpleGrid>
               </Box>
             </GridItem>
-            <Box
+            <GenerateQuizButton
               css={{
                 "@media screen and (min-width: 821px)": {
                   display: "none",
                 },
               }}
-              style={{
-                border: "1px solid black",
-                padding: "1rem",
+              onClick={() => {
+                setShowQuiz(!showQuiz);
+                onOpen();
               }}
-              borderRadius="md"
-              bg="red.100"
-              marginBottom="2rem"
-            >
-              <Text
-                fontSize="18px"
-                fontWeight="bold"
-                marginBottom="1rem"
-                letterSpacing={1}
-                color="blue.500" // Change the color here
-              >
-                Play Quiz to get to the LeaderBoard
-              </Text>
-              <Button
-                height="48px"
-                width="200px"
-                colorScheme="whiteAlpha"
-                borderRadius="xl"
-                _hover={{ opacity: 0.8 }}
-                color="red.800"
-                bg="whiteAlpha.900"
-                onClick={() => setShowQuiz(!showQuiz)}
-              >
-                Generate Quiz
-              </Button>
-            </Box>
+            />
           </Grid>
         </>
       )}
