@@ -21,6 +21,10 @@ const quizAttemptSchema = new mongoose.Schema({
         type: String,
         required: true,
       },
+      isCorrect: {
+        type: Boolean,
+        default: false,
+      },
     },
   ],
   score: {
