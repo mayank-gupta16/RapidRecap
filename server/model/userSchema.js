@@ -45,10 +45,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
-    quizzes: [
+    quizAttempts: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "QUIZ",
+        ref: "QUIZ_ATTEMPT",
       },
     ],
   },

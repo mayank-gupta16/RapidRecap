@@ -5,12 +5,6 @@ const quizSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "ARTICLE",
   },
-  users: [
-    {
-      user: { type: mongoose.Schema.Types.ObjectId, ref: "USER" },
-      score: { type: Number },
-    },
-  ],
   para1: {
     questions: [
       {
