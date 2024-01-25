@@ -2,6 +2,7 @@ const dotenv = require("dotenv");
 const express = require("express");
 const userRoutes = require("./router/userRoutes");
 const articleRoutes = require("./router/articleRoutes");
+const quizRoutes = require("./router/quizRoutes");
 const authRouter = express.Router();
 const cookieParser = require("cookie-parser");
 
@@ -15,6 +16,7 @@ const PORT = process.env.PORT;
 authRouter.use(cookieParser());
 authRouter.use("/user", userRoutes);
 authRouter.use("/articles", articleRoutes);
+authRouter.use("/quiz", quizRoutes);
 app.use("/api", authRouter);
 
 app.listen(PORT, () => {
