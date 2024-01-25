@@ -88,7 +88,9 @@ const loginUser = async (req, res) => {
       httpOnly: true,
     });
 
-    return res.status(201).json({ message: "SignIn Successfull" });
+    return res
+      .status(201)
+      .json({ message: "SignIn Successfull", user: findUser });
   } catch (err) {
     console.log(err);
   }
@@ -246,7 +248,7 @@ const handleGoogleLogin = async (req, res) => {
       expires: new Date(Date.now() + 2592000000),
       httpOnly: true,
     });
-    res.status(201).json({ message: "Google Login Successfull" });
+    res.status(201).json({ message: "Google Login Successfull", user });
   } catch (error) {
     console.log(error.message);
     res.status(422).json({ error: error.message });
