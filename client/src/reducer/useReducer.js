@@ -13,6 +13,8 @@ export const Reducer = (state, action) => {
       return { ...state, forgotPassword: action.payloadForgotPassword };
     case "verifyEmail":
       return { ...state, verifyEmail: action.payloadverifyEmail };
+    case "setUser":
+      return { ...state, user: action.payloadUser };
     // Add more cases for other actions
     default:
       return state;
