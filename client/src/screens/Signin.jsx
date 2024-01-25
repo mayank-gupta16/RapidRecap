@@ -34,8 +34,13 @@ export default function Sigin() {
     try {
       setLoad({ submitLoad: true, forgotLoad: false });
       const response = await axios.post(`/api/user/login`, data);
+      console.log(response);
       if (response.status === 201) {
         dispatch({ type: "UNSHOW" });
+        dispatch({
+          type: "setUser",
+          payloadUser: response.data.user,
+        });
         toast({
           title: "Logined Successfully",
           status: "success",
@@ -203,8 +208,13 @@ export default function Sigin() {
                           "/api/user/handleGoogleLogin",
                           credentialResponse
                         );
+                        console.log(response);
                         if (response.status === 201) {
                           dispatch({ type: "UNSHOW" });
+                          dispatch({
+                            type: "setUser",
+                            payloadUser: response.data.user,
+                          });
                           toast({
                             title: "Logined Successfully",
                             status: "success",
