@@ -5,10 +5,10 @@ import axios from "axios";
 async function showState() {
   try {
     const response = await axios.get(`/api/user/loginCheck`);
-    console.log(response.data);
+    //console.log(response.data);
     if (response.status === 201) {
-      return false;
-    } else return true;
+      return { show: false, user: response.data };
+    } else return { show: true, user: {} };
   } catch (error) {
     console.log(error.message);
     return true;
@@ -17,12 +17,11 @@ async function showState() {
 
 const initialState = {
   // Define your initial state properties here
-  show: await showState(),
+  ...(await showState()),
   modal: false,
   news: {},
   forgotPassword: false,
   verifyEmail: false,
-  user: {},
   // ...
 };
 // async function init() {
