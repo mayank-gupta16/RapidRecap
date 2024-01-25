@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { AppContext } from "../../contextAPI/appContext";
 import {
   Button,
   Modal,
@@ -26,9 +27,10 @@ import Countdown from "./Countdown";
 import axios from "axios";
 
 const Quiz = ({ article, isOpen, onClose }) => {
+  const { state, dispatch } = useContext(AppContext);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [submitted, setSubmitted] = useState(false);
-  const [userAnswers, setUserAnswers] = useState({});
+  const [userAnswers, setUserAnswers] = useState([]);
   const [score, setScore] = useState(0);
   const [quizData, setQuizData] = useState(null);
   const [load, setLoad] = useState(true);
@@ -43,26 +45,54 @@ const Quiz = ({ article, isOpen, onClose }) => {
   };
 
   const handleAnswer = (selectedOption) => {
-    setUserAnswers((prevAnswers) => ({
-      ...prevAnswers,
-      [currentQuestionIndex]: selectedOption,
-    }));
+    setUserAnswers((prevAnswers) => [...prevAnswers, selectedOption]);
   };
 
-  const handleSubmitQuiz = () => {
+  const handleSubmitQuiz = async () => {
     // For example, you can calculate the score here
     // You can add your own logic here
-    let marks = 0;
-    quizData.questions.forEach((question, index) => {
-      if (question.answer === userAnswers[index]) {
-        marks++;
-      }
-    });
-    setScore(marks);
-    console.log("User Answers:", userAnswers);
-    console.log(quizData.questions);
-    setCurrentQuestionIndex(quizData.questions.length);
-    setSubmitted(true);
+    console.log("Submitting Quiz");
+    try {
+      const userId = state.user._id;
+      const articleId = article._id;
+      const userResponses = [...userAnswers];
+      // let marks = 0;
+      // quizData.questions.forEach((question, index) => {
+      //   if (question.answer === userAnswers[index]) {
+      //     marks++;
+      //   }
+      // });
+      // setScore(marks);
+      // console.log("User Answers:", userAnswers);
+      // console.log(quizData.questions);
+      const response = await axios.post(`/api/quiz/attempt`, {
+        userId,
+        articleId,
+        userResponses,
+        quizData,
+      });
+      setScore(response.data.score);
+      setCurrentQuestionIndex(quizData.questions.length);
+      setSubmitted(true);
+      toast({
+        title: "Quiz submitted Successfully!",
+        description: "You can now view your score.",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+        position: "top",
+      });
+    } catch (error) {
+      console.log(error.response.data.error);
+      toast({
+        title: "Quiz submission failed!",
+        description: error.response.data.error,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "top",
+      });
+    }
   };
 
   const fetchQuiz = async () => {
@@ -70,8 +100,8 @@ const Quiz = ({ article, isOpen, onClose }) => {
     try {
       //console.log(article._id);
       const articleId = article._id;
-      const response = await axios.get(`/api/articles/genQuiz/${articleId}`);
-      console.log(response.data);
+      const response = await axios.put(`/api/articles/genQuiz/${articleId}`);
+      //console.log(response.data);
       setQuizData(response.data);
       setLoad(false);
       toast({

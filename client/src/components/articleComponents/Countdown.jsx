@@ -25,11 +25,13 @@ const Countdown = ({ initialTimer, onTimerExhausted, submitted }) => {
       });
     }, 1000);
 
-    if (timer === 0 || submitted) {
+    if (timer === 0) {
       onTimerExhausted();
       clearInterval(intervalId);
     }
-
+    if (submitted) {
+      clearInterval(intervalId);
+    }
     // Clear the interval when the component unmounts or when the timer reaches 0
     return () => clearInterval(intervalId);
   }, [timer]);
