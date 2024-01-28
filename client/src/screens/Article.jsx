@@ -1,9 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { AppContext } from "../contextAPI/appContext";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { ArrowBackIcon, TriangleDownIcon } from "@chakra-ui/icons";
 import {
   Box,
+  Flex,
   Grid,
   GridItem,
   Heading,
@@ -18,6 +20,7 @@ import Quiz from "../components/articleComponents/Quiz";
 import GenerateQuizButton from "../components/articleComponents/GenerateQuizButton";
 
 const Article = () => {
+  const { state, dispatch } = useContext(AppContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
   const { id } = useParams();
@@ -27,8 +30,11 @@ const Article = () => {
   const [showQuiz, setShowQuiz] = useState(false);
   const [textHeight, setTextHeight] = useState(0);
   const [articleHeight, setArticleHeight] = useState(0);
+  const [givenQuiz, setGivenQuiz] = useState(false);
   const textRef = useRef();
   const articleRef = useRef();
+  const [percentile, setPercentile] = useState(null);
+  const [score, setScore] = useState(null);
 
   const fetchArticle = async () => {
     try {
@@ -45,9 +51,30 @@ const Article = () => {
       setLoad(false);
     }
   };
+
+  const isQuizGiven = async () => {
+    const userId = state.user._id;
+    const articleId = id;
+    try {
+      const response = await axios.get(
+        `/api/quiz/given/${articleId}/${userId}`
+      );
+      if (response.data.given) {
+        setPercentile(response.data.percentile);
+        setScore(response.data.score);
+        setGivenQuiz(true);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   useEffect(() => {
     fetchArticle();
   }, []);
+  useEffect(() => {
+    isQuizGiven();
+  }, [givenQuiz]);
   useEffect(() => {
     if (textRef.current) {
       //console.log(textRef.current.getBoundingClientRect().height);
@@ -59,8 +86,16 @@ const Article = () => {
   }, [article]);
   return (
     <>
-      {showQuiz ? (
-        <Quiz article={article} isOpen={isOpen} onClose={onClose} />
+      {showQuiz && !givenQuiz ? (
+        <Quiz
+          article={article}
+          isOpen={isOpen}
+          onClose={onClose}
+          ofShowQuiz={() => {
+            setShowQuiz(false);
+            setGivenQuiz(true);
+          }}
+        />
       ) : null}
       {load ? (
         <Loading />
@@ -193,12 +228,57 @@ const Article = () => {
                 },
               }}
             >
-              <GenerateQuizButton
-                onClick={() => {
-                  setShowQuiz(!showQuiz);
-                  onOpen();
-                }}
-              />
+              {givenQuiz ? (
+                <>
+                  <Flex
+                    flexDirection="column"
+                    alignItems="center"
+                    bgGradient="linear-gradient(-180deg, #1a1527, #0e0c16 88%, #0e0c16 99%)"
+                    color="white"
+                    borderRadius="lg"
+                    p={6}
+                    boxShadow="0 4px 8px rgba(0, 0, 0, 0.1)"
+                    marginBottom={5}
+                  >
+                    <Heading
+                      as="h6"
+                      size="lg"
+                      textAlign="center"
+                      mb={4}
+                      color="cyan.400"
+                    >
+                      Explore Your Quiz Performance
+                    </Heading>
+                    <Flex flexDirection="column" alignItems="center">
+                      <Heading
+                        textAlign={"left"}
+                        as="h6"
+                        fontSize="20px"
+                        mb={2}
+                        color="green.300"
+                      >
+                        Current Percentile: {percentile}%
+                      </Heading>
+                      <Heading
+                        textAlign={"left"}
+                        as="h6"
+                        fontSize="20px"
+                        mb={4}
+                        color="green.300"
+                      >
+                        Score: {score}%
+                      </Heading>
+                    </Flex>
+                  </Flex>
+                </>
+              ) : (
+                <GenerateQuizButton
+                  onClick={() => {
+                    setShowQuiz(!showQuiz);
+                    onOpen();
+                  }}
+                />
+              )}
               <Box
                 boxShadow={"0 100px 200px rgba(0, 0, 0, 1.1)"}
                 borderRadius={"15px"}
@@ -255,17 +335,67 @@ const Article = () => {
                 </SimpleGrid>
               </Box>
             </GridItem>
-            <GenerateQuizButton
-              css={{
-                "@media screen and (min-width: 821px)": {
-                  display: "none",
-                },
-              }}
-              onClick={() => {
-                setShowQuiz(!showQuiz);
-                onOpen();
-              }}
-            />
+            {givenQuiz ? (
+              <>
+                <Flex
+                  css={{
+                    "@media screen and (min-width: 821px)": {
+                      display: "none",
+                    },
+                  }}
+                  flexDirection="column"
+                  alignItems="center"
+                  bgGradient="linear-gradient(-180deg, #1a1527, #0e0c16 88%, #0e0c16 99%)"
+                  color="white"
+                  borderRadius="lg"
+                  p={6}
+                  boxShadow="0 4px 8px rgba(0, 0, 0, 0.1)"
+                  marginBottom={5}
+                >
+                  <Heading
+                    as="h6"
+                    size="lg"
+                    textAlign="center"
+                    mb={4}
+                    color="cyan.400"
+                  >
+                    Explore Your Quiz Performance
+                  </Heading>
+                  <Flex flexDirection="column" alignItems="center">
+                    <Heading
+                      textAlign={"left"}
+                      as="h6"
+                      fontSize="20px"
+                      mb={2}
+                      color="green.300"
+                    >
+                      Current Percentile: 90%
+                    </Heading>
+                    <Heading
+                      textAlign={"left"}
+                      as="h6"
+                      fontSize="20px"
+                      mb={4}
+                      color="green.300"
+                    >
+                      Percentage: 80%
+                    </Heading>
+                  </Flex>
+                </Flex>
+              </>
+            ) : (
+              <GenerateQuizButton
+                css={{
+                  "@media screen and (min-width: 821px)": {
+                    display: "none",
+                  },
+                }}
+                onClick={() => {
+                  setShowQuiz(!showQuiz);
+                  onOpen();
+                }}
+              />
+            )}
           </Grid>
         </>
       )}

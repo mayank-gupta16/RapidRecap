@@ -25,8 +25,9 @@ import {
 import "./Quiz.css";
 import Countdown from "./Countdown";
 import axios from "axios";
+import ConfirmationModal from "./customQuizModal/ConfirmationModal";
 
-const Quiz = ({ article, isOpen, onClose }) => {
+const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
   const { state, dispatch } = useContext(AppContext);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [submitted, setSubmitted] = useState(false);
@@ -35,6 +36,7 @@ const Quiz = ({ article, isOpen, onClose }) => {
   const [quizData, setQuizData] = useState(null);
   const [load, setLoad] = useState(true);
   const toast = useToast();
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 
   const totalQuestions = quizData ? quizData.questions.length : 0;
 
@@ -130,11 +132,29 @@ const Quiz = ({ article, isOpen, onClose }) => {
     fetchQuiz();
   }, []);
 
+  const showConfirmation = () => {
+    setShowConfirmationModal(true);
+  };
+  const handleClose = () => {
+    if (!submitted && currentQuestionIndex < totalQuestions) {
+      showConfirmation();
+    } else {
+      ofShowQuiz();
+      onClose();
+    }
+  };
+  const handleConfirmClose = async () => {
+    // Close the confirmation modal
+    setShowConfirmationModal(false);
+    await handleSubmitQuiz();
+    // Perform additional actions if needed
+  };
+
   return (
     <>
       <Modal
         isOpen={isOpen}
-        onClose={onClose}
+        onClose={handleClose}
         size={{ base: "full", md: "3xl" }}
       >
         <ModalOverlay
@@ -314,23 +334,7 @@ const Quiz = ({ article, isOpen, onClose }) => {
                   textAlign="center"
                   marginTop="2"
                 >
-                  Score: {`${score} / ${totalQuestions}`}
-                </Text>
-                <Text
-                  color="white"
-                  fontSize="30px"
-                  textAlign="center"
-                  marginTop="2"
-                >
-                  Percentage: {`${(score / totalQuestions) * 100} %`}
-                </Text>
-                <Text
-                  color="white"
-                  fontSize="30px"
-                  textAlign="center"
-                  marginTop="2"
-                >
-                  Percentile: {`85 %`}
+                  Percentage: {`${score} %`}
                 </Text>
               </SlideFade>
             )}
@@ -356,6 +360,12 @@ const Quiz = ({ article, isOpen, onClose }) => {
           </Skeleton>
         </ModalContent>
       </Modal>
+      <ConfirmationModal
+        isOpen={showConfirmationModal}
+        onClose={() => setShowConfirmationModal(false)}
+        onConfirm={handleConfirmClose}
+        message="Are you sure you want to close the quiz? Your progress will be lost."
+      />
     </>
   );
 };
