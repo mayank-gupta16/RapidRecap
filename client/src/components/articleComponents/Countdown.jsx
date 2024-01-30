@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./Countdown.css";
 import { Box, Heading, Text } from "@chakra-ui/react";
 
-const Countdown = ({ initialTimer, onTimerExhausted, submitted }) => {
+const Countdown = ({ initialTimer, onTimerExhausted, submitted, start }) => {
   const [timer, setTimer] = useState(initialTimer);
   const [loadingPercent, setLoadingPercent] = useState(0);
   const [dot, setDot] = useState(360);
@@ -10,6 +10,7 @@ const Countdown = ({ initialTimer, onTimerExhausted, submitted }) => {
   const [isPulsating, setPulsating] = useState(false);
 
   useEffect(() => {
+    if (!start) return;
     const intervalId = setInterval(() => {
       setTimer((prevTimer) => {
         const newTimer = prevTimer - 1;
@@ -34,7 +35,7 @@ const Countdown = ({ initialTimer, onTimerExhausted, submitted }) => {
     }
     // Clear the interval when the component unmounts or when the timer reaches 0
     return () => clearInterval(intervalId);
-  }, [timer]);
+  }, [timer, start, submitted, onTimerExhausted]);
 
   const calculateLoadingPercent = (secs) => {
     return 440 - 440 * (secs / initialTimer);

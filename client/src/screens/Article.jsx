@@ -18,6 +18,7 @@ import {
 import Loading from "../components/miscellaneous/Loading";
 import Quiz from "../components/articleComponents/Quiz";
 import GenerateQuizButton from "../components/articleComponents/GenerateQuizButton";
+import InstructionModal from "../components/articleComponents/customQuizModal/InstructionModal";
 
 const Article = () => {
   const { state, dispatch } = useContext(AppContext);
@@ -35,6 +36,7 @@ const Article = () => {
   const articleRef = useRef();
   const [percentile, setPercentile] = useState(null);
   const [score, setScore] = useState(null);
+  //const [showInstruction, setShowInstruction] = useState(false);
 
   const fetchArticle = async () => {
     try {
@@ -84,8 +86,15 @@ const Article = () => {
       setArticleHeight(articleRef.current.getBoundingClientRect().height);
     }
   }, [article]);
+
+  // const closeInstructionModal = () => {
+  //   setShowInstruction(false);
+  // };
+
   return (
     <>
+      {/* {!givenQuiz && showInstruction
+      ? <InstructionModal onClose={closeInstructionModal} /> : null} */}
       {showQuiz && !givenQuiz ? (
         <Quiz
           article={article}
