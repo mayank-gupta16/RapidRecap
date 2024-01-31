@@ -24,7 +24,7 @@ const InstructionModal = () => {
           </Box>
           <Box>
             <Text>
-              2. You have to complete these 5 questions in 60 seconds.
+              2. You have to complete these 5 questions in 45 seconds.
             </Text>
           </Box>
           <Box>

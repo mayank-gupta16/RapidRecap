@@ -29,6 +29,7 @@ import ConfirmationModal from "./customQuizModal/ConfirmationModal";
 import InstructionModal from "./customQuizModal/InstructionModal";
 
 const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
+  const quizStartedKey = `quizStarted_${article._id}`;
   const { state, dispatch } = useContext(AppContext);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [submitted, setSubmitted] = useState(false);
@@ -41,6 +42,18 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
   const [showInstruction, setShowInstruction] = useState(true);
 
   const totalQuestions = quizData ? quizData.questions.length : 0;
+
+  const checkAndStartQuiz = () => {
+    const quizStartedInOtherTab = localStorage.getItem(quizStartedKey);
+    if (quizStartedInOtherTab) {
+      // Quiz already started in another tab, close this tab
+      onClose();
+      return false;
+    }
+    // Set the flag indicating that the quiz has started
+    localStorage.setItem(quizStartedKey, true);
+    return true;
+  };
 
   const handleNextQuestion = () => {
     if (currentQuestionIndex < totalQuestions - 1) {
@@ -131,7 +144,24 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
   };
 
   useEffect(() => {
+    const quizCanBeStarted = checkAndStartQuiz();
+    if (!quizCanBeStarted) {
+      // Quiz can't be started in this tab, return early
+      toast({
+        title: "Quiz already started!",
+        description: "Quiz already started in another tab.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "top",
+      });
+      return;
+    }
     fetchQuiz();
+
+    return () => {
+      localStorage.removeItem(quizStartedKey);
+    };
   }, []);
 
   const showConfirmation = () => {
@@ -194,7 +224,7 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
               marginBottom={load ? "10px" : "0"} // remove this when skeleton isLoaded
             >
               <Countdown
-                initialTimer={60}
+                initialTimer={45}
                 onTimerExhausted={() => submitted && handleSubmitQuiz()}
                 submitted={currentQuestionIndex === totalQuestions}
                 start={!showInstruction}
@@ -212,6 +242,7 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
               justifyContent={"center"}
               alignItems={"center"}
               width={"100%"}
+              userSelect={"none"}
             >
               {!submitted ? (
                 <>
@@ -271,6 +302,7 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
                         overflowWrap="break-word"
                         color={"white"}
                         fontSize={"20px"}
+                        userSelect={"none"}
                       >
                         {quizData.questions.length > 0
                           ? quizData.questions[currentQuestionIndex].question
@@ -290,6 +322,7 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
                               marginRight={2}
                               color={"white"}
                               minW={"20px"}
+                              userSelect={"none"}
                             >{`${optionKey.toLocaleUpperCase()} :`}</Box>
                             <Button
                               border={"1px solid lightgray"}
