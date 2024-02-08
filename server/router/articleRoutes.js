@@ -5,5 +5,6 @@ const { allArticles, getArticle, getQuiz } = require("../controllers/article");
 router.route("/").get(allArticles);
 router.route("/article/:id").get(getArticle);
 router.route("/genQuiz/:articleId").put(getQuiz);
+//router.route("/genQuiz").post(getQuiz);
 
 module.exports = router;

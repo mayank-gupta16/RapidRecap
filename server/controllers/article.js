@@ -1,8 +1,8 @@
 const natural = require("natural");
 const Article = require("../model/articleSchema");
 const Quiz = require("../model/quizSchema");
-const { GoogleGenerativeAI } = require("@google/generative-ai");
 const { genQuiz } = require("../utils/quiz");
+const OpenAI = require("openai");
 
 const allArticles = async (req, res) => {
   const { page = 1, pageSize = 9 } = req.query;
@@ -86,6 +86,11 @@ const getQuiz = async (req, res) => {
       //console.log("Quiz already exists");
       const quizId = article.quiz;
       const fullQuiz = await Quiz.findById(quizId);
+      if (!fullQuiz) {
+        article.quiz = null;
+        await article.save();
+        throw new Error("Quiz not found, Please try again.");
+      }
       const quiz = genQuiz({ fullQuiz, title });
       if (quiz.questions.length <= 2) {
         throw new Error("Article is too short for a quiz");
@@ -94,88 +99,97 @@ const getQuiz = async (req, res) => {
       return;
     }
 
-    const genAI = new GoogleGenerativeAI(process.env.API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    const openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
     const prompt = `Title: ${title}\n Author: ${author}\n\n ${mainText}\n\n`;
     const instructions = `Instructions:
-                          1. Break the article into 3 paragraphs.
-                          2. Generate minimum 2 and maximum 5 questions from each paragraph.
-                          3. Each question should have 4 options.
-                          4. Each question should have a correct answer.
-                          5. Each answer should have an explanation.
-                          6. Nothing should be outside of the article provided(important)
-                          7. Every question should be unique.
-                          8. Return response in following JSON object format:
-                            {
-                              title: "Title of the article",                                 
-                              para1 :
-                              {
-                                questions: 
-                                [
+                                1. Break the article into 3 paragraphs.
+                                2. Generate minimum 2 and maximum 5 questions from each paragraph(very important!).
+                                3. Each question should have 4 options.
+                                4. Each question should have a correct answer.
+                                5. Each answer should have an explanation.
+                                6. Nothing should be outside of the article provided(important)
+                                7. Every question should be unique.
+                                8. Give each question a difficulty level between 0 to 1.
+                                9. Return response in following JSON object format:
                                   {
-                                    question: "",
-                                    options: 
+                                    title: "Title of the article",
+                                    para1 :
                                     {
-                                      a: "",
-                                      b: "",
-                                      c: "",
-                                      d: ""
-                                    },
-                                    answer: "a",
-                                    explanation:""    
-                                  },
-                                ],
-                              }
-                              para2 :
-                              {
-                                questions: 
-                                [
-                                  {
-                                    question: "",
-                                    options: 
+                                      questions:
+                                      [
+                                        {
+                                          question: "",
+                                          options:
+                                          {
+                                            a: "",
+                                            b: "",
+                                            c: "",
+                                            d: ""
+                                          },
+                                          answer: "a",
+                                          explanation:"",
+                                          difficulty: ""
+                                        },
+                                      ],
+                                    }
+                                    para2 :
                                     {
-                                      a: "",
-                                      b: "",
-                                      c: "",
-                                      d: ""
-                                    },
-                                    answer: "a",
-                                    explanation:""    
-                                  },
-                                ],
-                              }
-                              para3 :
-                              {
-                                questions: 
-                                [
-                                  {
-                                    question: "",
-                                    options: 
+                                      questions:
+                                      [
+                                        {
+                                          question: "",
+                                          options:
+                                          {
+                                            a: "",
+                                            b: "",
+                                            c: "",
+                                            d: ""
+                                          },
+                                          answer: "a",
+                                          explanation:"",
+                                          difficulty: ""
+                                        },
+                                      ],
+                                    }
+                                    para3 :
                                     {
-                                      a: "",
-                                      b: "",
-                                      c: "",
-                                      d: ""
-                                    },
-                                    answer: "a",
-                                    explanation:""    
-                                  },
-                                ],
-                              }
-                            }`;
-    let result = await model.generateContent(prompt + instructions);
-    const response = await result.response;
-    const text = await response.text();
-    //console.log(text);
-    const textWithoutBackticks = text.replace(/`/g, "");
-    //console.log(textWithoutBackticks);
-    const quizQues = JSON.parse(textWithoutBackticks);
-    //console.log(quizQues);
+                                      questions:
+                                      [
+                                        {
+                                          question: "",
+                                          options:
+                                          {
+                                            a: "",
+                                            b: "",
+                                            c: "",
+                                            d: ""
+                                          },
+                                          answer: "a",
+                                          explanation:"",
+                                          difficulty: ""
+                                        },
+                                      ],
+                                    }
+                                  }`;
+    let result = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo-0125",
+      response_format: { type: "json_object" },
+      messages: [
+        {
+          role: "user",
+          content: prompt + instructions,
+        },
+      ],
+    });
+    const response = JSON.parse(result.choices[0].message.content);
+    //console.log(response);
     const newQuiz = new Quiz({
       article: articleId,
-      para1: quizQues.para1,
-      para2: quizQues.para2,
-      para3: quizQues.para3,
+      para1: response.para1,
+      para2: response.para2,
+      para3: response.para3,
     });
     await newQuiz.save();
     article.quiz = newQuiz._id;

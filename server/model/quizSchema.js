@@ -33,6 +33,10 @@ const quizSchema = new mongoose.Schema({
         explanation: {
           type: String,
         },
+        difficulty: {
+          type: String,
+          required: true,
+        },
       },
     ],
   },
@@ -64,6 +68,10 @@ const quizSchema = new mongoose.Schema({
         explanation: {
           type: String,
         },
+        difficulty: {
+          type: String,
+          required: true,
+        },
       },
     ],
   },
@@ -94,6 +102,10 @@ const quizSchema = new mongoose.Schema({
         },
         explanation: {
           type: String,
+        },
+        difficulty: {
+          type: String,
+          required: true,
         },
       },
     ],
