@@ -51,7 +51,6 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
       return false;
     }
     // Set the flag indicating that the quiz has started
-    localStorage.setItem(quizStartedKey, true);
     return true;
   };
 
@@ -157,6 +156,7 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
       });
       return;
     }
+    //console.log(article._id);
     fetchQuiz();
 
     return () => {
@@ -400,7 +400,10 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
                 <Button
                   colorScheme="blue"
                   mr={3}
-                  onClick={() => setShowInstruction(false)}
+                  onClick={() => {
+                    localStorage.setItem(quizStartedKey, true);
+                    setShowInstruction(false);
+                  }}
                 >
                   Start
                 </Button>
