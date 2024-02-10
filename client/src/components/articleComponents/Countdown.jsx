@@ -2,7 +2,13 @@ import React, { useState, useEffect } from "react";
 import "./Countdown.css";
 import { Box, Heading, Text } from "@chakra-ui/react";
 
-const Countdown = ({ initialTimer, onTimerExhausted, submitted, start }) => {
+const Countdown = ({
+  initialTimer,
+  onTimerExhausted,
+  submitted,
+  start,
+  setTimeTaken,
+}) => {
   const [timer, setTimer] = useState(initialTimer);
   const [loadingPercent, setLoadingPercent] = useState(0);
   const [dot, setDot] = useState(360);
@@ -21,7 +27,7 @@ const Countdown = ({ initialTimer, onTimerExhausted, submitted, start }) => {
 
         // Enable pulsating effect when less than 10 seconds
         setPulsating(newTimer <= 10);
-
+        setTimeTaken(initialTimer - newTimer);
         return newTimer;
       });
     }, 1000);

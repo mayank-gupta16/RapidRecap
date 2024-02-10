@@ -35,7 +35,7 @@ const Article = () => {
   const textRef = useRef();
   const articleRef = useRef();
   const [percentile, setPercentile] = useState(null);
-  const [score, setScore] = useState(null);
+  const [RQM_score, setRQM_score] = useState(null);
   //const [showInstruction, setShowInstruction] = useState(false);
 
   const fetchArticle = async () => {
@@ -63,7 +63,7 @@ const Article = () => {
       );
       if (response.data.given) {
         setPercentile(response.data.percentile);
-        setScore(response.data.score);
+        setRQM_score(response.data.RQM_score);
         setGivenQuiz(true);
       }
     } catch (error) {
@@ -275,7 +275,7 @@ const Article = () => {
                         mb={4}
                         color="green.300"
                       >
-                        Score: {score}%
+                        RQM-Score: {RQM_score}
                       </Heading>
                     </Flex>
                   </Flex>
@@ -378,7 +378,7 @@ const Article = () => {
                       mb={2}
                       color="green.300"
                     >
-                      Current Percentile: 90%
+                      Current Percentile: {percentile}%
                     </Heading>
                     <Heading
                       textAlign={"left"}
@@ -387,7 +387,7 @@ const Article = () => {
                       mb={4}
                       color="green.300"
                     >
-                      Percentage: 80%
+                      RQM-Score: {RQM_score}
                     </Heading>
                   </Flex>
                 </Flex>

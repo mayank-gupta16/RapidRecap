@@ -110,6 +110,10 @@ const quizSchema = new mongoose.Schema({
       },
     ],
   },
+  overAllDifficulty: {
+    type: String,
+    required: true,
+  },
 });
 
 const Quiz = mongoose.model("QUIZ", quizSchema);

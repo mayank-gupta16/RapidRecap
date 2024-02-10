@@ -19,7 +19,6 @@ const quizAttemptSchema = new mongoose.Schema({
       },
       userAnswer: {
         type: String,
-        required: true,
       },
       isCorrect: {
         type: Boolean,
@@ -27,7 +26,7 @@ const quizAttemptSchema = new mongoose.Schema({
       },
     },
   ],
-  score: {
+  RQM_score: {
     type: Number,
     required: true,
   },

@@ -2,7 +2,7 @@ const User = require("../model/userSchema");
 const QuizAttempt = require("../model/quizAttemptSchema");
 
 const saveAttempt = async (req, res) => {
-  const { userId, articleId, userResponses, quizData } = req.body;
+  const { userId, articleId, userResponses, quizData, timeTaken } = req.body;
   //console.log(req.body);
   try {
     if (!userId || !articleId || !userResponses || !quizData) {
@@ -17,18 +17,21 @@ const saveAttempt = async (req, res) => {
     }
     const questions = quizData.questions;
     const correctAnswers = questions.map((question) => question.answer);
-    let score =
-      userResponses.length === correctAnswers.length
-        ? correctAnswers.reduce((acc, answer, index) => {
-            if (answer === userResponses[index]) {
-              //console.log(acc);
-              return acc + 1;
-            }
-            return acc;
-          }, 0)
-        : 0;
+    let score = correctAnswers.reduce((acc, answer, index) => {
+      if (userResponses.length > index && answer === userResponses[index]) {
+        //console.log(acc);
+        return acc + 1;
+      }
+      return acc;
+    }, 0);
     //console.log(score);
-    score = (score / quizData.questions.length) * 100;
+    score = score / quizData.questions.length;
+    const quizDifficulty =
+      questions.reduce((acc, question, index) => {
+        //console.log(acc, question.difficulty);
+        return acc + parseFloat(question.difficulty);
+      }, 0) / questions.length;
+    const RQM_score = Math.ceil(((score * quizDifficulty) / timeTaken) * 1000);
     const newQuizAttempt = new QuizAttempt({
       user: userId,
       article: articleId,
@@ -37,13 +40,13 @@ const saveAttempt = async (req, res) => {
         userAnswer,
         isCorrect: userAnswer === correctAnswers[index],
       })),
-      score,
+      RQM_score,
     });
     await newQuizAttempt.save();
     const user = await User.findById(userId);
     user.quizAttempts.push(newQuizAttempt._id);
     await user.save();
-    res.status(201).json({ message: "Attempt saved successfully", score });
+    res.status(201).json({ message: "Attempt saved successfully", RQM_score });
   } catch (error) {
     console.log(error.message);
     res.status(422).json({ error: error.message });
@@ -55,7 +58,9 @@ const getPercentile = async (req, res) => {
 
   try {
     const quizAttempts = await QuizAttempt.find({ article: articleId });
-    const sortedQuizAttempts = quizAttempts.sort((a, b) => b.score - a.score);
+    const sortedQuizAttempts = quizAttempts.sort(
+      (a, b) => b.RQM_score - a.RQM_score
+    );
     const userAttempt = sortedQuizAttempts.find(
       (attempt) => attempt.user.toString() === userId
     );
@@ -86,7 +91,9 @@ const givenQuiz = async (req, res) => {
     });
     if (quizAttempt) {
       const quizAttempts = await QuizAttempt.find({ article: articleId });
-      const sortedQuizAttempts = quizAttempts.sort((a, b) => b.score - a.score);
+      const sortedQuizAttempts = quizAttempts.sort(
+        (a, b) => b.RQM_score - a.RQM_score
+      );
       const userAttempt = sortedQuizAttempts.find(
         (attempt) => attempt.user.toString() === userId
       );
@@ -101,7 +108,7 @@ const givenQuiz = async (req, res) => {
       res.status(200).json({
         given: true,
         percentile: userPercentile,
-        score: quizAttempt.score,
+        RQM_score: quizAttempt.RQM_score,
       });
     } else {
       res.status(200).json({ given: false });

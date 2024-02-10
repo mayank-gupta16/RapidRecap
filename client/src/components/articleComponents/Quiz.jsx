@@ -40,6 +40,7 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
   const toast = useToast();
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [showInstruction, setShowInstruction] = useState(true);
+  const [timeTaken, setTimeTaken] = useState(45);
 
   const totalQuestions = quizData ? quizData.questions.length : 0;
 
@@ -56,6 +57,9 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
 
   const handleNextQuestion = () => {
     if (currentQuestionIndex < totalQuestions - 1) {
+      if (userAnswers.length === currentQuestionIndex) {
+        setUserAnswers((prevAnswers) => [...prevAnswers, ""]);
+      }
       setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
     }
   };
@@ -72,22 +76,19 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
       const userId = state.user._id;
       const articleId = article._id;
       const userResponses = [...userAnswers];
-      // let marks = 0;
-      // quizData.questions.forEach((question, index) => {
-      //   if (question.answer === userAnswers[index]) {
-      //     marks++;
-      //   }
-      // });
-      // setScore(marks);
-      // console.log("User Answers:", userAnswers);
-      // console.log(quizData.questions);
+      if (userResponses.length === currentQuestionIndex) {
+        userResponses.push("");
+      }
+      console.log(userResponses, quizData, timeTaken);
       const response = await axios.post(`/api/quiz/attempt`, {
         userId,
         articleId,
         userResponses,
         quizData,
+        timeTaken,
       });
-      setScore(response.data.score);
+      console.log(response);
+      setScore(response.data.RQM_score);
       setCurrentQuestionIndex(quizData.questions.length);
       setSubmitted(true);
       toast({
@@ -225,8 +226,9 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
             >
               <Countdown
                 initialTimer={45}
-                onTimerExhausted={() => submitted && handleSubmitQuiz()}
+                onTimerExhausted={() => handleSubmitQuiz()}
                 submitted={currentQuestionIndex === totalQuestions}
+                setTimeTaken={setTimeTaken}
                 start={!showInstruction}
               />
             </SkeletonCircle>
@@ -384,7 +386,7 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
                     textAlign="center"
                     marginTop="2"
                   >
-                    Percentage: {`${score} %`}
+                    RQM_score: {`${score}`}
                   </Text>
                 </SlideFade>
               )}

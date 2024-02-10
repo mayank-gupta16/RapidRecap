@@ -69,7 +69,6 @@ const getQuiz = async (req, res) => {
     if (!articleId) {
       throw new Error("No article provided");
     }
-
     const article = await Article.findById(articleId);
     if (!article) {
       throw new Error("Article not found");
@@ -84,6 +83,7 @@ const getQuiz = async (req, res) => {
 
     if (article.quiz) {
       //console.log("Quiz already exists");
+
       const quizId = article.quiz;
       const fullQuiz = await Quiz.findById(quizId);
       if (!fullQuiz) {
@@ -111,8 +111,17 @@ const getQuiz = async (req, res) => {
                                 5. Each answer should have an explanation.
                                 6. Nothing should be outside of the article provided(important)
                                 7. Every question should be unique.
-                                8. Give each question a difficulty level between 0 to 1.
-                                9. Return response in following JSON object format:
+                                8. Give each question a difficulty level between 0 to 1 (Important).
+                                9.Assess the overall difficulty level of the article by considering factors 
+                                  such as vocabulary complexity, sentence structure, conceptual difficulty, 
+                                  depth of analysis, background knowledge required, clarity and coherence, 
+                                  density of information, language style, length of the article, and reader 
+                                  engagement. Evaluate each criterion to determine the article's difficulty 
+                                  rating on a scale from 0 to 1, where 0 represents low difficulty and 1 represents 
+                                  high difficulty. Aggregate these assessments to derive an overall difficulty level 
+                                  that reflects the article's complexity and suitability for readers of varying 
+                                  proficiency levels.
+                                10. Return response in following JSON object format:
                                   {
                                     title: "Title of the article",
                                     para1 :
@@ -172,11 +181,19 @@ const getQuiz = async (req, res) => {
                                         },
                                       ],
                                     }
+                                    overAllDifficulty: ""
                                   }`;
     let result = await openai.chat.completions.create({
       model: "gpt-3.5-turbo-0125",
       response_format: { type: "json_object" },
       messages: [
+        {
+          role: "system",
+          content: `You are a quiz generator bot. You have to generate a quiz for the given article. You
+                    have to follow the given instructions to generate the quiz. You importantly have to give 
+                    the overall difficulty of the article and also difficulty of each question. You have to 
+                    return the response in the given JSON format.`,
+        },
         {
           role: "user",
           content: prompt + instructions,
@@ -190,6 +207,7 @@ const getQuiz = async (req, res) => {
       para1: response.para1,
       para2: response.para2,
       para3: response.para3,
+      overAllDifficulty: response.overAllDifficulty,
     });
     await newQuiz.save();
     article.quiz = newQuiz._id;
