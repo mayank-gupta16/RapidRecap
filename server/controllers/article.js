@@ -104,10 +104,10 @@ const getQuiz = async (req, res) => {
     });
     const prompt = `Title: ${title}\n Author: ${author}\n\n ${mainText}\n\n`;
     const instructions = `Instructions:
-                                1. Break the article into 3 paragraphs.
+                                1. Break the article into 3 paragraphs such that minimum 2 questions can be made from each para.
                                 2. Generate minimum 2 and maximum 5 questions from each paragraph(very important!).
                                 3. Each question should have 4 options.
-                                4. Each question should have a correct answer.
+                                4. Each question should have a correct option.
                                 5. Each answer should have an explanation.
                                 6. Nothing should be outside of the article provided(important)
                                 7. Every question should be unique.
@@ -137,7 +137,7 @@ const getQuiz = async (req, res) => {
                                             c: "",
                                             d: ""
                                           },
-                                          answer: "a",
+                                          answer: "",
                                           explanation:"",
                                           difficulty: ""
                                         },
@@ -156,7 +156,7 @@ const getQuiz = async (req, res) => {
                                             c: "",
                                             d: ""
                                           },
-                                          answer: "a",
+                                          answer: "",
                                           explanation:"",
                                           difficulty: ""
                                         },
@@ -175,7 +175,7 @@ const getQuiz = async (req, res) => {
                                             c: "",
                                             d: ""
                                           },
-                                          answer: "a",
+                                          answer: "",
                                           explanation:"",
                                           difficulty: ""
                                         },
@@ -192,15 +192,55 @@ const getQuiz = async (req, res) => {
           content: `You are a quiz generator bot. You have to generate a quiz for the given article. You
                     have to follow the given instructions to generate the quiz. You importantly have to give 
                     the overall difficulty of the article and also difficulty of each question. You have to 
-                    return the response in the given JSON format.`,
+                    return the response in the given JSON format. Break the article into 3 paragraphs such that minimum 2 questions can be made from each para.`,
+        },
+        {
+          role: "system",
+          content: instructions,
         },
         {
           role: "user",
-          content: prompt + instructions,
+          content: prompt,
         },
       ],
     });
-    const response = JSON.parse(result.choices[0].message.content);
+    let response = JSON.parse(result.choices[0].message.content);
+    let cnt = 3;
+    while (
+      (!response.para1.questions[0].difficulty ||
+        !response.para2.questions[0].difficulty ||
+        !response.para3.questions[0].difficulty ||
+        !response.overAllDifficulty) &&
+      cnt-- > 0
+    ) {
+      result = await openai.chat.completions.create({
+        model: "gpt-3.5-turbo-0125",
+        response_format: { type: "json_object" },
+        messages: [
+          {
+            role: "system",
+            content: `Provide the difficulty of each question and overall difficulty of the article.Assess the overall difficulty level of the article by considering factors 
+                      such as vocabulary complexity, sentence structure, conceptual difficulty, 
+                      depth of analysis, background knowledge required, clarity and coherence, 
+                      density of information, language style, length of the article, and reader 
+                      engagement. Evaluate each criterion to determine the article's difficulty 
+                      rating on a scale from 0 to 1, where 0 represents low difficulty and 1 represents 
+                      high difficulty. Aggregate these assessments to derive an overall difficulty level 
+                      that reflects the article's complexity and suitability for readers of varying 
+                      proficiency levels.`,
+          },
+          {
+            role: "system",
+            content: instructions,
+          },
+          {
+            role: "user",
+            content: response,
+          },
+        ],
+      });
+      response = JSON.parse(result.choices[0].message.content);
+    }
     //console.log(response);
     const newQuiz = new Quiz({
       article: articleId,
