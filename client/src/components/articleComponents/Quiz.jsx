@@ -51,7 +51,6 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
       onClose();
       return false;
     }
-    // Set the flag indicating that the quiz has started
     return true;
   };
 
@@ -75,8 +74,13 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
     try {
       const userId = state.user._id;
       const articleId = article._id;
-      const userResponses = [...userAnswers];
-      if (userResponses.length === currentQuestionIndex) {
+      const userResponses = showConfirmationModal
+        ? Array.from({ length: quizData.length }, () => "")
+        : [...userAnswers];
+      if (
+        !showConfirmationModal &&
+        userResponses.length === currentQuestionIndex
+      ) {
         userResponses.push("");
       }
       console.log(userResponses, quizData, timeTaken);
@@ -160,7 +164,20 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
     //console.log(article._id);
     fetchQuiz();
 
+    const handleBeforeUnload = (event) => {
+      // Cancel the event
+      event.preventDefault();
+      // Chrome requires returnValue to be set
+      event.returnValue = "";
+      // Show the confirmation modal
+      setShowConfirmationModal(true);
+    };
+
+    if (!showInstruction)
+      window.addEventListener("beforeunload", handleBeforeUnload);
+
     return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
       localStorage.removeItem(quizStartedKey);
     };
   }, []);
@@ -185,8 +202,8 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
   };
   const handleConfirmClose = async () => {
     // Close the confirmation modal
-    setShowConfirmationModal(false);
     await handleSubmitQuiz();
+    setShowConfirmationModal(false);
     // Perform additional actions if needed
   };
 
@@ -392,41 +409,48 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
               )}
             </ModalBody>
           )}
-          <Skeleton
-            isLoaded={!load}
-            borderRadius={"10px"}
-            marginBottom={load ? "10px" : ""} // remove this when skeleton isLoaded
-          >
-            <ModalFooter>
-              {showInstruction && (
-                <Button
-                  colorScheme="blue"
-                  mr={3}
-                  onClick={() => {
-                    localStorage.setItem(quizStartedKey, true);
-                    setShowInstruction(false);
-                  }}
-                >
-                  Start
-                </Button>
-              )}
-              {!showInstruction &&
-                currentQuestionIndex < totalQuestions - 1 && (
+          <Flex flexDirection={"column"} color={"white"}>
+            {load && (
+              <Text size={"lg"}>
+                Quiz is Generating Wait for the start button....
+              </Text>
+            )}
+            <Skeleton
+              isLoaded={!load}
+              borderRadius={"10px"}
+              marginBottom={load ? "10px" : ""} // remove this when skeleton isLoaded
+            >
+              <ModalFooter>
+                {showInstruction && (
                   <Button
                     colorScheme="blue"
                     mr={3}
-                    onClick={handleNextQuestion}
+                    onClick={() => {
+                      localStorage.setItem(quizStartedKey, true);
+                      setShowInstruction(false);
+                    }}
                   >
-                    Next
+                    Start
                   </Button>
                 )}
-              {currentQuestionIndex === totalQuestions - 1 && (
-                <Button colorScheme="blue" mr={3} onClick={handleSubmitQuiz}>
-                  Submit
-                </Button>
-              )}
-            </ModalFooter>
-          </Skeleton>
+                {!showInstruction &&
+                  currentQuestionIndex < totalQuestions - 1 && (
+                    <Button
+                      colorScheme="blue"
+                      mr={3}
+                      onClick={handleNextQuestion}
+                    >
+                      Next
+                    </Button>
+                  )}
+                {currentQuestionIndex === totalQuestions - 1 && (
+                  <Button colorScheme="blue" mr={3} onClick={handleSubmitQuiz}>
+                    Submit
+                  </Button>
+                )}
+              </ModalFooter>
+            </Skeleton>
+          </Flex>
         </ModalContent>
       </Modal>
       {!showInstruction && (
@@ -434,7 +458,7 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
           isOpen={showConfirmationModal}
           onClose={() => setShowConfirmationModal(false)}
           onConfirm={handleConfirmClose}
-          message="Are you sure you want to close the quiz? Your progress will be lost."
+          message="Clicking on Confirm will result in submission of the quiz with 0 score. Are you sure you want to submit the quiz?"
         />
       )}
     </>

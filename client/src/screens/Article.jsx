@@ -18,7 +18,6 @@ import {
 import Loading from "../components/miscellaneous/Loading";
 import Quiz from "../components/articleComponents/Quiz";
 import GenerateQuizButton from "../components/articleComponents/GenerateQuizButton";
-import InstructionModal from "../components/articleComponents/customQuizModal/InstructionModal";
 
 const Article = () => {
   const { state, dispatch } = useContext(AppContext);
