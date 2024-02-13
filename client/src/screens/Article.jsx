@@ -13,15 +13,17 @@ import {
   Image,
   SimpleGrid,
   Text,
-  Toast,
+  useToast,
   useDisclosure,
+  Tooltip,
 } from "@chakra-ui/react";
 import Loading from "../components/miscellaneous/Loading";
 import Quiz from "../components/articleComponents/Quiz";
 import GenerateQuizButton from "../components/articleComponents/GenerateQuizButton";
+import medalIcon from "../assets/medal.png";
 
 const Article = () => {
-  const toast = Toast();
+  const toast = useToast();
   const { state, dispatch } = useContext(AppContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
@@ -323,7 +325,25 @@ const Article = () => {
                         mb={4}
                         color="green.300"
                       >
-                        RQM-Score: {RQM_score}
+                        <Flex gap={"5px"}>
+                          <Tooltip
+                            color={"white"}
+                            label="This is the Rapid Quiz Mastery(RQM) score. It is calculated based on the number of correct answers, time taken to complete the quiz and the difficulty level of the overall quiz. The higher the RQM-Score, the better the performance."
+                            aria-label="A tooltip"
+                            textAlign={"left"}
+                            rounded={"md"}
+                            p={"10px"}
+                          >
+                            <Image
+                              src={medalIcon}
+                              alt="Rating"
+                              width={"25px"}
+                              height={"25px"}
+                              bg={"none"}
+                            />
+                          </Tooltip>
+                          RQM-Score: {RQM_score}
+                        </Flex>
                       </Heading>
                     </Flex>
                   </Flex>
