@@ -27,7 +27,7 @@ const Countdown = ({
 
         // Enable pulsating effect when less than 10 seconds
         setPulsating(newTimer <= 10);
-        setTimeTaken(initialTimer - newTimer);
+        setTimeTaken((prevTimeTaken) => prevTimeTaken + 1);
         return newTimer;
       });
     }, 1000);

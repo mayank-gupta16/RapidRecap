@@ -29,7 +29,6 @@ import ConfirmationModal from "./customQuizModal/ConfirmationModal";
 import InstructionModal from "./customQuizModal/InstructionModal";
 
 const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
-  const quizStartedKey = `quizStarted_${article._id}`;
   const { state, dispatch } = useContext(AppContext);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [submitted, setSubmitted] = useState(false);
@@ -40,19 +39,9 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
   const toast = useToast();
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [showInstruction, setShowInstruction] = useState(true);
-  const [timeTaken, setTimeTaken] = useState(45);
+  const [timeTaken, setTimeTaken] = useState(0);
 
   const totalQuestions = quizData ? quizData.questions.length : 0;
-
-  const checkAndStartQuiz = () => {
-    const quizStartedInOtherTab = localStorage.getItem(quizStartedKey);
-    if (quizStartedInOtherTab) {
-      // Quiz already started in another tab, close this tab
-      onClose();
-      return false;
-    }
-    return true;
-  };
 
   const handleNextQuestion = () => {
     if (currentQuestionIndex < totalQuestions - 1) {
@@ -72,7 +61,6 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
     // You can add your own logic here
     console.log("Submitting Quiz");
     try {
-      const userId = state.user._id;
       const articleId = article._id;
       const userResponses = showConfirmationModal
         ? Array.from({ length: quizData.length }, () => "")
@@ -85,7 +73,6 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
       }
       console.log(userResponses, quizData, timeTaken);
       const response = await axios.post(`/api/quiz/attempt`, {
-        userId,
         articleId,
         userResponses,
         quizData,
@@ -106,13 +93,40 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
     } catch (error) {
       console.log(error.response.data.error);
       toast({
-        title: "Quiz submission failed!",
-        description: error.response.data.error,
+        title: "Error",
+        description: error.response.data.error || "Quiz submission failed!",
         status: "error",
         duration: 5000,
         isClosable: true,
         position: "top",
       });
+    }
+  };
+
+  const startQuiz = async () => {
+    setLoad(true);
+    try {
+      //console.log(article._id);
+      const articleId = article._id;
+      const quiz = await axios.get(`/api/articles/startQuiz/${articleId}`);
+      if (!quiz.data) throw new Error("No Quiz data found!");
+      setQuizData(quiz.data);
+      localStorage.removeItem("isQuizGivenCalled");
+      setShowInstruction(false);
+    } catch (error) {
+      toast({
+        title: "Quiz failed!",
+        description:
+          error.response.data.error ||
+          "Please try again (Close the quiz and Try refreshing the page)",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "top",
+      });
+      console.log(error);
+    } finally {
+      setLoad(false);
     }
   };
 
@@ -122,8 +136,6 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
       //console.log(article._id);
       const articleId = article._id;
       const response = await axios.put(`/api/articles/genQuiz/${articleId}`);
-      //console.log(response.data);
-      setQuizData(response.data);
       setLoad(false);
       toast({
         title: "Quiz generated Successfully!",
@@ -137,6 +149,7 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
       toast({
         title: "Quiz generation failed!",
         description:
+          error.response.data.error ||
           "Please try again (Close the quiz and Try refreshing the page)",
         status: "error",
         duration: 5000,
@@ -148,19 +161,6 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
   };
 
   useEffect(() => {
-    const quizCanBeStarted = checkAndStartQuiz();
-    if (!quizCanBeStarted) {
-      // Quiz can't be started in this tab, return early
-      toast({
-        title: "Quiz already started!",
-        description: "Quiz already started in another tab.",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-        position: "top",
-      });
-      return;
-    }
     //console.log(article._id);
     fetchQuiz();
 
@@ -178,7 +178,6 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
 
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
-      localStorage.removeItem(quizStartedKey);
     };
   }, []);
 
@@ -202,8 +201,21 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
   };
   const handleConfirmClose = async () => {
     // Close the confirmation modal
-    await handleSubmitQuiz();
-    setShowConfirmationModal(false);
+    try {
+      await handleSubmitQuiz();
+      setShowConfirmationModal(false);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description:
+          error.response.data.error || "Quiz closing failed! Please try again.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+      console.log(error);
+    }
     // Perform additional actions if needed
   };
 
@@ -244,7 +256,7 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
               <Countdown
                 initialTimer={45}
                 onTimerExhausted={() => handleSubmitQuiz()}
-                submitted={currentQuestionIndex === totalQuestions}
+                submitted={submitted}
                 setTimeTaken={setTimeTaken}
                 start={!showInstruction}
               />
@@ -422,14 +434,7 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
             >
               <ModalFooter>
                 {showInstruction && (
-                  <Button
-                    colorScheme="blue"
-                    mr={3}
-                    onClick={() => {
-                      localStorage.setItem(quizStartedKey, true);
-                      setShowInstruction(false);
-                    }}
-                  >
+                  <Button colorScheme="blue" mr={3} onClick={startQuiz}>
                     Start
                   </Button>
                 )}

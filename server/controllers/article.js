@@ -16,11 +16,11 @@ const allArticles = async (req, res) => {
       .limit(pageSize);
 
     if (!article) {
-      res.status(422).json({ error: "No articles found" });
-      //throw new Error("No articles found");
+      throw new Error("No articles found");
     }
     res.send(article);
   } catch (error) {
+    res.status(400).json({ error: error.message || "Something went wrong" });
     console.log(error.message);
   }
 };
@@ -58,6 +58,7 @@ const getArticle = async (req, res) => {
     //console.log(article);
     res.status(201).send(newArticle);
   } catch (error) {
+    res.status(400).json({ error: error.message || "Something went wrong" });
     console.log(error.message);
   }
 };
@@ -80,10 +81,7 @@ const getQuiz = async (req, res) => {
     if (!title || !author || !mainText) {
       throw new Error("Please provide all the details");
     }
-
     if (article.quiz) {
-      //console.log("Quiz already exists");
-
       const quizId = article.quiz;
       const fullQuiz = await Quiz.findById(quizId);
       if (!fullQuiz) {
@@ -91,14 +89,10 @@ const getQuiz = async (req, res) => {
         await article.save();
         throw new Error("Quiz not found, Please try again.");
       }
-      const quiz = genQuiz({ fullQuiz, title });
-      if (quiz.questions.length <= 2) {
-        throw new Error("Article is too short for a quiz");
-      }
-      res.status(200).send(quiz);
-      return;
+      return res
+        .status(200)
+        .json({ message: "Quiz Questions generated successfully" });
     }
-
     const openai = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY,
     });
@@ -235,7 +229,7 @@ const getQuiz = async (req, res) => {
           },
           {
             role: "user",
-            content: response,
+            content: JSON.stringify(response),
           },
         ],
       });
@@ -252,17 +246,84 @@ const getQuiz = async (req, res) => {
     await newQuiz.save();
     article.quiz = newQuiz._id;
     await article.save();
-    const quizId = newQuiz._id;
-    const fullQuiz = await Quiz.findById(quizId);
-    const quiz = genQuiz({ fullQuiz, title });
-    if (quiz.questions.length <= 2) {
-      throw new Error("Article is too short for a quiz");
-    }
-    res.status(200).send(quiz);
+    res.status(200).json({ message: "Quiz Questions generated successfully" });
   } catch (error) {
-    res.status(400).json({ error: "Something went wrong" });
+    res.status(400).json({ error: error.message || "Something went wrong" });
     console.log(error);
   }
 };
 
-module.exports = { allArticles, getArticle, getQuiz };
+const startQuiz = async (req, res) => {
+  const { articleId } = req.params;
+  const userId = req.user._id;
+  //console.log(userId);
+  try {
+    if (!articleId) {
+      throw new Error("No article provided");
+    }
+    const article = await Article.findById(articleId);
+    if (!article) {
+      throw new Error("Article not found");
+    }
+    const { title } = article;
+    if (
+      article.userQuizStatus.find(
+        (status) =>
+          status.userId.toString() === userId && status.status === true
+      )
+    ) {
+      throw new Error("Quiz already started");
+    }
+    if (article.quiz) {
+      const quizId = article.quiz;
+      const fullQuiz = await Quiz.findById(quizId);
+      if (!fullQuiz) {
+        article.quiz = null;
+        await article.save();
+        throw new Error("Quiz not found, Please try again.");
+      }
+      const quiz = genQuiz({ fullQuiz, title });
+      if (quiz.questions.length <= 2) {
+        throw new Error("Article is too short for a quiz");
+      }
+      article.userQuizStatus.push({ userId, status: true });
+      await article.save();
+      res.status(200).send(quiz);
+      return;
+    } else {
+      throw new Error("Quiz not found, Please try again.");
+    }
+  } catch (error) {
+    res.status(400).json({ error: error.message || "Something went wrong" });
+    console.log(error.message);
+  }
+};
+
+const getArticleQuizStatus = async (req, res) => {
+  const { articleId } = req.params;
+  const userId = req.user._id;
+  try {
+    const article = await Article.findById(articleId);
+    if (!article) {
+      throw new Error("Article not found");
+    }
+    const userStatus = article.userQuizStatus.find(
+      (status) => status.userId.toString() === userId
+    );
+    if (!userStatus) {
+      throw new Error("User not found");
+    }
+    res.status(200).json({ status: userStatus.status });
+  } catch (error) {
+    res.status(400).json({ error: error.message || "Something went wrong" });
+    console.log(error);
+  }
+};
+
+module.exports = {
+  allArticles,
+  getArticle,
+  getQuiz,
+  getArticleQuizStatus,
+  startQuiz,
+};

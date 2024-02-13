@@ -1,13 +1,28 @@
 const User = require("../model/userSchema");
+const Article = require("../model/articleSchema");
 const QuizAttempt = require("../model/quizAttemptSchema");
+const mongoose = require("mongoose");
+const { Types } = mongoose;
 
 const saveAttempt = async (req, res) => {
-  const { userId, articleId, userResponses, quizData, timeTaken } = req.body;
-  //console.log(req.body);
+  const { articleId, userResponses, quizData, timeTaken } = req.body;
+  const userId = req.user._id;
+  //console.log(userId);
   try {
     if (!userId || !articleId || !userResponses || !quizData) {
       throw new Error("Please provide all the details");
     }
+    const article = await Article.findById(articleId);
+    const foundStatus = article.userQuizStatus.find(
+      (status) => status.userId.toString() === userId
+    );
+
+    if (foundStatus) {
+      foundStatus.status = false;
+    } else {
+      throw new Error("User never started the quiz");
+    }
+    await article.save();
     const quizAttempt = await QuizAttempt.findOne({
       user: userId,
       article: articleId,
@@ -49,7 +64,7 @@ const saveAttempt = async (req, res) => {
     res.status(201).json({ message: "Attempt saved successfully", RQM_score });
   } catch (error) {
     console.log(error.message);
-    res.status(422).json({ error: error.message });
+    res.status(400).json({ error: error.message || "Error saving attempt" });
   }
 };
 
@@ -76,9 +91,10 @@ const getPercentile = async (req, res) => {
     res.status(200).json({ percentile: userPercentile });
   } catch (error) {
     console.log(error.message);
-    res
-      .status(422)
-      .json({ error: "Error Calculating percentile. Please try again Later" });
+    res.status(400).json({
+      error:
+        error.message || "Error Calculating percentile. Please try again Later",
+    });
   }
 };
 

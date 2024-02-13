@@ -55,6 +55,18 @@ const articleSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "QUIZ",
     },
+    userQuizStatus: [
+      {
+        userId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "USER",
+        },
+        status: {
+          type: Boolean,
+          required: true,
+        },
+      },
+    ],
   },
   { collection: "Articles" }
 );

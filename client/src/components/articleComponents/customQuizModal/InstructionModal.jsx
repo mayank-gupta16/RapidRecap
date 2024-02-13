@@ -20,12 +20,10 @@ const InstructionModal = () => {
 
         <VStack spacing={4} alignItems="start" textAlign="left">
           <Box>
-            <Text>1. Quiz will contain 5 questions.</Text>
+            <Text>1. Quiz will contain some questions.</Text>
           </Box>
           <Box>
-            <Text>
-              2. You have to complete these 5 questions in 45 seconds.
-            </Text>
+            <Text>2. You have 9 seconds per question.</Text>
           </Box>
           <Box>
             <Text>3. All the questions will be from the given article.</Text>
@@ -39,7 +37,10 @@ const InstructionModal = () => {
             </Text>
           </Box>
           <Box>
-            <Text>6. Attempting the quiz will affect your IQ score.</Text>
+            <Text>6. You can't leave the quiz in between.</Text>
+          </Box>
+          <Box>
+            <Text>7. Attempting the quiz will affect your IQ score.</Text>
           </Box>
         </VStack>
       </ModalBody>

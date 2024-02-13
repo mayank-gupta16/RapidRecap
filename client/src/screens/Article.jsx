@@ -13,6 +13,7 @@ import {
   Image,
   SimpleGrid,
   Text,
+  Toast,
   useDisclosure,
 } from "@chakra-ui/react";
 import Loading from "../components/miscellaneous/Loading";
@@ -20,6 +21,7 @@ import Quiz from "../components/articleComponents/Quiz";
 import GenerateQuizButton from "../components/articleComponents/GenerateQuizButton";
 
 const Article = () => {
+  const toast = Toast();
   const { state, dispatch } = useContext(AppContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
@@ -35,6 +37,7 @@ const Article = () => {
   const articleRef = useRef();
   const [percentile, setPercentile] = useState(null);
   const [RQM_score, setRQM_score] = useState(null);
+  const [onGoingQuiz, setOnGoingQuiz] = useState(false);
   //const [showInstruction, setShowInstruction] = useState(false);
 
   const fetchArticle = async () => {
@@ -47,7 +50,15 @@ const Article = () => {
       setArticle(response.data);
     } catch (error) {
       // Handle errors
-      console.log(error.message);
+      toast({
+        title: "Error",
+        description: error.response.data.error || "Error fetching article",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+      console.log(error.response.data.error);
     } finally {
       setLoad(false);
     }
@@ -56,6 +67,7 @@ const Article = () => {
   const isQuizGiven = async () => {
     const userId = state.user._id;
     const articleId = id;
+
     try {
       const response = await axios.get(
         `/api/quiz/given/${articleId}/${userId}`
@@ -66,12 +78,49 @@ const Article = () => {
         setGivenQuiz(true);
       }
     } catch (error) {
+      toast({
+        title: "Error",
+        description:
+          error.response.data.error || "Error checking for given quiz",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
       console.log(error.message);
+    }
+  };
+
+  const checkOnGoingQuiz = async () => {
+    const hasBeenCalled = localStorage.getItem("isQuizGivenCalled");
+    if (!hasBeenCalled) {
+      try {
+        const response = await axios.get(`/api/articles/quizStatus/${id}`);
+        if (response.data.status) {
+          setOnGoingQuiz(true);
+        } else {
+          setOnGoingQuiz(false);
+        }
+      } catch (error) {
+        toast({
+          title: "Error",
+          description:
+            error.response.data.error || "Error checking for on going quiz",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+          position: "top",
+        });
+        console.log(error.message);
+      } finally {
+        localStorage.setItem("isQuizGivenCalled", true);
+      }
     }
   };
 
   useEffect(() => {
     fetchArticle();
+    checkOnGoingQuiz();
   }, []);
   useEffect(() => {
     isQuizGiven();
@@ -279,6 +328,10 @@ const Article = () => {
                     </Flex>
                   </Flex>
                 </>
+              ) : onGoingQuiz ? (
+                <Heading size="md" margin={"20px"} color={"red.500"}>
+                  Quiz is Already going on in some other tab or device
+                </Heading>
               ) : (
                 <GenerateQuizButton
                   onClick={() => {
@@ -391,6 +444,19 @@ const Article = () => {
                   </Flex>
                 </Flex>
               </>
+            ) : onGoingQuiz ? (
+              <Heading
+                css={{
+                  "@media screen and (min-width: 821px)": {
+                    display: "none",
+                  },
+                }}
+                size="md"
+                margin={"20px"}
+                color={"red.500"}
+              >
+                Quiz is Already going on in some other tab or device
+              </Heading>
             ) : (
               <GenerateQuizButton
                 css={{
