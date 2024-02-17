@@ -51,6 +51,10 @@ const userSchema = new mongoose.Schema(
         ref: "QUIZ_ATTEMPT",
       },
     ],
+    IQ_score: {
+      type: Number,
+      default: 0,
+    },
   },
   { collection: "Users" }
 );
