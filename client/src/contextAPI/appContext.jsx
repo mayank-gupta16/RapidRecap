@@ -11,7 +11,7 @@ async function showState() {
     } else return { show: true, user: {} };
   } catch (error) {
     console.log(error.message);
-    return true;
+    return { show: true, user: {} };
   }
 }
 
