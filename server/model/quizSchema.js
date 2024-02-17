@@ -114,6 +114,14 @@ const quizSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+  isActive: {
+    type: Boolean,
+    default: true,
+  },
 });
 
 const Quiz = mongoose.model("QUIZ", quizSchema);
