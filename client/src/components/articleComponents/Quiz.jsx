@@ -136,6 +136,9 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
       //console.log(article._id);
       const articleId = article._id;
       const response = await axios.put(`/api/articles/genQuiz/${articleId}`);
+      if (response.data.expired) {
+        throw new Error("Quiz is already expired.");
+      }
       setLoad(false);
       toast({
         title: "Quiz generated Successfully!",
@@ -150,6 +153,7 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
         title: "Quiz generation failed!",
         description:
           error.response.data.error ||
+          error ||
           "Please try again (Close the quiz and Try refreshing the page)",
         status: "error",
         duration: 5000,
