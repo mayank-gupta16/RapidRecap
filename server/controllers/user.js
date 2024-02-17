@@ -1,4 +1,5 @@
 const User = require("../model/userSchema");
+const QuizAttempt = require("../model/quizAttemptSchema");
 const bcrypt = require("bcryptjs");
 const {
   generateOtp,
@@ -8,6 +9,7 @@ const {
 const VerificationToken = require("../model/verificationToken");
 const { isValidObjectId } = require("mongoose");
 const jwt = require("jsonwebtoken");
+const { updatePercentilesOnQuizDeactivation } = require("../utils/quiz");
 
 const registerUser = async (req, res) => {
   console.log(req.body);
@@ -254,6 +256,91 @@ const handleGoogleLogin = async (req, res) => {
     res.status(422).json({ error: error.message });
   }
 };
+
+// Incomplete function
+
+const calculateUserIQScores = async (req, res) => {
+  try {
+    // Fetch all users
+    const users = await User.aggregate([
+      {
+        $lookup: {
+          from: "quiz_attempts",
+          localField: "_id",
+          foreignField: "user",
+          as: "quizAttempts",
+        },
+      },
+      {
+        $addFields: {
+          distinctArticles: { $size: { $setUnion: "$quizAttempts.article" } },
+        },
+      },
+      {
+        $match: {
+          distinctArticles: { $gte: 10 },
+        },
+      },
+    ]);
+
+    // Array to store user scores
+    const userScores = [];
+    let sumOfUserScores = 0;
+    // Iterate through each user
+    for (const user of users) {
+      // Fetch quiz attempts for the user
+      const quizAttempts = await QuizAttempt.find({
+        user: user._id,
+      }).populate({
+        path: "article",
+        populate: { path: "quiz" },
+      });
+
+      let userScore = 0;
+
+      // Iterate through each quiz attempt
+      for (const attempt of quizAttempts) {
+        // Calculate score for the quiz attempt (Wi * Pi)
+        if (
+          attempt.article.quiz.createdAt.getTime() + 24 * 60 * 60 * 1000 <
+          Date.now()
+        ) {
+          if (attempt.article.quiz.isActive) {
+            await updatePercentilesOnQuizDeactivation({
+              id: attempt.article._id,
+            });
+            attempt.article.quiz.isActive = false;
+            await attempt.article.quiz.save();
+          }
+          const quizScore = attempt.articleDifficulty * attempt.userPercentile;
+          userScore += quizScore;
+        }
+      }
+      sumOfUserScores += userScore;
+      // Add user score to the array
+      userScores.push({ user, userScore });
+    }
+    const meanOfUserScores = sumOfUserScores / userScores.length;
+    const sumOfSquares = userScores.reduce(
+      (acc, user) => acc + Math.pow(user.userScore - meanOfUserScores, 2),
+      0
+    );
+    const standardDeviation = Math.sqrt(sumOfSquares / userScores.length);
+    for (const user of userScores) {
+      const normalizedScore =
+        (user.userScore - meanOfUserScores) / standardDeviation;
+      const IQScore = 100 + 15 * normalizedScore;
+      user.user.IQ_score = IQScore;
+      await user.user.save();
+    }
+    // Calculate IQ scores for each user
+  } catch (error) {
+    res
+      .status(400)
+      .json({ error: error.message || "Error calculating IQ score" });
+    console.log(error.message);
+  }
+};
 //module.exports = router;
 module.exports = {
   registerUser,
@@ -264,4 +351,5 @@ module.exports = {
   resendOTP,
   forgotPassword,
   handleGoogleLogin,
+  calculateUserIQScores,
 };
