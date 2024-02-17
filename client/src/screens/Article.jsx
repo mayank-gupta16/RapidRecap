@@ -40,6 +40,7 @@ const Article = () => {
   const [percentile, setPercentile] = useState(null);
   const [RQM_score, setRQM_score] = useState(null);
   const [onGoingQuiz, setOnGoingQuiz] = useState(false);
+  const [quizExpired, setQuizExpired] = useState(false);
   //const [showInstruction, setShowInstruction] = useState(false);
 
   const fetchArticle = async () => {
@@ -49,7 +50,8 @@ const Article = () => {
       //console.log(response.data);
       setLatestNews(news.data);
       //console.log(news.data);
-      setArticle(response.data);
+      setArticle(response.data.newArticle);
+      setQuizExpired(response.data.quizExpired);
     } catch (error) {
       // Handle errors
       toast({
@@ -352,7 +354,7 @@ const Article = () => {
                 <Heading size="md" margin={"20px"} color={"red.500"}>
                   Quiz is Already going on in some other tab or device
                 </Heading>
-              ) : (
+              ) : quizExpired ? null : (
                 <GenerateQuizButton
                   onClick={() => {
                     setShowQuiz(!showQuiz);
@@ -477,7 +479,7 @@ const Article = () => {
               >
                 Quiz is Already going on in some other tab or device
               </Heading>
-            ) : (
+            ) : quizExpired ? null : (
               <GenerateQuizButton
                 css={{
                   "@media screen and (min-width: 821px)": {
