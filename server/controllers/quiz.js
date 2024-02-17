@@ -12,7 +12,14 @@ const saveAttempt = async (req, res) => {
     if (!userId || !articleId || !userResponses || !quizData) {
       throw new Error("Please provide all the details");
     }
-    const article = await Article.findById(articleId);
+    const attempt = await QuizAttempt.findOne({
+      user: userId,
+      article: articleId,
+    });
+    if (attempt) {
+      throw new Error("User has already attempted the quiz for the article.");
+    }
+    const article = await Article.findById(articleId).populate("quiz");
     const foundStatus = article.userQuizStatus.find(
       (status) => status.userId.toString() === userId
     );
@@ -47,6 +54,7 @@ const saveAttempt = async (req, res) => {
         return acc + parseFloat(question.difficulty);
       }, 0) / questions.length;
     const RQM_score = Math.ceil(((score * quizDifficulty) / timeTaken) * 1000);
+    const articleDifficulty = article.quiz.overAllDifficulty;
     const newQuizAttempt = new QuizAttempt({
       user: userId,
       article: articleId,
@@ -56,6 +64,7 @@ const saveAttempt = async (req, res) => {
         isCorrect: userAnswer === correctAnswers[index],
       })),
       RQM_score,
+      articleDifficulty,
     });
     await newQuizAttempt.save();
     const user = await User.findById(userId);
@@ -87,7 +96,9 @@ const getPercentile = async (req, res) => {
     const totalAttempts = sortedQuizAttempts.length;
     const userPercentile =
       ((totalAttempts - userPosition) / totalAttempts) * 100;
-
+    userAttempt.userPercentile = userPercentile;
+    await userAttempt.save();
+    console.log(userPercentile);
     res.status(200).json({ percentile: userPercentile });
   } catch (error) {
     console.log(error.message);
@@ -121,6 +132,8 @@ const givenQuiz = async (req, res) => {
       const totalAttempts = sortedQuizAttempts.length;
       const userPercentile =
         ((totalAttempts - userPosition) / totalAttempts) * 100;
+      userAttempt.userPercentile = userPercentile;
+      await userAttempt.save();
       res.status(200).json({
         given: true,
         percentile: userPercentile,
