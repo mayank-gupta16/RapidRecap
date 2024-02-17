@@ -30,6 +30,13 @@ const quizAttemptSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  articleDifficulty: {
+    type: Number,
+    required: true,
+  },
+  userPercentile: {
+    type: Number,
+  },
 });
 
 const QuizAttempt = mongoose.model("QUIZ_ATTEMPT", quizAttemptSchema);
