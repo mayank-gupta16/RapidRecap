@@ -21,6 +21,7 @@ import Loading from "../components/miscellaneous/Loading";
 import Quiz from "../components/articleComponents/Quiz";
 import GenerateQuizButton from "../components/articleComponents/GenerateQuizButton";
 import medalIcon from "../assets/medal.png";
+import QuizExpired from "../components/articleComponents/QuizExpired";
 
 const Article = () => {
   const toast = useToast();
@@ -354,7 +355,9 @@ const Article = () => {
                 <Heading size="md" margin={"20px"} color={"red.500"}>
                   Quiz is Already going on in some other tab or device
                 </Heading>
-              ) : quizExpired ? null : (
+              ) : !quizExpired ? (
+                <QuizExpired />
+              ) : (
                 <GenerateQuizButton
                   onClick={() => {
                     setShowQuiz(!showQuiz);
@@ -479,7 +482,9 @@ const Article = () => {
               >
                 Quiz is Already going on in some other tab or device
               </Heading>
-            ) : quizExpired ? null : (
+            ) : quizExpired ? (
+              <QuizExpired />
+            ) : (
               <GenerateQuizButton
                 css={{
                   "@media screen and (min-width: 821px)": {
