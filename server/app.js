@@ -11,7 +11,7 @@ const app = express();
 
 require("./db/conn");
 app.use(express.json());
-
+require("./scheduler/userIQScoreScheduler");
 const PORT = process.env.PORT;
 authRouter.use(cookieParser());
 authRouter.use("/user", userRoutes);
