@@ -1,5 +1,5 @@
 import React from "react";
-
+import { Button, ButtonGroup } from '@chakra-ui/react'
 export default function Profile() {
   const containerStyle = {
     display: "flex",
@@ -11,7 +11,7 @@ export default function Profile() {
 
   const profileStyle = {
     maxWidth: "300px",
-    maxHeight: "500px",
+    maxHeight: "550px",
     margin: "20px",
     padding: "20px",
     border: "1px solid #ccc",
@@ -24,7 +24,7 @@ export default function Profile() {
     display: "flex",
     flexDirection: "column",
     maxWidth: "800px",
-    maxHeight: "360px",
+    maxHeight: "520px",
     margin: "20px",
     padding: "0px",
     border: "1px",
@@ -34,8 +34,8 @@ export default function Profile() {
   const ratingStyle = {
     maxWidth: "800px",
     maxHeight: "180px",
-    margin: "0px",
-    padding: "80px",
+    margin: "10px",
+    padding: "50px",
     border: "1px solid #ccc",
     borderRadius: "10px",
   };
@@ -53,7 +53,7 @@ export default function Profile() {
 
   const badgesContainerStyle = {
     marginTop: "5px",
-    marginBottom: "5px" // Adjust this value to add a gap between the sections
+    marginBottom: "5px", // Adjust this value to add a gap between the sections
   };
 
   return (
@@ -68,6 +68,7 @@ export default function Profile() {
           </div>
         </div>
         <div>
+          <h1></h1>
           <h6>Email : subratgupta2704@gmail.com</h6>
           <h6>Phone : 9876543210</h6>
           <p>
@@ -79,6 +80,15 @@ export default function Profile() {
             intuitive web applications while also honing my analytical and
             logical thinking skills.
           </p>
+          <Button
+            size="md"
+            height="38px"
+            width="150px"
+            border="3px"
+            borderColor="green.200"
+          >
+            Edit Profile
+          </Button>
         </div>
       </section>
       <section style={Style}>
@@ -105,7 +115,6 @@ export default function Profile() {
           </div>
         </section>
       </section>
-      
     </div>
   );
 }
