@@ -41,6 +41,7 @@ const registerUser = async (req, res) => {
       phone,
       password,
       cpassword,
+      googleEmail: email,
     });
 
     const OTP = generateOtp();
@@ -229,14 +230,26 @@ const handleGoogleLogin = async (req, res) => {
   //console.log(credential);
   try {
     const userInfo = jwt.decode(credential);
-    let user = await User.findOne({ googleId: userInfo.sub });
+    let user = await User.findOne({
+      $or: [
+        { email: userInfo.email },
+        { googleEmail: userInfo.email },
+        { googleId: userInfo.sub },
+      ],
+    });
     //console.log(userInfo);
-    if (!user) {
+    if (user) {
+      user.googleEmail = userInfo.email;
+      user.googleId = userInfo.sub;
+      user.verified = true;
+    } else {
+      console.log("User not found");
       // If not, create a new user with Google data
       const name = userInfo.name.split(" ");
       user = new User({
         firstName: name[0],
         lastName: name[name.length - 1],
+        email: userInfo.email,
         // Add other necessary Google fields
         googleId: userInfo.sub,
         googleEmail: userInfo.email,
