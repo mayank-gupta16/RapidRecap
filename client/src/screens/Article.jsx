@@ -355,7 +355,7 @@ const Article = () => {
                 <Heading size="md" margin={"20px"} color={"red.500"}>
                   Quiz is Already going on in some other tab or device
                 </Heading>
-              ) : !quizExpired ? (
+              ) : quizExpired ? (
                 <QuizExpired />
               ) : (
                 <GenerateQuizButton

@@ -1,11 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Button, ButtonGroup } from "@chakra-ui/react";
 import { AppContext } from "../contextAPI/appContext";
+import useDrag from "../customHooks/useDrag";
 export default function Profile() {
+  const { startDrag, drag, endDrag } = useDrag();
   const { state, dispatch } = useContext(AppContext);
   const [user, setUser] = useState({});
   useEffect(() => {
-    console.log(state.user);
+    //console.log(state.user);
     setUser(state.user);
   }, []);
   const containerStyle = {
@@ -64,7 +66,15 @@ export default function Profile() {
   };
 
   return (
-    <div style={containerStyle}>
+    <div
+      style={containerStyle}
+      onMouseDown={startDrag}
+      onTouchStart={startDrag}
+      onMouseMove={(e) => drag(e)}
+      onTouchMove={(e) => drag(e.touches[0])}
+      onMouseUp={endDrag}
+      onTouchEnd={endDrag}
+    >
       <section style={profileStyle}>
         <div style={contentContainerStyle}>
           <img src="images\Subrat.jpeg" alt="Profile" style={imageStyle} />

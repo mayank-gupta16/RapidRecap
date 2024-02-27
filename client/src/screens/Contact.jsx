@@ -2,10 +2,12 @@ import { useContext, useEffect, useState } from "react";
 import { useRef } from "react";
 import { AppContext } from "../contextAPI/appContext";
 import { useNavigate } from "react-router-dom";
+import useDrag from "../customHooks/useDrag";
 
 const Contact = () => {
+  const { startDrag, drag, endDrag } = useDrag();
   const navigate = useNavigate();
-  const {state,dispatch} = useContext(AppContext);
+  const { state, dispatch } = useContext(AppContext);
   const button = useRef(null);
   const [isHovered, setIsHovered] = useState(false);
   const buttonStyle = {
@@ -15,16 +17,24 @@ const Contact = () => {
     color: isHovered ? "#6c757d" : "#f9f9f9",
   };
   const handleLoginAlert = () => {
-    if(state.show===true){
+    if (state.show === true) {
       navigate("/signin");
     }
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     handleLoginAlert();
-  },[state.show]);
+  }, [state.show]);
   return (
-    <div style={{ minHeight: "77vh" }}>
+    <div
+      style={{ minHeight: "77vh" }}
+      onMouseDown={startDrag}
+      onTouchStart={startDrag}
+      onMouseMove={(e) => drag(e)}
+      onTouchMove={(e) => drag(e.touches[0])}
+      onMouseUp={endDrag}
+      onTouchEnd={endDrag}
+    >
       <div className="container-fluid px-5 my-5">
         <div className="row justify-content-center">
           <div className="col-xl-10">
