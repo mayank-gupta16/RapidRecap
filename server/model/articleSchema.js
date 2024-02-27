@@ -31,26 +31,6 @@ const articleSchema = new mongoose.Schema(
         required: true,
       },
     ],
-    sentiments: [
-      {
-        neg: {
-          type: Number,
-          required: true,
-        },
-        neu: {
-          type: Number,
-          required: true,
-        },
-        pos: {
-          type: Number,
-          required: true,
-        },
-        compound: {
-          type: Number,
-          required: true,
-        },
-      },
-    ],
     quiz: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "QUIZ",
@@ -67,6 +47,11 @@ const articleSchema = new mongoose.Schema(
         },
       },
     ],
+    category: {
+      type: String,
+      required: true,
+      default: "General",
+    },
   },
   { collection: "Articles" }
 );
