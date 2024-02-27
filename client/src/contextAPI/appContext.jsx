@@ -1,4 +1,4 @@
-import { createContext, useReducer } from "react";
+import { createContext, useReducer, useRef } from "react";
 import { Reducer } from "../reducer/useReducer";
 import axios from "axios";
 
@@ -22,6 +22,7 @@ const initialState = {
   news: {},
   forgotPassword: false,
   verifyEmail: false,
+  focusedNavLink: 0,
   // ...
 };
 // async function init() {
@@ -31,10 +32,11 @@ const initialState = {
 export const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
+  const navLinkRefs = useRef([]);
   const [state, dispatch] = useReducer(Reducer, initialState);
 
   return (
-    <AppContext.Provider value={{ state, dispatch }}>
+    <AppContext.Provider value={{ state, dispatch, navLinkRefs }}>
       {children}
     </AppContext.Provider>
   );
