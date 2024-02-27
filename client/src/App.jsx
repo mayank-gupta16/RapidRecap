@@ -11,6 +11,7 @@ import Contact from "./screens/Contact";
 import Footer from "./components/Header-Footer/Footer.jsx";
 import Article from "./screens/Article.jsx";
 import Profile from "./screens/Profile.jsx";
+import LeaderBoard from "./screens/LeaderBoard.jsx";
 
 const App = () => {
   return (
@@ -19,11 +20,12 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route exact path="/article/:id" element={<Article />} />
-        <Route exact path="/about" element={<About />} />
-        <Route exact path="/profile" element={<Profile />}/>
+        {/* <Route exact path="/about" element={<About />} /> */}
+        <Route exact path="/profile" element={<Profile />} />
         <Route exact path="/signin" element={<Signin />} />
         <Route exact path="/register" element={<Register />} />
         <Route exact path="/contact" element={<Contact />} />
+        <Route exact path="/leaderboard" element={<LeaderBoard />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       <Footer />
