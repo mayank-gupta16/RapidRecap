@@ -6,11 +6,13 @@ import { AppContext } from "../contextAPI/appContext";
 import { useNavigate } from "react-router-dom";
 import Modal from "./Modal";
 import News from "../components/articleComponents/News";
+import useDrag from "../customHooks/useDrag";
 const Home = () => {
   const { state, dispatch } = useContext(AppContext);
   const [items, setItems] = useState([]);
   const [page, setPage] = useState(1);
   const [load, setLoad] = useState(true);
+  const { startDrag, drag, endDrag } = useDrag();
   const navigate = useNavigate();
   async function fetchData() {
     try {
@@ -56,7 +58,14 @@ const Home = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
   return (
-    <div>
+    <div
+      onMouseDown={startDrag}
+      onTouchStart={startDrag}
+      onMouseMove={(e) => drag(e)}
+      onTouchMove={(e) => drag(e.touches[0])}
+      onMouseUp={endDrag}
+      onTouchEnd={endDrag}
+    >
       {state.modal && (
         <Modal
           onClose={() => dispatch({ type: "showModal", payloadModal: false })}
