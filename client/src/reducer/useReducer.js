@@ -15,6 +15,8 @@ export const Reducer = (state, action) => {
       return { ...state, verifyEmail: action.payloadverifyEmail };
     case "setUser":
       return { ...state, user: action.payloadUser };
+    case "setFocusedNavLink":
+      return { ...state, focusedNavLink: action.payloadFocusedNavLink };
     // Add more cases for other actions
     default:
       return state;
