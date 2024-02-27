@@ -1,15 +1,25 @@
-import { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import "./Navbar.css";
 import { AppContext } from "../../contextAPI/appContext";
 import axios from "axios";
 import { useToast } from "@chakra-ui/react";
+import useDrag from "../../customHooks/useDrag";
 
 const Navbar = () => {
+  const navItems = [
+    { to: "/", label: "Home" },
+    // { to: '/About', label: 'About Us' }, // Commented out
+    { to: "/contact", label: "Contact Us" },
+    { to: "/profile", label: "Profile" },
+    { to: "/leaderboard", label: "Leaderboard" },
+  ];
   const navigate = useNavigate();
   const toast = useToast();
-  const { state, dispatch } = useContext(AppContext);
+  const { state, dispatch, navLinkRefs } = useContext(AppContext);
+  const { startDrag, drag, endDrag } = useDrag();
   useEffect(() => {}, [state.show]);
+
   const handleLogout = async () => {
     try {
       const response = await axios.post("/api/user/logout");
@@ -38,8 +48,17 @@ const Navbar = () => {
       console.error(error.message);
     }
   };
+
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light px-5">
+    <nav
+      className="navbar navbar-expand-lg navbar-light bg-light px-5"
+      onMouseDown={startDrag}
+      onTouchStart={startDrag}
+      onMouseMove={(e) => drag(e)}
+      onTouchMove={(e) => drag(e.touches[0])}
+      onMouseUp={endDrag}
+      onTouchEnd={endDrag}
+    >
       <div className="container-fluid">
         <NavLink to="/" className="navbar-brand">
           📻 Rapid Recap
@@ -57,26 +76,17 @@ const Navbar = () => {
         </button>
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav">
-            <li className="nav-item">
-              <NavLink to="/" className="nav-link">
-                Home
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink to="/About" className="nav-link">
-                About Us
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink to="/contact" className="nav-link">
-                Contact Us
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink to="/profile" className="nav-link">
-                Profile
-              </NavLink>
-            </li>
+            {navItems.map((item, index) => (
+              <li className="nav-item" key={index}>
+                <NavLink
+                  to={item.to}
+                  className="nav-link"
+                  ref={(ref) => (navLinkRefs.current[index] = ref)}
+                >
+                  {item.label}
+                </NavLink>
+              </li>
+            ))}
             {state.show ? (
               <li className="nav-item">
                 <NavLink to="/signin" className="nav-link">
@@ -84,16 +94,11 @@ const Navbar = () => {
                 </NavLink>
               </li>
             ) : (
-              ""
-            )}
-            {!state.show ? (
               <li className="nav-item d-flex justify-content-center">
                 <button className="nav-link" onClick={handleLogout}>
                   Logout
                 </button>
               </li>
-            ) : (
-              ""
             )}
           </ul>
         </div>
