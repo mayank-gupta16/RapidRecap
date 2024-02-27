@@ -13,6 +13,7 @@ const userSchema = new mongoose.Schema(
     },
     email: {
       type: String,
+      default: null,
       unique: true,
     },
     phone: {
@@ -44,6 +45,7 @@ const userSchema = new mongoose.Schema(
     googleEmail: {
       type: String,
       default: null,
+      unique: true,
     },
     quizAttempts: [
       {
