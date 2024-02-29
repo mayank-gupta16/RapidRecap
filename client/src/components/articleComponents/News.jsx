@@ -2,6 +2,7 @@ import { useRef, useContext, useEffect } from "react";
 import { AppContext } from "../../contextAPI/appContext";
 import { Button, Image } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
+import Alt_img from "../../assets/alt_image.jpg";
 const News = () => {
   const { state, dispatch } = useContext(AppContext);
   const data = state.news;
@@ -12,7 +13,14 @@ const News = () => {
   }, [window.innerWidth]);
   return (
     <div className="d-flex justify-content-center flex-column align-items-center text-white">
-      <Image src={data.imgURL[0]} style={{ width: "95%" }} />
+      <Image
+        src={data.imgURL[0]}
+        style={{ width: "95%" }}
+        onError={(e) => {
+          e.target.onerror = null;
+          e.target.src = Alt_img;
+        }}
+      />
       <div style={{ width: "80%" }}>
         <h1 className="mt-2 mb-5">{data.title}</h1>
         <p className="mb-4">
