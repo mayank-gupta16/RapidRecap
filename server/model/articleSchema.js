@@ -12,7 +12,7 @@ const articleSchema = new mongoose.Schema(
     },
     author: {
       type: String,
-      required: true,
+      default: "Rapid Recap Team",
     },
 
     title: {
@@ -55,6 +55,13 @@ const articleSchema = new mongoose.Schema(
   },
   { collection: "Articles" }
 );
+
+articleSchema.pre("save", function (next) {
+  if (this.author === null) {
+    this.author = "Rapid Recap Team";
+  }
+  next();
+});
 
 const Article = mongoose.model("ARTICLE", articleSchema);
 
