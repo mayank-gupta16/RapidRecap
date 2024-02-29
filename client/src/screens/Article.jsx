@@ -22,6 +22,7 @@ import Quiz from "../components/articleComponents/Quiz";
 import GenerateQuizButton from "../components/articleComponents/GenerateQuizButton";
 import medalIcon from "../assets/medal.png";
 import QuizExpired from "../components/articleComponents/QuizExpired";
+import Alt_img from "../assets/alt_image.jpg";
 
 const Article = () => {
   const toast = useToast();
@@ -245,6 +246,11 @@ const Article = () => {
                         float={"left"}
                         marginRight={"3"}
                         height={textHeight}
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = Alt_img;
+                          e.target.style.height = `${textHeight}px`;
+                        }}
                       />
 
                       <Text ref={textRef} align="left" letterSpacing={1}>
@@ -270,6 +276,11 @@ const Article = () => {
                       marginRight="5"
                       float={"left"}
                       height={textHeight}
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = Alt_img;
+                        e.target.style.height = `${textHeight}px`;
+                      }}
                     />
 
                     <Text ref={textRef} align="left" letterSpacing={1}>
@@ -413,6 +424,11 @@ const Article = () => {
                             float="left"
                             src={item.imgURL}
                             alt="Article img"
+                            onError={(e) => {
+                              e.target.onerror = null;
+                              e.target.src = Alt_img;
+                              e.target.style.height = `${textHeight}px`;
+                            }}
                           />
                           <Text>{item.title}</Text>
                         </Box>
