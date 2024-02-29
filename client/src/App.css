@@ -140,11 +140,7 @@ section {
   transform: translateY(0);
   transition-delay: 0.4s;
 }
-.cardWrapper:hover .contents p
-{
-  transform: translateY(0);
-  transition-delay: 0.5s;
-}
+
 .contents h2{
   color: #fff;
   transition: 0.5s;
