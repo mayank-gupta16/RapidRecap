@@ -5,14 +5,15 @@ import { AppContext } from "../../contextAPI/appContext";
 import axios from "axios";
 import { useToast } from "@chakra-ui/react";
 import useDrag from "../../customHooks/useDrag";
+import ProfileDropDownMenu from "../profileComponents/ProfileDropDownMenu";
 
 const Navbar = () => {
   const navItems = [
     { to: "/", label: "Home" },
     // { to: '/About', label: 'About Us' }, // Commented out
     { to: "/contact", label: "Contact Us" },
-    { to: "/profile", label: "Profile" },
     { to: "/leaderboard", label: "Leaderboard" },
+    { to: "/profile", label: "Profile" },
   ];
   const navigate = useNavigate();
   const toast = useToast();
@@ -78,26 +79,30 @@ const Navbar = () => {
           <ul className="navbar-nav">
             {navItems.map((item, index) => (
               <li className="nav-item" key={index}>
-                <NavLink
-                  to={item.to}
-                  className="nav-link"
-                  ref={(ref) => (navLinkRefs.current[index] = ref)}
-                >
-                  {item.label}
-                </NavLink>
+                {item.label === "Profile" ? (
+                  <li style={{ backgroundColor: "transparent" }}>
+                    <ProfileDropDownMenu
+                      handleLogout={handleLogout}
+                      toProfile={item.to}
+                      refProfile={(ref) => (navLinkRefs.current[index] = ref)}
+                    />
+                  </li>
+                ) : (
+                  <NavLink
+                    to={item.to}
+                    className="nav-link"
+                    ref={(ref) => (navLinkRefs.current[index] = ref)}
+                  >
+                    {item.label}
+                  </NavLink>
+                )}
               </li>
             ))}
-            {state.show ? (
+            {state.show && (
               <li className="nav-item">
                 <NavLink to="/signin" className="nav-link">
                   Sign In
                 </NavLink>
-              </li>
-            ) : (
-              <li className="nav-item d-flex justify-content-center">
-                <button className="nav-link" onClick={handleLogout}>
-                  Logout
-                </button>
               </li>
             )}
           </ul>
