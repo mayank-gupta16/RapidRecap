@@ -1,6 +1,7 @@
 import { Slide } from "@chakra-ui/react";
 import { useRef, useContext } from "react";
 import { AppContext } from "../../contextAPI/appContext";
+import Alt_img from "../../assets/alt_image.jpg";
 
 const Card = ({ newsNumber, data }) => {
   const { state, dispatch } = useContext(AppContext);
@@ -67,7 +68,14 @@ const Card = ({ newsNumber, data }) => {
         <Slide direction="left" in={true} unmountOnExit>
           <div className="cards" ref={card}>
             <div className="img-box">
-              <img src={data.imgURL[0]} alt="" />
+              <img
+                src={data.imgURL[0]}
+                alt=""
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = Alt_img;
+                }}
+              />
             </div>
             <div className="contents text-white">
               <h2> Click here to know More </h2>
