@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import ReactDom from "react-dom";
 
 const MODAL_STYLES = {
@@ -22,23 +23,30 @@ const OVERLAY_STYLES = {
 };
 
 export default function Modal({ children, onClose }) {
+  const [isHovered, setIsHovered] = useState(false);
+
+  const buttonStyle = {
+    marginLeft: "100%",
+    marginTop: "-5px",
+    zIndex: 2001,
+    position: "absolute",
+    top: "22px",
+    right: "10px",
+    color: isHovered ? "#f0f0f0" : "#253547",
+    backgroundColor: isHovered ? "#37474f" : "white",
+    transition: "background-color 0.3s, color 0.3s", // Hover effect transition
+  };
+
   return ReactDom.createPortal(
     <>
       <div style={OVERLAY_STYLES} />
       <div style={MODAL_STYLES}>
         <button
           className="btn fs-6"
-          style={{
-            marginLeft: "100%",
-            marginTop: "-5px",
-            zIndex: 2001,
-            position: "absolute",
-            top: "10px",
-            right: "10px",
-            color: "white",
-            backgroundColor: "#253547",
-          }}
+          style={buttonStyle}
           onClick={onClose}
+          onMouseOver={() => setIsHovered(true)}
+          onMouseOut={() => setIsHovered(false)}
         >
           X
         </button>
