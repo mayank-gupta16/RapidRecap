@@ -24,7 +24,7 @@ const News = () => {
     >
       <Image
         src={data.imgURL[0]}
-        style={{ width: "95%", marginTop: "1rem" }}
+        style={{ width: "92%", marginTop: "1rem" }}
         onError={(e) => {
           e.target.onerror = null;
           e.target.src = Alt_img;
