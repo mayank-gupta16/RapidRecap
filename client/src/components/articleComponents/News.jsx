@@ -14,32 +14,42 @@ const News = () => {
   }, [window.innerWidth]);
 
   return (
-    <div className="d-flex justify-content-center flex-column align-items-center" style={{ backgroundColor: "#1a1a2e", color: "#253547", minHeight: "90vh" }}>
+    <div
+      className="d-flex justify-content-center flex-column align-items-center"
+      style={{
+        backgroundColor: "#1a1a2e",
+        color: "#253547",
+        minHeight: "90vh",
+      }}
+    >
       <Image
         src={data.imgURL[0]}
-        style={{ width: "95%", marginTop: "1rem"}}
+        style={{ width: "95%", marginTop: "1rem" }}
         onError={(e) => {
           e.target.onerror = null;
           e.target.src = Alt_img;
         }}
       />
-      <div style={{ width: "92%"}}>
-        <h1 className="mt-3 mb-3" style={{ color: "#f0f0f0", textAlign: "center" }}>{data.title}</h1>
+      <div style={{ width: "92%" }}>
+        <h1
+          className="mt-3 mb-3"
+          style={{ color: "#f0f0f0", textAlign: "center" }}
+        >
+          {data.title}
+        </h1>
         <p className="mb-2" style={{ color: "#f0f0f0", textAlign: "justify" }}>
           {data.mainText.length > 1000
             ? `${data.mainText.substring(0, 1000)}...`
             : data.mainText}
         </p>
         <Link to={`/article/${data._id}`}>
-          <Button  mb={2} 
-            style={{ 
-              maxWidth: "100%", 
-              transition: "background-color 0.3s, color 0.3s", 
-              backgroundColor: "#253547", 
-              borderColor: "#f0f0f0",
+          <Button
+            mb={2}
+            _hover={{ backgroundColor: "#37474f", color: "#f0f0f0" }}
+            style={{
+              maxWidth: "100%",
+              transition: "background-color 0.3s, color 0.3s",
             }}
-            onMouseOver={(e) => { e.currentTarget.style.backgroundColor = "#37474f"; e.currentTarget.style.color = "#f0f0f0"; }}
-            onMouseOut={(e) => { e.currentTarget.style.backgroundColor = "#253547"; e.currentTarget.style.color = "#f0f0f0"; }}
           >
             Read More
           </Button>
