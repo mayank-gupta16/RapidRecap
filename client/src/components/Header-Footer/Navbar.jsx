@@ -79,22 +79,22 @@ const Navbar = () => {
           <ul className="navbar-nav">
             {navItems.map((item, index) => (
               <li className="nav-item" key={index}>
-                {item.label === "Profile" ? (
-                  <li style={{ backgroundColor: "transparent" }}>
-                    <ProfileDropDownMenu
-                      handleLogout={handleLogout}
-                      toProfile={item.to}
-                      refProfile={(ref) => (navLinkRefs.current[index] = ref)}
-                    />
-                  </li>
+                {item.label === "Profile" && !state.show ? (
+                  <ProfileDropDownMenu
+                    handleLogout={handleLogout}
+                    toProfile={item.to}
+                    refProfile={(ref) => (navLinkRefs.current[index] = ref)}
+                  />
                 ) : (
-                  <NavLink
-                    to={item.to}
-                    className="nav-link"
-                    ref={(ref) => (navLinkRefs.current[index] = ref)}
-                  >
-                    {item.label}
-                  </NavLink>
+                  item.label !== "Profile" && (
+                    <NavLink
+                      to={item.to}
+                      className="nav-link"
+                      ref={(ref) => (navLinkRefs.current[index] = ref)}
+                    >
+                      {item.label}
+                    </NavLink>
+                  )
                 )}
               </li>
             ))}
