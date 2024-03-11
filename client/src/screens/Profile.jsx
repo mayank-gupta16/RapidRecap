@@ -1,7 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Box, Button, Flex, Heading, Image, Text } from "@chakra-ui/react";
 import { AppContext } from "../contextAPI/appContext";
-import IQGraph from "../components/profileComponents/IQGraph";
+import IQLineGraph from "../components/profileComponents/IQLineGraph";
+import IQBarGraph from "../components/profileComponents/IQBarGraph";
 import LeftProfileBox from "../components/profileComponents/LeftProfileBox";
 import SolvedQuizzes from "../components/profileComponents/SolvedQuizzes";
 import RankAndSociety from "../components/profileComponents/RankAndSociety";
@@ -24,7 +25,18 @@ export default function Profile() {
         border="1px"
         borderRadius="10px"
       >
-        <IQGraph />
+        <Box
+          margin="10px"
+          padding="50px"
+          border="1px solid #ccc"
+          borderRadius="10px"
+          boxShadow="0px 4px 10px rgba(0, 0, 0, 0.1)"
+          display={"flex"}
+          flexDirection={"row"}
+        >
+          <IQLineGraph />
+          <IQBarGraph />
+        </Box>
 
         <Flex
           margin="10px"
