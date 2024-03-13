@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Line } from "react-chartjs-2";
-import { Box, Flex } from "@chakra-ui/react";
+import { Flex, Text } from "@chakra-ui/react";
 import Chart from "chart.js/auto";
-
+import moment from "moment";
+import "chartjs-adapter-date-fns";
 Chart.register({
-  id: "uniqueid5", //typescript crashes without id
+  id: "uniqueid5",
   afterDraw: function (chart, easing) {
     if (chart.tooltip._active && chart.tooltip._active.length) {
       const activePoint = chart.tooltip._active[0];
@@ -32,23 +33,95 @@ Chart.register({
     }
   },
 });
-const contestData = [
-  { date: "", rating: null },
-  { date: "January 24", rating: 500 },
-  { date: "January 24", rating: 100 },
-  { date: "February 24", rating: 1200 },
-  // Add more contest data here
+
+let contestData = [
+  { date: null, IQScore: null, dailyRank: null },
+  { date: "2024:01:15", IQScore: 100, dailyRank: "1000/6000" },
+  { date: "2024:01:16", IQScore: 99, dailyRank: "2424/6024" },
+  { date: "2024:01:17", IQScore: 98, dailyRank: "1212/6026" },
+  { date: "2024:01:18", IQScore: 97, dailyRank: "3030/6030" },
+  { date: "2024:01:19", IQScore: 96, dailyRank: "1616/6035" },
+  { date: "2024:01:20", IQScore: 95, dailyRank: "727/6036" },
+  { date: "2024:01:21", IQScore: 94, dailyRank: "858/6041" },
+  { date: "2024:01:22", IQScore: 93, dailyRank: "1818/6045" },
+  { date: "2024:01:23", IQScore: 92, dailyRank: "1717/6048" },
+  { date: "2024:01:24", IQScore: 91, dailyRank: "3030/6050" },
+  { date: "2024:01:25", IQScore: 90, dailyRank: "555/6052" },
+  { date: "2024:01:26", IQScore: 91, dailyRank: "3737/6055" },
+  { date: "2024:01:27", IQScore: 92, dailyRank: "989/6060" },
+  { date: "2024:01:28", IQScore: 93, dailyRank: "2929/6063" },
+  { date: "2024:01:29", IQScore: 94, dailyRank: "505/6065" },
+  { date: "2024:01:30", IQScore: 95, dailyRank: "2222/6066" },
+  { date: "2024:01:31", IQScore: 96, dailyRank: "303/6067" },
+  { date: "2024:02:01", IQScore: 97, dailyRank: "4343/6070" },
+  { date: "2024:02:02", IQScore: 98, dailyRank: "111/6075" },
+  { date: "2024:02:03", IQScore: 99, dailyRank: "222/6080" },
+  { date: "2024:02:04", IQScore: 100, dailyRank: "7676/6083" },
+  { date: "2024:02:05", IQScore: 99, dailyRank: "888/6085" },
+  { date: "2024:02:06", IQScore: 98, dailyRank: "2828/6088" },
+  { date: "2024:02:07", IQScore: 97, dailyRank: "2121/6090" },
+  { date: "2024:02:08", IQScore: 96, dailyRank: "3737/6095" },
+  { date: "2024:02:09", IQScore: 95, dailyRank: "5656/6097" },
+  { date: "2024:02:10", IQScore: 94, dailyRank: "909/6100" },
+  { date: "2024:02:11", IQScore: 93, dailyRank: "2222/6103" },
+  { date: "2024:02:12", IQScore: 92, dailyRank: "505/6106" },
+  { date: "2024:02:13", IQScore: 91, dailyRank: "4343/6110" },
+  { date: "2024:02:14", IQScore: 90, dailyRank: "3838/6115" },
+  { date: "2024:02:15", IQScore: 91, dailyRank: "555/6120" },
+  { date: "2024:02:16", IQScore: 92, dailyRank: "4949/6123" },
+  { date: "2024:02:17", IQScore: 93, dailyRank: "6767/6125" },
+  { date: "2024:02:18", IQScore: 94, dailyRank: "7979/6128" },
+  { date: "2024:02:19", IQScore: 95, dailyRank: "3838/6130" },
+  { date: "2024:02:20", IQScore: 96, dailyRank: "2929/6133" },
+  { date: "2024:02:21", IQScore: 97, dailyRank: "3434/6135" },
+  { date: "2024:02:22", IQScore: 98, dailyRank: "4949/6138" },
+  { date: "2024:02:23", IQScore: 99, dailyRank: "8383/6140" },
+  { date: "2024:02:24", IQScore: 100, dailyRank: "7373/6145" },
+  { date: "2024:02:25", IQScore: 99, dailyRank: "5959/6150" },
+  { date: "2024:02:26", IQScore: null, dailyRank: null },
 ];
 
 const IQLineGraph = () => {
+  const minIQ = Math.min(
+    ...contestData.map((entry) =>
+      entry.IQScore ? entry.IQScore : contestData[1].IQScore
+    )
+  );
+  const maxIQ = Math.max(
+    ...contestData.map((entry) =>
+      entry.IQScore ? entry.IQScore : contestData[1].IQScore
+    )
+  );
+
+  const [hoveredData, setHoveredData] = useState(
+    contestData[contestData.length - 2]
+  );
+  const [isHovering, setIsHovering] = useState(false);
+  const chartRef = useRef(null);
+  const handleHover = (event, array) => {
+    setIsHovering(true);
+    if (array && array.length) {
+      const point = array[0];
+      const index = point.index;
+      const data = contestData[index];
+
+      setHoveredData(data);
+    } else {
+      setHoveredData(null);
+    }
+  };
   const [chartData, setChartData] = useState({
     labels: contestData.map((entry) => entry.date),
     datasets: [
       {
-        data: contestData.map((entry) => entry.rating),
+        data: contestData.map((entry) => entry.IQScore),
         borderColor: "#ff9800", // Orangish color for the line
-        pointBackgroundColor: "#ff9800", // Orangish color for points
         pointBorderColor: "white",
+        pointBackgroundColor: (context) => {
+          return context.dataIndex === contestData.length - 2 && !isHovering
+            ? "white"
+            : "#ff9800";
+        },
         backgroundColor: "rgba(0, 0, 0, 0)", // Transparent background
         borderWidth: 1, // Thin line
       },
@@ -56,6 +129,10 @@ const IQLineGraph = () => {
   });
 
   const chartOptions = {
+    animation: {
+      duration: 0,
+    },
+    onHover: handleHover,
     plugins: {
       tooltip: {
         enabled: false,
@@ -70,30 +147,31 @@ const IQLineGraph = () => {
     },
     scales: {
       x: {
-        grid: {
-          display: false, // Hide x-axis grid lines
-        },
         ticks: {
-          color: "#ccc", // Lighter ticks color
+          color: "#ccc",
           font: {
             size: 12,
           },
           callback: function (value, index, values) {
-            if (index === 1 || index === values.length - 2) {
-              return this.getLabelForValue(value); // Format the date
-            } else {
-              return "";
-            }
+            if (index === values.length - 1 || index === 1)
+              return moment(this.getLabelForValue(value), "YYYY:MM:DD").format(
+                "MMM YYYY"
+              );
+            else return null;
           },
+          min: contestData[1].date, // Set min to the second date in the data array
+          max: contestData[contestData.length - 1].date, // Set max to the last date in the data array
         },
-        min: contestData[0].date, // Set min date to the first contest date
-        max: contestData[contestData.length - 1].date + 1, // Set max date to the last contest date
       },
+
       y: {
-        beginAtZero: true, // Start y-axis at zero
-        display: false, // Hide y-axis
-        min: 0, // Set min rating to 0
-        max: contestData[contestData.length - 1].rating + 200, // Set max rating to the highest rating + 100
+        beginAtZero: true,
+        display: false,
+        ticks: {
+          stepSize: 0.5,
+        },
+        min: minIQ - 20 >= 0 ? minIQ - 20 : 0,
+        max: maxIQ + 10,
       },
     },
     responsive: true,
@@ -105,27 +183,84 @@ const IQLineGraph = () => {
       },
       point: {
         z: 2, // Set z-index for points
-        radius: 0, // Set point radius to 0 to remove the dots
-      },
-    },
-    layout: {
-      padding: {
-        left: 10, // Adjust padding as needed
-        right: 10, // Adjust padding as needed
-        top: 10, // Adjust padding as needed
-        bottom: 10, // Adjust padding as needed
+        radius: (context) => {
+          // Adjust point radius dynamically
+          if (context.dataIndex === contestData.length - 2 && !isHovering) {
+            return 3; // Set radius to 4 for the last point when not hovered
+          } else {
+            return 0; // Set radius to 0 for other points or when hovered
+          }
+        },
       },
     },
   };
 
+  useEffect(() => {
+    const chartCanvas = chartRef.current?.canvas;
+    const handleMouseLeave = () => {
+      setIsHovering(false);
+      setHoveredData(contestData[contestData.length - 2]);
+    };
+
+    if (chartCanvas) {
+      chartCanvas.addEventListener("mouseleave", handleMouseLeave);
+    }
+
+    return () => {
+      if (chartCanvas) {
+        chartCanvas.removeEventListener("mouseleave", handleMouseLeave);
+      }
+    };
+  }, [hoveredData, isHovering]);
+  useEffect(() => {
+    setChartData((prevChartData) => ({
+      ...prevChartData,
+      datasets: prevChartData.datasets.map((dataset) => ({
+        ...dataset,
+        pointBackgroundColor: (context) => {
+          return context.dataIndex === contestData.length - 2 && !isHovering
+            ? "white"
+            : "#ff9800";
+        },
+      })),
+    }));
+  }, [isHovering]);
+
   return (
-    <Box w={"100%"} borderRight={"1px"}>
-      <Box>
-        <Box>
-          <Line data={chartData} options={chartOptions} />
-        </Box>
-      </Box>
-    </Box>
+    <Flex
+      flexDirection={"column"}
+      borderRight={"1px"}
+      w={"100%"}
+      paddingRight={"30px"}
+    >
+      <Flex justifyContent={"space-between"}>
+        <Flex flexDirection={"column"}>
+          <Text textAlign={"left"} color={"#eff2f699"} p={0} m={0}>
+            IQ Score
+          </Text>
+          <Text textAlign={"left"} fontSize={"1.5rem"}>
+            {hoveredData.IQScore}
+          </Text>
+        </Flex>
+        <Flex flexDirection={"column"}>
+          <Text textAlign={"left"} color={"#eff2f699"} p={0} m={0}>
+            Date
+          </Text>
+          <Text textAlign={"left"}>
+            {moment(hoveredData.date, "YYYY:MM:DD").format("MMM DD, YYYY")}
+          </Text>
+        </Flex>
+        <Flex flexDirection={"column"}>
+          <Text textAlign={"left"} color={"#eff2f699"} p={0} m={0}>
+            Daily Rank
+          </Text>
+          <Text textAlign={"left"}>{hoveredData.dailyRank}</Text>
+        </Flex>
+      </Flex>
+      <Flex w={"100%"} justifyContent={"center"} alignItems={"center"}>
+        <Line ref={chartRef} data={chartData} options={chartOptions} />
+      </Flex>
+    </Flex>
   );
 };
 
