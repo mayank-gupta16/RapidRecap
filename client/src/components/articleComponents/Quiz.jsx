@@ -40,6 +40,8 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [showInstruction, setShowInstruction] = useState(true);
   const [timeTaken, setTimeTaken] = useState(0);
+  const [isCloseButtonHovered, setIsCloseButtonHovered] = useState(false);
+  const [isStartQuizButtonHovered, setIsStartQuizButtonHovered] = useState(false);
 
   const totalQuestions = quizData ? quizData.questions.length : 0;
 
@@ -83,7 +85,7 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
       setCurrentQuestionIndex(quizData.questions.length);
       setSubmitted(true);
       toast({
-        title: "Quiz submitted Successfully!",
+        title: "Quiz Submitted Successfully!",
         description: "You can now view your score.",
         status: "success",
         duration: 5000,
@@ -141,8 +143,8 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
       }
       setLoad(false);
       toast({
-        title: "Quiz generated Successfully!",
-        description: "You can now take the quiz.",
+        title: "Quiz Generated Successfully!",
+        description: "You can now attempt the quiz.",
         status: "success",
         duration: 5000,
         isClosable: true,
@@ -150,11 +152,11 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
       });
     } catch (error) {
       toast({
-        title: "Quiz generation failed!",
+        title: "Quiz Generation Failed!",
         description:
           error.response.data.error ||
           error ||
-          "Please try again (Close the quiz and Try refreshing the page)",
+          "Please try again (Close this and Try refreshing the page)",
         status: "error",
         duration: 5000,
         isClosable: true,
@@ -232,17 +234,17 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
       >
         <ModalOverlay
           bg="blackAlpha.300"
-          backdropFilter="blur(10px) hue-rotate(90deg)"
+          backdropFilter="blur(15px) hue-rotate(90deg)"
         />
 
         <ModalContent
           background={
-            "linear-gradient(-45deg, #2c022b, #5f025f, #2c022b, #660066)"
+            "linear-gradient(-45deg, #092635, #9EC8B9, #1B4242, #9EC8B9)"
           }
           backgroundSize="400% 400%"
           className="animated-gradient"
           minHeight={"75%"}
-          borderRadius={{ md: "30px" }}
+          borderRadius={{ md: "20px" }}
         >
           <ModalHeader
             maxHeight={"100px"}
@@ -258,7 +260,7 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
               marginBottom={load ? "10px" : "0"} // remove this when skeleton isLoaded
             >
               <Countdown
-                initialTimer={45}
+                initialTimer={50}
                 onTimerExhausted={() => handleSubmitQuiz()}
                 submitted={submitted}
                 setTimeTaken={setTimeTaken}
@@ -266,7 +268,17 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
               />
             </SkeletonCircle>
           </ModalHeader>
-          <ModalCloseButton left={"10px"} right={"10px"} color={"white"} />
+          <ModalCloseButton
+            style={{
+              right: "10px",
+              color: isCloseButtonHovered ? "white" : "#FAF0E6",
+              backgroundColor: isCloseButtonHovered ? "#040D12" : "#183D3D",
+              transition: "background-color 0.3s, color 0.3s",
+            }}
+            onMouseEnter={() => setIsCloseButtonHovered(true)}
+            onMouseLeave={() => setIsCloseButtonHovered(false)}
+          />
+
           {showInstruction ? (
             <InstructionModal />
           ) : (
@@ -428,7 +440,7 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
           <Flex flexDirection={"column"} color={"white"}>
             {load && (
               <Text size={"lg"}>
-                Quiz is Generating Wait for the start button....
+                Quiz is generating. Wait for the start button....
               </Text>
             )}
             <Skeleton
@@ -438,9 +450,20 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
             >
               <ModalFooter>
                 {showInstruction && (
-                  <Button colorScheme="blue" mr={3} onClick={startQuiz}>
-                    Start
-                  </Button>
+                  <Button
+                  colorScheme="blue"
+                  mr={3}
+                  onClick={startQuiz}
+                  style={{
+                    transition: "background-color 0.3s, color 0.3s",
+                    backgroundColor: isStartQuizButtonHovered ? "#DDE6ED" : "#183D3D",
+                    color: isStartQuizButtonHovered ? "#27374D" : "#FAF0E6",
+                  }}
+                  onMouseEnter={() => setIsStartQuizButtonHovered(true)}
+                  onMouseLeave={() => setIsStartQuizButtonHovered(false)}
+                >
+                  Start Quiz 
+                </Button>
                 )}
                 {!showInstruction &&
                   currentQuestionIndex < totalQuestions - 1 && (

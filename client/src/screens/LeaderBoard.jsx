@@ -47,7 +47,7 @@ const LeaderBoard = () => {
         <TableContainer width={"100%"}>
           <Table variant={"unstyled"}>
             <TableCaption color={"white"} placement="top">
-              Top Knowledge Giants in the game
+            "Where Champions Stand Out!"
             </TableCaption>
 
             <Thead>
@@ -65,7 +65,7 @@ const LeaderBoard = () => {
                   IQ Scores
                 </Th>
                 <Th textAlign={"center"} bg={"teal.300"} isNumeric>
-                  Quizzes Given
+                Quiz Submissions
                 </Th>
                 <Th textAlign={"center"} bg={"pink.300"} isNumeric>
                   Avg. RQM Scores

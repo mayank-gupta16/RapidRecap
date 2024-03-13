@@ -12,21 +12,19 @@ const InstructionModal = () => {
         justifyContent={"center"}
         alignItems={"center"}
         width={"100%"}
-        color={"white"}
+        color={"black"}
+        
       >
-        <Heading as="h2" size={"xl"} mb={4}>
+        <Heading as="h1" size={"xl"} mb={4}>
           Instructions
         </Heading>
 
-        <VStack spacing={4} alignItems="start" textAlign="left">
+        <VStack spacing={1} alignItems="start" textAlign="left">
           <Box>
-            <Text>1. Quiz will contain some questions.</Text>
+            <Text>1. Quiz will contain five questions.</Text>
           </Box>
           <Box>
-            <Text>2. You have 9 seconds per question.</Text>
-          </Box>
-          <Box>
-            <Text>3. All the questions will be from the given article.</Text>
+            <Text>3. All the questions will be from the given article only.</Text>
           </Box>
           <Box>
             <Text>4. All questions are compulsory to attempt.</Text>
