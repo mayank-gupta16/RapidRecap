@@ -6,11 +6,11 @@ const GenerateQuizButton = ({ onClick, css }) => {
     <Box
       css={css}
       style={{
-        border: "1px solid black",
+        border: "2px",
         padding: "1rem",
       }}
       borderRadius="md"
-      bg="red.100"
+      backgroundColor="#E4D0D0"
       marginBottom="2rem"
     >
       <Text
@@ -18,18 +18,17 @@ const GenerateQuizButton = ({ onClick, css }) => {
         fontWeight="bold"
         marginBottom="1rem"
         letterSpacing={1}
-        color="blue.500" // Change the color here
+        color="#6C3428" // Change the color here
       >
-        Play Quiz to get to the LeaderBoard
+        Compete in the quiz for a chance at the LeaderBoard
       </Text>
       <Button
-        height="48px"
-        width="200px"
-        colorScheme="whiteAlpha"
+        height="40px"
+        width="120px"
         borderRadius="xl"
         _hover={{ opacity: 0.8 }}
-        color="red.800"
-        bg="whiteAlpha.900"
+        color="#EDE4E0"
+        backgroundColor="#594545"
         onClick={() => {
           onClick();
         }}
