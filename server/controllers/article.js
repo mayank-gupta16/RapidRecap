@@ -6,6 +6,7 @@ const {
   updatePercentilesOnQuizDeactivation,
 } = require("../utils/quiz");
 const { breakArticleIntoParagraphs } = require("../utils/article");
+const NewsAPI = require("newsapi");
 
 const allArticles = async (req, res) => {
   const { page = 1, pageSize = 9 } = req.query;
@@ -46,6 +47,7 @@ const getArticle = async (req, res) => {
       imgURL: article.imgURL[0],
       _id: article._id,
     };
+    //console.log(newArticle);
     let quizExpired = false;
     if (article.quiz) {
       const quizId = article.quiz;
@@ -91,8 +93,8 @@ const getQuiz = async (req, res) => {
     //console.log(article);
 
     const { title, author, mainText } = article;
-
-    if (!title || !author || !mainText) {
+    //console.log(title, author, mainText);
+    if (!title || !mainText) {
       throw new Error("Please provide all the details");
     }
     if (article.quiz) {
@@ -206,10 +208,25 @@ const getArticleQuizStatus = async (req, res) => {
   }
 };
 
+// const testNewsApi = async (req, res) => {
+//   const newsapi = new NewsAPI("fb29cd0efb7e4ed292134d083f457869");
+//   try {
+//     const response = await newsapi.v2.topHeadlines({
+//       category: "entertainment",
+//       language: "en",
+//     });
+//     //console.log(response.articles[1]);
+//     res.status(200).json(response);
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
 module.exports = {
   allArticles,
   getArticle,
   getQuiz,
   getArticleQuizStatus,
   startQuiz,
+  //testNewsApi,
 };
