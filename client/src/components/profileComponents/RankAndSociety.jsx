@@ -3,7 +3,7 @@ import React from "react";
 
 const RankAndSociety = () => {
   return (
-    <Box margin="10px" border="1px solid #ccc" borderRadius="10px" w={"100%"}>
+    <Box margin="10px" borderRadius="10px" w={"100%"}>
       <Flex>
         <Heading as="h2">Badges</Heading>
       </Flex>
