@@ -27,18 +27,18 @@ const ProfileDropDownMenu = ({ handleLogout, toProfile, refProfile }) => {
         <Image src={state.user.pic} h={"50px"} w={"50px"} rounded={"50%"} />
       </MenuButton>
       <MenuList zIndex={"3000"} bg={"purple.300"} color={"white"} p={"0"}>
-        <MenuItem
-          as="div"
-          display={"flex"}
-          justifyContent={"center"}
-          p={"10px"}
-          _hover={{ bg: "green.300" }}
-          bg={"purple.300"}
-        >
-          <NavLink to={toProfile} ref={refProfile}>
+        <NavLink w={"100%"} to={toProfile} ref={refProfile}>
+          <MenuItem
+            as="div"
+            display={"flex"}
+            justifyContent={"center"}
+            p={"10px"}
+            _hover={{ bg: "green.300" }}
+            bg={"purple.300"}
+          >
             View Profile
-          </NavLink>
-        </MenuItem>
+          </MenuItem>
+        </NavLink>
         <MenuDivider m={"0"} />
         <MenuItem
           as="div"
