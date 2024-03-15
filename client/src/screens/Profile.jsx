@@ -57,16 +57,34 @@ export default function Profile() {
           borderRadius="10px"
           marginTop="5px"
           marginBottom="5px"
-          style={{
-            backgroundColor: "#0f0d15",
-            backgroundImage:
-              "linear-gradient(-180deg, #1a1527, #0e0c16 88%, #0e0c16 99%)",
-            boxShadow:
-              "0px 4px 8px rgba(0, 0, 0, 0.3), 0px 8px 16px rgba(0, 0, 0, 0.3), 0px 12px 24px rgba(0, 0, 0, 0.3)", // Increased intensity of the shadow
-          }}
+          flexDirection="row"
+          justifyContent="space-between"
+          gap={5}
         >
-          <SolvedQuizzes />
-          <RankAndSociety />
+          <Flex
+            width={"100%"}
+            style={{
+              backgroundColor: "#0f0d15",
+              backgroundImage:
+                "linear-gradient(-180deg, #1a1527, #0e0c16 88%, #0e0c16 99%)",
+              boxShadow:
+                "0px 4px 8px rgba(0, 0, 0, 0.3), 0px 8px 16px rgba(0, 0, 0, 0.3), 0px 12px 24px rgba(0, 0, 0, 0.3)", // Increased intensity of the shadow
+            }}
+          >
+            <SolvedQuizzes />
+          </Flex>
+          <Flex
+            width={"100%"}
+            style={{
+              backgroundColor: "#0f0d15",
+              backgroundImage:
+                "linear-gradient(-180deg, #1a1527, #0e0c16 88%, #0e0c16 99%)",
+              boxShadow:
+                "0px 4px 8px rgba(0, 0, 0, 0.3), 0px 8px 16px rgba(0, 0, 0, 0.3), 0px 12px 24px rgba(0, 0, 0, 0.3)", // Increased intensity of the shadow
+            }}
+          >
+            <RankAndSociety />
+          </Flex>
         </Flex>
         <Box
           margin="10px"
