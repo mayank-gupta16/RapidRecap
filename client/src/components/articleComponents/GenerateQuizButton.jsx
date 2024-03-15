@@ -9,26 +9,26 @@ const GenerateQuizButton = ({ onClick, css }) => {
         border: "2px",
         padding: "1rem",
       }}
-      borderRadius="md"
-      backgroundColor="#E4D0D0"
+      borderRadius="xl"
+      backgroundColor="#2A2F4F"
       marginBottom="2rem"
     >
       <Text
         fontSize="18px"
         fontWeight="bold"
         marginBottom="1rem"
-        letterSpacing={1}
-        color="#6C3428" // Change the color here
+        letterSpacing={0.25}
+        color="#FDE2F3" // Change the color here
       >
-        Compete in the quiz for a chance at the LeaderBoard
+        !!! Compete in the quiz for a chance at the LeaderBoard !!!
       </Text>
       <Button
-        height="40px"
-        width="120px"
+        height="35px"
+        width="110px"
         borderRadius="xl"
-        _hover={{ opacity: 0.8 }}
-        color="#EDE4E0"
-        backgroundColor="#594545"
+        _hover={{ opacity: 0.5 }}
+        color="#37306B"
+        backgroundColor="#F7EFE5"
         onClick={() => {
           onClick();
         }}

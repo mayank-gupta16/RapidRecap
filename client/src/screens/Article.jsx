@@ -183,7 +183,7 @@ const Article = () => {
                   borderRadius="5px"
                   boxShadow="md"
                   cursor="pointer"
-                  _hover={{ bg: "gray.200", color: "red.500" }}
+                  _hover={{ bg: "#37474f", color: "#f0f0f0" }}
                   onClick={() => navigate(-1)}
                 >
                   <ArrowBackIcon />
@@ -193,9 +193,11 @@ const Article = () => {
                   letterSpacing={1}
                   as="h3"
                   fontSize="25px"
-                  bg="teal.500"
+                  bg="#2A2F4F"
                   p={2}
+                  color="#FDE2F3"
                   borderRadius="xl"
+                  marginBottom="20px"
                 >
                   {article.title}
                 </Heading>
@@ -204,7 +206,7 @@ const Article = () => {
                   letterSpacing={1}
                   as="h4"
                   fontSize="15px"
-                  marginTop="20px"
+                  marginTop="10px"
                 >
                   <Highlight
                     query="Author:"
@@ -212,26 +214,25 @@ const Article = () => {
                       px: "2",
                       py: "1",
                       rounded: "full",
-                      bg: "red.100",
+                      bg: "#F7EFE5",
                     }}
                   >
                     Author:
                   </Highlight>
-                  <span style={{ fontSize: "20px", marginLeft: "5px" }}>
+                  <span style={{ fontSize: "20px", marginLeft: "10px" }}>
                     {article.author}
                   </span>
                 </Heading>
                 {article.mainText.length == 3 ? (
-                  <Box marginTop={8} ref={articleRef}>
-                    <Text align="left" letterSpacing={1}>
+                  <Box marginTop={5} ref={articleRef}>
+                    <Text align="justify" letterSpacing={0}>
                       {article.mainText[0]}
                     </Text>
                     <Box
-                      marginTop="5"
-                      marginBottom="5"
-                      marginRight="5"
+                      marginTop="2"
+                      marginBottom="2"
                       display={"flex"}
-                      alignItems={"center"}
+                      alignItems={"justify"}
                       height={"100%"}
                     >
                       <Image
@@ -253,11 +254,11 @@ const Article = () => {
                         }}
                       />
 
-                      <Text ref={textRef} align="left" letterSpacing={1}>
+                      <Text ref={textRef} align="justify" letterSpacing={0}>
                         {article.mainText[1]}
                       </Text>
                     </Box>
-                    <Text align="left" letterSpacing={1}>
+                    <Text align="justify" letterSpacing={0}>
                       {article.mainText[2]}
                     </Text>
                   </Box>
@@ -306,7 +307,7 @@ const Article = () => {
                   <Flex
                     flexDirection="column"
                     alignItems="center"
-                    bgGradient="linear-gradient(-180deg, #1a1527, #0e0c16 88%, #0e0c16 99%)"
+                    bgGradient="linear-gradient(-180deg, #495C83, #7A86B6  88%, #A8A4CE 99%)"
                     color="white"
                     borderRadius="lg"
                     p={6}
@@ -315,38 +316,40 @@ const Article = () => {
                   >
                     <Heading
                       as="h6"
-                      size="lg"
+                      size="xl"
                       textAlign="center"
-                      mb={4}
-                      color="cyan.400"
+                      mb={3}
+                      color="#11235A"
                     >
-                      Explore Your Quiz Performance
+                      Quiz Performance
                     </Heading>
                     <Flex flexDirection="column" alignItems="center">
                       <Heading
-                        textAlign={"left"}
+                        textAlign={"center"}
                         as="h6"
                         fontSize="20px"
+                        mt={2}
                         mb={2}
-                        color="green.300"
+                        color="#0C356A"
                       >
                         Current Percentile: {percentile}%
                       </Heading>
                       <Heading
-                        textAlign={"left"}
+                        textAlign={"center"}
                         as="h6"
                         fontSize="20px"
                         mb={4}
-                        color="green.300"
+                        color="#0C356A"
                       >
-                        <Flex gap={"5px"}>
+                        <Flex gap={"10px"}>
                           <Tooltip
-                            color={"white"}
+                            color={"grey.300"}
                             label="This is the Rapid Quiz Mastery(RQM) score. It is calculated based on the number of correct answers, time taken to complete the quiz and the difficulty level of the overall quiz. The higher the RQM-Score, the better the performance."
                             aria-label="A tooltip"
-                            textAlign={"left"}
+                            textAlign={"justify"}
                             rounded={"md"}
                             p={"10px"}
+                            bg={"#EEF5FF"}
                           >
                             <Image
                               src={medalIcon}
@@ -377,17 +380,17 @@ const Article = () => {
                 />
               )}
               <Box
-                boxShadow={"0 100px 200px rgba(0, 0, 0, 1.1)"}
+                boxShadow={"0 100px 200px rgba(1, 1, 1, 1.1)"}
                 borderRadius={"15px"}
-                p={1}
+                p={1.5}
               >
                 <Heading
                   as="h3"
-                  fontSize="23px"
+                  fontSize="25px"
                   color="white"
                   letterSpacing={1}
                 >
-                  <TriangleDownIcon color="red.500" /> Latest Articles
+                  <TriangleDownIcon color="#F2D7D9" /> Latest Articles
                 </Heading>
 
                 <SimpleGrid
@@ -395,7 +398,7 @@ const Article = () => {
                   marginTop={5}
                   display={"flex"}
                   flexDirection={"column"}
-                  alignItems={"center"}
+                  alignItems={"justify"}
                 >
                   {latestNews
                     .filter(
@@ -412,14 +415,16 @@ const Article = () => {
                             window.location.href = `/article/${item._id}`;
                           }}
                           style={{ cursor: "pointer" }}
-                          borderTop={"1px solid lightblue"}
+                          borderTop={"2px solid lightblue"}
                           p={2}
-                          w={"90%"}
+                          w={"100%"}
                           display={"flex"}
                           alignItems={"center"}
                         >
                           <Image
-                            width="80px"
+                            width="100px"
+                            mr={3}
+                            mt={-3}
                             height={"100%"}
                             float="left"
                             src={item.imgURL}
@@ -430,7 +435,9 @@ const Article = () => {
                               e.target.style.height = `${textHeight}px`;
                             }}
                           />
-                          <Text>{item.title}</Text>
+                          <Text 
+                            mt={2}>
+                              {item.title}</Text>
                         </Box>
                       );
                     })}
