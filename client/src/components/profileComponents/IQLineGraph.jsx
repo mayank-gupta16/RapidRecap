@@ -4,35 +4,6 @@ import { Flex, Text } from "@chakra-ui/react";
 import Chart from "chart.js/auto";
 import moment from "moment";
 import "chartjs-adapter-date-fns";
-Chart.register({
-  id: "uniqueid5",
-  afterDraw: function (chart, easing) {
-    if (chart.tooltip._active && chart.tooltip._active.length) {
-      const activePoint = chart.tooltip._active[0];
-      const ctx = chart.ctx;
-      const x = activePoint.element.x;
-      const topY = chart.scales.y.top;
-      const bottomY = chart.scales.y.bottom;
-
-      ctx.save();
-      ctx.beginPath();
-      ctx.moveTo(x, topY);
-      ctx.lineTo(x, bottomY);
-      ctx.lineWidth = 1;
-      ctx.strokeStyle = "#ff9800";
-      ctx.stroke();
-      ctx.restore();
-
-      const y = activePoint.element.y;
-      const radius = 8; // Adjust the size of the shadow
-      ctx.beginPath();
-      ctx.arc(x, y, radius, 0, 2 * Math.PI, false);
-      ctx.fillStyle = "rgba(255, 152, 0, 0.2)"; // Orangish color with opacity
-      ctx.fill();
-      ctx.closePath();
-    }
-  },
-});
 
 let contestData = [
   { date: null, IQScore: null, dailyRank: null },
@@ -82,6 +53,8 @@ let contestData = [
 ];
 
 const IQLineGraph = () => {
+  const [chartInstance, setChartInstance] = useState(null);
+  const [hoveredIndex, setHoveredIndex] = useState(null);
   const minIQ = Math.min(
     ...contestData.map((entry) =>
       entry.IQScore ? entry.IQScore : contestData[1].IQScore
@@ -99,13 +72,39 @@ const IQLineGraph = () => {
   const [isHovering, setIsHovering] = useState(false);
   const chartRef = useRef(null);
   const handleHover = (event, array) => {
+    const chart = chartRef.current;
     setIsHovering(true);
     if (array && array.length) {
       const point = array[0];
       const index = point.index;
-      const data = contestData[index];
+      if (index !== hoveredIndex) {
+        // Update hovered index only when index changes
+        setHoveredIndex(index);
+        setIsHovering(true);
+        const ctx = chart.ctx;
+        const x = point.element.x;
+        const topY = chart.scales.y.top;
+        const bottomY = chart.scales.y.bottom;
 
-      setHoveredData(data);
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(x, topY);
+        ctx.lineTo(x, bottomY);
+        //console.log(ctx);
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = "#ff9800";
+        ctx.stroke();
+        ctx.restore();
+
+        const y = point.element.y;
+        const radius = 8; // Adjust the size of the shadow
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, 2 * Math.PI, false);
+        ctx.fillStyle = "rgba(255, 152, 0, 0.2)"; // Orangish color with opacity
+        ctx.fill();
+        ctx.closePath();
+        setHoveredData(contestData[index]);
+      }
     } else {
       setHoveredData(null);
     }
@@ -142,7 +141,7 @@ const IQLineGraph = () => {
       },
     },
     interaction: {
-      mode: "nearest", // Enable interaction mode for closest point
+      mode: "index", // Enable interaction mode for closest point
       intersect: false,
     },
     scales: {
