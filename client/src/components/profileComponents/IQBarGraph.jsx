@@ -65,7 +65,7 @@ const calculatePercentilesOfEachBar = (
   const calculatePercentile = (iqScore) => {
     const sortedScores = IQScores.sort((a, b) => a - b);
     const index = sortedScores.findIndex((score) => score >= iqScore);
-    return 100 - ((index + 1) / sortedScores.length) * 100;
+    return index === 0 ? 100 : 100 - ((index + 1) / sortedScores.length) * 100;
   };
 
   // Iterate through each data point
@@ -266,7 +266,9 @@ const IQBarGraph = () => {
           </Flex>
         ) : null}
       </Flex>
-      <Bar ref={chartRef} data={chartData} options={options} />
+      <Flex height={"150px"} width={"100%"} justifyContent={"center"}>
+        <Bar ref={chartRef} data={chartData} options={options} />
+      </Flex>
     </Flex>
   );
 };

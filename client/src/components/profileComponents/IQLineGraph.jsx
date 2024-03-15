@@ -256,7 +256,12 @@ const IQLineGraph = () => {
           <Text textAlign={"left"}>{hoveredData.dailyRank}</Text>
         </Flex>
       </Flex>
-      <Flex w={"100%"} justifyContent={"center"} alignItems={"center"}>
+      <Flex
+        w={"100%"}
+        justifyContent={"center"}
+        alignItems={"center"}
+        height={"150px"}
+      >
         <Line ref={chartRef} data={chartData} options={chartOptions} />
       </Flex>
     </Flex>
