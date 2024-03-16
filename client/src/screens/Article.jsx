@@ -307,11 +307,11 @@ const Article = () => {
                   <Flex
                     flexDirection="column"
                     alignItems="center"
-                    bgGradient="linear-gradient(-180deg, #495C83, #7A86B6  88%, #A8A4CE 99%)"
+                    bgGradient="linear-gradient(-180deg, #1A374D, #406882  58%, #6998AB 99%)"
                     color="white"
                     borderRadius="lg"
                     p={6}
-                    boxShadow="0 4px 8px rgba(0, 0, 0, 0.1)"
+                    boxShadow="5px 4px 8px rgba(0, 0, 0, 0.5)"
                     marginBottom={5}
                   >
                     <Heading
@@ -319,7 +319,7 @@ const Article = () => {
                       size="xl"
                       textAlign="center"
                       mb={3}
-                      color="#11235A"
+                      color="#B1D0E0"
                     >
                       Quiz Performance
                     </Heading>
@@ -330,7 +330,7 @@ const Article = () => {
                         fontSize="20px"
                         mt={2}
                         mb={2}
-                        color="#0C356A"
+                        color="#D4ECDD"
                       >
                         Current Percentile: {percentile}%
                       </Heading>
@@ -339,7 +339,7 @@ const Article = () => {
                         as="h6"
                         fontSize="20px"
                         mb={4}
-                        color="#0C356A"
+                        color="#D4ECDD"
                       >
                         <Flex gap={"10px"}>
                           <Tooltip
@@ -366,7 +366,7 @@ const Article = () => {
                   </Flex>
                 </>
               ) : onGoingQuiz ? (
-                <Heading size="md" margin={"20px"} color={"red.500"}>
+                <Heading size="md" margin={"5px"} mb={5} height={"100px"} color={"red"}>
                   Quiz is Already going on in some other tab or device
                 </Heading>
               ) : quizExpired ? (
@@ -499,7 +499,7 @@ const Article = () => {
                 }}
                 size="md"
                 margin={"20px"}
-                color={"red.500"}
+                color={"red"}
               >
                 Quiz is Already going on in some other tab or device
               </Heading>

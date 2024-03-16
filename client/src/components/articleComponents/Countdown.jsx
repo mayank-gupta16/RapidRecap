@@ -32,7 +32,8 @@ const Countdown = ({
       });
     }, 1000);
 
-    if (timer === 0) {
+    if (timer === 0)
+    {
       onTimerExhausted();
       clearInterval(intervalId);
     }
@@ -68,12 +69,12 @@ const Countdown = ({
           </svg>
         </div>
       ) : timer === 0 ? (
-        <Text fontWeight={"50px"} fontSize={"25px"} color={"red"}>
-          Time's Up
+        <Text fontWeight={"50px"} fontSize={"40px"} color={"#000000"} mt={5}>
+          !! Time's Up !!
         </Text>
       ) : (
         <Box marginTop={"20px"}>
-          <Heading as="h6" fontSize={"30px"} color={"green"}>
+          <Heading as="h6" fontSize={"30px"} color={"#000000"}>
             Submitted in {`${60 - timer} Secs`}
           </Heading>
         </Box>

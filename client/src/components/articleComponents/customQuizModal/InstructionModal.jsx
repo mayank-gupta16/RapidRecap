@@ -15,32 +15,35 @@ const InstructionModal = () => {
         color={"black"}
         
       >
-        <Heading as="h1" size={"xl"} mb={4}>
+        <Heading as="h1" size={"xl"} mb={2}>
           Instructions
         </Heading>
 
         <VStack spacing={1} alignItems="start" textAlign="left">
-          <Box>
+        <Box mt={5} mb={-1}>
+            <Text fontStyle={"italic"} fontWeight={"bold"}> * Read all the instructions carefully before attempting the quiz</Text>
+          </Box>
+          <Box mt={-1} mb={-1}>
             <Text>1. Quiz will contain five questions.</Text>
           </Box>
-          <Box>
-            <Text>3. All the questions will be from the given article only.</Text>
+          <Box mt={-1} mb={-1}>
+            <Text>2. All the questions will be from the given article only.</Text>
           </Box>
-          <Box>
-            <Text>4. All questions are compulsory to attempt.</Text>
+          <Box mt={-1} mb={-1}>
+            <Text>3. All questions are compulsory to attempt.</Text>
           </Box>
-          <Box>
+          <Box mt={-1} mb={-1}>
             <Text>
-              5. At last, you will get your score and your percentile.
+              4. At last, you will get your score and your percentile.
             </Text>
           </Box>
-          <Box>
-            <Text>6. You can't leave the quiz in between.</Text>
+          <Box mt={-1} mb={-1}>
+            <Text>5. You can't leave the quiz in between.</Text>
           </Box>
-          <Box>
-            <Text>7. Attempting the quiz will affect your IQ score.</Text>
+          <Box mt={-1}>
+            <Text>6. Attempting the quiz will affect your IQ score.</Text>
           </Box>
-        </VStack>
+        </VStack> 
       </ModalBody>
     </>
   );

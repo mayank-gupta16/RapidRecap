@@ -41,7 +41,8 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
   const [showInstruction, setShowInstruction] = useState(true);
   const [timeTaken, setTimeTaken] = useState(0);
   const [isCloseButtonHovered, setIsCloseButtonHovered] = useState(false);
-  const [isStartQuizButtonHovered, setIsStartQuizButtonHovered] = useState(false);
+  const [isStartQuizButtonHovered, setIsStartQuizButtonHovered] =
+    useState(false);
 
   const totalQuestions = quizData ? quizData.questions.length : 0;
 
@@ -156,7 +157,7 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
         description:
           error.response.data.error ||
           error ||
-          "Please try again (Close this and Try refreshing the page)",
+          "Please try again (Close this window and Try refreshing the page)",
         status: "error",
         duration: 5000,
         isClosable: true,
@@ -234,7 +235,7 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
       >
         <ModalOverlay
           bg="blackAlpha.300"
-          backdropFilter="blur(15px) hue-rotate(90deg)"
+          backdropFilter="blur(40px) hue-rotate(90deg)"
         />
 
         <ModalContent
@@ -244,7 +245,7 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
           backgroundSize="400% 400%"
           className="animated-gradient"
           minHeight={"75%"}
-          borderRadius={{ md: "20px" }}
+          borderRadius={{ md: "2px" }}
         >
           <ModalHeader
             maxHeight={"100px"}
@@ -254,6 +255,7 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
             alignItems={"center"}
           >
             <SkeletonCircle
+              color="red"
               isLoaded={!load}
               marginTop={load ? "10px" : "0"} // remove this when skeleton isLoaded
               size={load ? "20" : "auto"} // make it auto when skeleton isLoaded
@@ -304,11 +306,11 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
                       <Progress
                         hasStripe
                         value={(currentQuestionIndex / totalQuestions) * 100}
-                        width={{ base: "100%", md: "75%" }}
+                        width={{ base: "100%", md: "80%" }}
                         height={"10px"}
                         marginBottom={"20px"}
                         borderRadius={"50px"}
-                        colorScheme="purple"
+                        colorScheme="blue"
                         marginY={"auto"}
                       />
 
@@ -334,20 +336,20 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
                   />
                   {quizData !== null && (
                     <>
-                      <Image
+                      {/* <Image
                         src={article.imgURL}
                         alt="Article Image"
                         borderRadius="md"
-                        marginBottom="2"
+                        marginBottom="5"
                         width={{ base: "100%", md: "50%" }}
                         height="auto"
-                      />
+                      /> */}
                       <Text
-                        p={1}
-                        letterSpacing={1}
+                        p={2}
+                        letterSpacing={0.5}
                         marginBottom={"50px"}
                         overflowWrap="break-word"
-                        color={"white"}
+                        color={"black"}
                         fontSize={"20px"}
                         userSelect={"none"}
                       >
@@ -355,7 +357,7 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
                           ? quizData.questions[currentQuestionIndex].question
                           : ""}
                       </Text>
-                      <Grid templateColumns={{ md: "1fr 1fr" }} gap="20px">
+                      <Grid templateColumns={{ md: "1fr 1fr" }} gap="25px">
                         {Object.entries(
                           quizData.questions.length > 0
                             ? quizData.questions[currentQuestionIndex].options
@@ -367,8 +369,9 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
                               flexDirection={"row"}
                               alignItems={"center"}
                               marginRight={2}
-                              color={"white"}
-                              minW={"20px"}
+                              color={"black"}
+                              fontWeight={"bold"}
+                              minW={"25px"}
                               userSelect={"none"}
                             >{`${optionKey.toLocaleUpperCase()} :`}</Box>
                             <Button
@@ -380,11 +383,11 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
                               onClick={() => handleAnswer(optionKey)}
                               bg={
                                 userAnswers[currentQuestionIndex] === optionKey
-                                  ? "white"
-                                  : "black"
+                                  ? "#DDE6ED" // Background color when selected
+                                  : "#183D3D" // Default background color
                               }
                               variant={"outline"}
-                              width={"80%"}
+                              width={"100%"}
                               maxWidth={"400px"}
                               textAlign={"left"}
                               height={"auto"}
@@ -392,10 +395,10 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
                               py={2}
                               color={
                                 userAnswers[currentQuestionIndex] === optionKey
-                                  ? "black"
-                                  : "white"
+                                  ? "#27374D" // Text color when selected
+                                  : "#FAF0E6" // Default text color
                               }
-                              _hover={{ color: "black", bg: "white" }}
+                              _hover={{ color: "#163020", bg: "#ADC4CE" }} // Hover effect
                             >
                               {`${optionText}`}
                             </Button>
@@ -415,10 +418,10 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
                   <Heading
                     as="h3"
                     size="lg"
-                    color="white"
+                    color="#3E3232"
                     position="absolute"
-                    top="20%"
-                    width="75%"
+                    top="40%"
+                    width="100%"
                     left="50%"
                     transform="translateX(-50%)"
                     textAlign="center"
@@ -426,10 +429,10 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
                     Quiz completed. Thank you for participating!
                   </Heading>
                   <Text
-                    color="white"
+                    color="#503C3C"
                     fontSize="30px"
                     textAlign="center"
-                    marginTop="2"
+                    marginTop="10"
                   >
                     RQM_score: {`${score}`}
                   </Text>
@@ -439,7 +442,7 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
           )}
           <Flex flexDirection={"column"} color={"white"}>
             {load && (
-              <Text size={"lg"}>
+              <Text size={"lg"} color={"black"}>
                 Quiz is generating. Wait for the start button....
               </Text>
             )}
@@ -451,19 +454,21 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
               <ModalFooter>
                 {showInstruction && (
                   <Button
-                  colorScheme="blue"
-                  mr={3}
-                  onClick={startQuiz}
-                  style={{
-                    transition: "background-color 0.3s, color 0.3s",
-                    backgroundColor: isStartQuizButtonHovered ? "#DDE6ED" : "#183D3D",
-                    color: isStartQuizButtonHovered ? "#27374D" : "#FAF0E6",
-                  }}
-                  onMouseEnter={() => setIsStartQuizButtonHovered(true)}
-                  onMouseLeave={() => setIsStartQuizButtonHovered(false)}
-                >
-                  Start Quiz 
-                </Button>
+                    colorScheme="blue"
+                    mr={3}
+                    onClick={startQuiz}
+                    style={{
+                      transition: "background-color 0.3s, color 0.3s",
+                      backgroundColor: isStartQuizButtonHovered
+                        ? "#DDE6ED"
+                        : "#183D3D",
+                      color: isStartQuizButtonHovered ? "#27374D" : "#FAF0E6",
+                    }}
+                    onMouseEnter={() => setIsStartQuizButtonHovered(true)}
+                    onMouseLeave={() => setIsStartQuizButtonHovered(false)}
+                  >
+                    Start Quiz
+                  </Button>
                 )}
                 {!showInstruction &&
                   currentQuestionIndex < totalQuestions - 1 && (
@@ -471,12 +476,28 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
                       colorScheme="blue"
                       mr={3}
                       onClick={handleNextQuestion}
+                      bg="#FCECDD" // Default background color
+                      color="#046582  " // Default text color
+                      _hover={{
+                        bg: "#046582", // Change background color to red on hover
+                        color: "#FCECDD", // Change text color to black on hover
+                      }}
                     >
                       Next
                     </Button>
                   )}
                 {currentQuestionIndex === totalQuestions - 1 && (
-                  <Button colorScheme="blue" mr={3} onClick={handleSubmitQuiz}>
+                  <Button
+                    colorScheme="blue"
+                    mr={3}
+                    onClick={handleSubmitQuiz}
+                    bg="#DCF2F1" // Default background color 
+                    color="#265073" // Default text color 
+                    _hover={{
+                      bg: "#265073",  // Change background color to red on hover
+                      color: "#DCF2F1", // Change text color to black on hover
+                    }}
+                  >
                     Submit
                   </Button>
                 )}
@@ -487,10 +508,11 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
       </Modal>
       {!showInstruction && (
         <ConfirmationModal
+          bg={"black"}
           isOpen={showConfirmationModal}
           onClose={() => setShowConfirmationModal(false)}
           onConfirm={handleConfirmClose}
-          message="Clicking on Confirm will result in submission of the quiz with 0 score. Are you sure you want to submit the quiz?"
+          message="Clicking on Confirm will result in submission of the quiz with 0 score. Are you sure you want to submit the quiz ?"
         />
       )}
     </>

@@ -26,7 +26,7 @@ const GenerateQuizButton = ({ onClick, css }) => {
         height="35px"
         width="110px"
         borderRadius="xl"
-        _hover={{ opacity: 0.5 }}
+        _hover={{ opacity: 0.3 }}
         color="#37306B"
         backgroundColor="#F7EFE5"
         onClick={() => {

@@ -13,12 +13,12 @@ const ConfirmationModal = ({ isOpen, onClose, onConfirm, message }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>Confirmation</ModalHeader>
+      <ModalContent bg="#BBE2EC">
+        <ModalHeader fontWeight="bold" fontSize="30px">Confirmation</ModalHeader>
         <ModalCloseButton />
-        <ModalBody>{message}</ModalBody>
+        <ModalBody fontSize="17px">{message}</ModalBody>
         <ModalFooter>
-          <Button colorScheme="blue" mr={3} onClick={onConfirm}>
+          <Button bg="#50727B" color="#000000" mr={5} onClick={onConfirm}>
             Confirm
           </Button>
           <Button variant="ghost" onClick={onClose}>
