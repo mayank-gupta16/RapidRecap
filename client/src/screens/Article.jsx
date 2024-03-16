@@ -223,7 +223,7 @@ const Article = () => {
                     {article.author}
                   </span>
                 </Heading>
-                {article.mainText.length == 3 ? (
+                {article.mainText.length === 3 ? (
                   <Box marginTop={5} ref={articleRef}>
                     <Text align="justify" letterSpacing={0}>
                       {article.mainText[0]}
@@ -246,7 +246,7 @@ const Article = () => {
                         borderRadius="md"
                         float={"left"}
                         marginRight={"3"}
-                        height={textHeight}
+                        height={`${textHeight}px`}
                         onError={(e) => {
                           e.target.onerror = null;
                           e.target.src = Alt_img;
@@ -276,7 +276,7 @@ const Article = () => {
                       marginBottom="5"
                       marginRight="5"
                       float={"left"}
-                      height={textHeight}
+                      height={`${textHeight}px`}
                       onError={(e) => {
                         e.target.onerror = null;
                         e.target.src = Alt_img;
@@ -435,9 +435,7 @@ const Article = () => {
                               e.target.style.height = `${textHeight}px`;
                             }}
                           />
-                          <Text 
-                            mt={2}>
-                              {item.title}</Text>
+                          <Text mt={2}>{item.title}</Text>
                         </Box>
                       );
                     })}
@@ -506,7 +504,13 @@ const Article = () => {
                 Quiz is Already going on in some other tab or device
               </Heading>
             ) : quizExpired ? (
-              <QuizExpired />
+              <QuizExpired
+                css={{
+                  "@media screen and (min-width: 821px)": {
+                    display: "none",
+                  },
+                }}
+              />
             ) : (
               <GenerateQuizButton
                 css={{

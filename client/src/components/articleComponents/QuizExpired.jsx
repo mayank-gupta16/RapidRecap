@@ -1,9 +1,9 @@
 import { Container, Heading } from "@chakra-ui/react";
 import React from "react";
 
-const QuizExpired = () => {
+const QuizExpired = ({ css }) => {
   return (
-    <Container margin={"20px"}>
+    <Container css={css} margin={"20px"}>
       <Heading color={"red"}>Quiz Expired</Heading>
     </Container>
   );
