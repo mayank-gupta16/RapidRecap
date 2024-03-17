@@ -8,7 +8,7 @@ const SolvedQuizzes = () => {
       borderRadius="10px"
       w={"100%"}
       flexDirection={"column"}
-      gap={5}
+      gap={3}
     >
       <Box flexDirection={"column"} width={"100%"}>
         <Text textAlign={"left"} color={"#eff2f699"} p={0} m={0}>
