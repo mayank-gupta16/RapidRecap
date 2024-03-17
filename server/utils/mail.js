@@ -2,17 +2,6 @@ const nodemailer = require("nodemailer");
 const { google } = require("googleapis");
 
 //These id's and secrets should come from .env file.
-const CLIENT_ID = process.env.CLIENT_ID;
-const CLEINT_SECRET = process.env.CLIENT_SECRET;
-const REDIRECT_URI = "https://developers.google.com/oauthplayground";
-const REFRESH_TOKEN = process.env.REFRESH_TOKEN;
-
-const oAuth2Client = new google.auth.OAuth2(
-  CLIENT_ID,
-  CLEINT_SECRET,
-  REDIRECT_URI
-);
-oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
 
 const generateOtp = () => {
   let otp = "";
@@ -23,12 +12,23 @@ const generateOtp = () => {
 };
 
 const mailTransporter = async () => {
+  const CLIENT_ID = process.env.CLIENT_ID;
+  const CLEINT_SECRET = process.env.CLIENT_SECRET;
+  const REDIRECT_URI = "https://developers.google.com/oauthplayground";
+  const REFRESH_TOKEN = process.env.REFRESH_TOKEN;
+
+  const oAuth2Client = new google.auth.OAuth2(
+    CLIENT_ID,
+    CLEINT_SECRET,
+    REDIRECT_URI
+  );
+  oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
   const accessToken = await oAuth2Client.getAccessToken();
   return nodemailer.createTransport({
     service: "gmail",
     auth: {
       type: "OAuth2",
-      user: "20ucs174@lnmiit.ac.in",
+      user: "rapidrecap2k23@gmail.com",
       clientId: CLIENT_ID,
       clientSecret: CLEINT_SECRET,
       refreshToken: REFRESH_TOKEN,
