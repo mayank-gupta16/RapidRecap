@@ -238,7 +238,7 @@ const IQLineGraph = () => {
             IQ Score
           </Text>
           <Text textAlign={"left"} fontSize={"1.5rem"}>
-            {hoveredData.IQScore}
+            {hoveredData?.IQScore}
           </Text>
         </Flex>
         <Flex flexDirection={"column"}>
@@ -246,14 +246,14 @@ const IQLineGraph = () => {
             Date
           </Text>
           <Text textAlign={"left"}>
-            {moment(hoveredData.date, "YYYY:MM:DD").format("MMM DD, YYYY")}
+            {moment(hoveredData?.date, "YYYY:MM:DD").format("MMM DD, YYYY")}
           </Text>
         </Flex>
         <Flex flexDirection={"column"}>
           <Text textAlign={"left"} color={"#eff2f699"} p={0} m={0}>
             Daily Rank
           </Text>
-          <Text textAlign={"left"}>{hoveredData.dailyRank}</Text>
+          <Text textAlign={"left"}>{hoveredData?.dailyRank}</Text>
         </Flex>
       </Flex>
       <Flex
