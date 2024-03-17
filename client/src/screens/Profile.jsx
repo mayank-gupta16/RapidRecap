@@ -54,7 +54,6 @@ export default function Profile() {
 
         <Flex
           margin="10px"
-          borderRadius="10px"
           marginTop="5px"
           marginBottom="5px"
           flexDirection="row"
@@ -62,6 +61,7 @@ export default function Profile() {
           gap={5}
         >
           <Flex
+            borderRadius="10px"
             width={"100%"}
             style={{
               backgroundColor: "#0f0d15",
@@ -74,6 +74,7 @@ export default function Profile() {
             <SolvedQuizzes />
           </Flex>
           <Flex
+            borderRadius="10px"
             width={"100%"}
             style={{
               backgroundColor: "#0f0d15",
