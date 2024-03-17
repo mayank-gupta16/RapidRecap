@@ -12,7 +12,7 @@ const jwt = require("jsonwebtoken");
 const { updatePercentilesOnQuizDeactivation } = require("../utils/quiz");
 
 const registerUser = async (req, res) => {
-  console.log(req.body);
+  //console.log(req.body);
   const { firstName, lastName, email, phone, password, cpassword } = req.body;
 
   if (!firstName || !email || !phone || !lastName || !password || !cpassword)
@@ -64,7 +64,7 @@ const registerUser = async (req, res) => {
     });
     return res.status(201).json({ message: "Registered Successfully" });
   } catch (err) {
-    console.log(err.message);
+    console.log(err);
   }
 };
 
