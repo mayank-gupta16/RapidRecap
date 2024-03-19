@@ -32,8 +32,7 @@ const Countdown = ({
       });
     }, 1000);
 
-    if (timer === 0)
-    {
+    if (timer === 0) {
       onTimerExhausted();
       clearInterval(intervalId);
     }
@@ -75,7 +74,7 @@ const Countdown = ({
       ) : (
         <Box marginTop={"20px"}>
           <Heading as="h6" fontSize={"30px"} color={"#000000"}>
-            Submitted in {`${60 - timer} Secs`}
+            Submitted in {`${initialTimer - timer} Secs`}
           </Heading>
         </Box>
       )}
