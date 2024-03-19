@@ -74,14 +74,14 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
       ) {
         userResponses.push("");
       }
-      console.log(userResponses, quizData, timeTaken);
+      //console.log(userResponses, quizData, timeTaken);
       const response = await axios.post(`/api/quiz/attempt`, {
         articleId,
         userResponses,
         quizData,
-        timeTaken,
+        timeTaken: timeTaken === 0 ? 1 : timeTaken,
       });
-      console.log(response);
+      //console.log(response);
       setScore(response.data.RQM_score);
       setCurrentQuestionIndex(quizData.questions.length);
       setSubmitted(true);
@@ -94,7 +94,7 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
         position: "top",
       });
     } catch (error) {
-      console.log(error.response.data.error);
+      //console.log(error.response.data.error);
       toast({
         title: "Error",
         description: error.response.data.error || "Quiz submission failed!",
@@ -127,7 +127,7 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
         isClosable: true,
         position: "top",
       });
-      console.log(error);
+      //console.log(error);
     } finally {
       setLoad(false);
     }
@@ -163,7 +163,7 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
         isClosable: true,
         position: "top",
       });
-      console.log(error);
+      //console.log(error);
     }
   };
 
@@ -221,7 +221,7 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
         isClosable: true,
         position: "top",
       });
-      console.log(error);
+      //console.log(error);
     }
     // Perform additional actions if needed
   };
@@ -491,10 +491,10 @@ const Quiz = ({ article, isOpen, onClose, ofShowQuiz }) => {
                     colorScheme="blue"
                     mr={3}
                     onClick={handleSubmitQuiz}
-                    bg="#DCF2F1" // Default background color 
-                    color="#265073" // Default text color 
+                    bg="#DCF2F1" // Default background color
+                    color="#265073" // Default text color
                     _hover={{
-                      bg: "#265073",  // Change background color to red on hover
+                      bg: "#265073", // Change background color to red on hover
                       color: "#DCF2F1", // Change text color to black on hover
                     }}
                   >
