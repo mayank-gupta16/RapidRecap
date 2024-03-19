@@ -37,7 +37,7 @@ const calculatePercentile = (userIQ, IQScores) => {
   return percentile;
 };
 const TOP_PERCENT = (100 - calculatePercentile(USER_IQ, IQScores)).toFixed(2);
-console.log(TOP_PERCENT);
+
 const labels = Array.from({ length: 30 }, (_, i) => (i + 1) * 10);
 const data = labels.map((threshold) => {
   return IQScores.filter(
