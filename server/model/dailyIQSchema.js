@@ -22,4 +22,4 @@ const dailyIQSchema = new mongoose.Schema({
 
 const DailyIQ = mongoose.model("DailyIQ", dailyIQSchema); // Daily IQ model
 
-module.exports = { DailyIQ };
+module.exports = DailyIQ;
