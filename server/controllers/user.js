@@ -1,5 +1,6 @@
 const User = require("../model/userSchema");
 const QuizAttempt = require("../model/quizAttemptSchema");
+const DailyIQ = require("../model/dailyIQSchema");
 const bcrypt = require("bcryptjs");
 const {
   generateOtp,
@@ -10,6 +11,8 @@ const VerificationToken = require("../model/verificationToken");
 const { isValidObjectId } = require("mongoose");
 const jwt = require("jsonwebtoken");
 const { updatePercentilesOnQuizDeactivation } = require("../utils/quiz");
+const { formatDate } = require("../utils/date");
+const { progressBar } = require("../utils/progress");
 
 const registerUser = async (req, res) => {
   //console.log(req.body);
@@ -270,11 +273,10 @@ const handleGoogleLogin = async (req, res) => {
   }
 };
 
-// Incomplete function
-
 const calculateUserIQScores = async (req, res) => {
   try {
     // Fetch all users
+    console.log("\nFetching users...\n");
     const users = await User.aggregate([
       {
         $lookup: {
@@ -295,63 +297,121 @@ const calculateUserIQScores = async (req, res) => {
         },
       },
     ]);
-
+    console.log("\nFetched users.\n");
     // Array to store user scores
     const userScores = [];
     let sumOfUserScores = 0;
-    // Iterate through each user
-    for (const user of users) {
-      // Fetch quiz attempts for the user
-      const quizAttempts = await QuizAttempt.find({
-        user: user._id,
-      }).populate({
+    const updateProgress1 = progressBar(users.length);
+    // Fetch quiz attempts concurrently for each user
+    const fetchQuizAttemptsPromises = users.map(async (user) => {
+      const quizAttempts = await QuizAttempt.find({ user: user._id }).populate({
         path: "article",
         populate: { path: "quiz" },
       });
+      updateProgress1();
+      return { user, quizAttempts };
+    });
 
+    const userQuizAttempts = await Promise.all(fetchQuizAttemptsPromises);
+    console.log("\nFetched quiz attempts.\n");
+    // Iterate through each user's quiz attempts
+    console.log("\nCalculating user scores...\n");
+    const updateProgress2 = progressBar(userQuizAttempts.length);
+    for (const { user, quizAttempts } of userQuizAttempts) {
       let userScore = 0;
 
-      // Iterate through each quiz attempt
       for (const attempt of quizAttempts) {
-        // Calculate score for the quiz attempt (Wi * Pi)
-        if (
-          attempt.article.quiz.createdAt.getTime() + 24 * 60 * 60 * 1000 <
-          Date.now()
-        ) {
-          if (attempt.article.quiz.isActive) {
-            await updatePercentilesOnQuizDeactivation({
-              id: attempt.article._id,
-            });
-            attempt.article.quiz.isActive = false;
-            await attempt.article.quiz.save();
-          }
-          const quizScore = attempt.articleDifficulty * attempt.userPercentile;
-          userScore += quizScore;
+        // Check if quiz attempt, quiz, and article exist
+        if (!attempt || !attempt.article || !attempt.article.quiz) {
+          console.error("Invalid quiz attempt data.");
+          continue; // Skip this attempt
         }
+
+        // Check if the quiz attempt is valid based on its creation date and quiz activity
+        // if (
+        //   attempt.article.quiz.createdAt.getTime() + 24 * 60 * 60 * 1000 <
+        //   Date.now()
+        // ) {
+        if (attempt.article.quiz.isActive) {
+          await updatePercentilesOnQuizDeactivation({
+            id: attempt.article._id,
+          });
+          attempt.article.quiz.isActive = false;
+          await attempt.article.quiz.save();
+        }
+        // Calculate score for the quiz attempt (Wi * Pi)
+        const quizScore = attempt.articleDifficulty * attempt.userPercentile;
+        userScore += quizScore;
+        //}
       }
       sumOfUserScores += userScore;
       // Add user score to the array
       userScores.push({ user, userScore });
+      updateProgress2();
     }
+
+    // Calculate mean and standard deviation
     const meanOfUserScores = sumOfUserScores / userScores.length;
     const sumOfSquares = userScores.reduce(
       (acc, user) => acc + Math.pow(user.userScore - meanOfUserScores, 2),
       0
     );
     const standardDeviation = Math.sqrt(sumOfSquares / userScores.length);
+
+    // Calculate and update IQ scores for each user
+    console.log("\nCalculating IQ scores...\n");
+    const updateProgress3 = progressBar(userScores.length);
     for (const user of userScores) {
+      if (!user || !user.user) {
+        console.error("Invalid user data.");
+        continue; // Skip this user
+      }
+
       const normalizedScore =
         (user.userScore - meanOfUserScores) / standardDeviation;
       const IQScore = 100 + 15 * normalizedScore;
-      user.user.IQ_score = IQScore;
-      await user.user.save();
+      const updatedUser = await User.findById(user.user._id);
+      updatedUser.IQ_score = Math.round(IQScore);
+      await updatedUser.save();
+      updateProgress3();
     }
-    // Calculate IQ scores for each user
+
+    // Send success response
+    res.status(200).json({ message: "IQ scores calculated successfully." });
   } catch (error) {
-    res
-      .status(400)
-      .json({ error: error.message || "Error calculating IQ score" });
-    console.log(error.message);
+    // Handle errors
+    console.error("Error calculating IQ score:", error);
+    res.status(500).json({ error: "Internal server error." });
+  }
+};
+
+// Controller function to get user's IQ score history
+const getUserIQScoreHistory = async (req, res) => {
+  try {
+    const userId = req.params.userId; // Assuming you pass userId in the URL parameters
+
+    // Find the user by ID
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Populate the dailyIQScores array to get the actual IQ score documents
+    await user.populate("dailyIQScores").execPopulate();
+
+    // Extract relevant information from the populated array
+    const iqScoresHistory = user.dailyIQScores.map((score) => ({
+      date: formatDate(score.date),
+      IQScore: score.IQ_score,
+      dailyRank: score.dailyRank,
+    }));
+
+    // Send the IQ score history to the frontend
+    res.status(200).json({ IQ_score_history: iqScoresHistory });
+  } catch (error) {
+    console.error("Error fetching user IQ score history:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 //module.exports = router;
@@ -365,4 +425,5 @@ module.exports = {
   forgotPassword,
   handleGoogleLogin,
   calculateUserIQScores,
+  getUserIQScoreHistory,
 };
