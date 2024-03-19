@@ -10,6 +10,11 @@ dotenv.config({ path: "./config.env" });
 const app = express();
 
 require("./db/conn");
+
+// -----Testings-----
+//require("./test/conn.test");
+// require("./test/index");
+// ------------------
 app.use(express.json());
 require("./scheduler/userIQScoreScheduler");
 const PORT = process.env.PORT;
