@@ -136,8 +136,8 @@ const getQuiz = async (req, res) => {
     await article.save();
     res.status(200).json({ message: "Quiz Questions generated successfully" });
   } catch (error) {
-    res.status(400).json({ error: error.message || "Something went wrong" });
-    console.log(error);
+    res.status(400).json({ error: "Something went wrong! Please try again" });
+    console.log(error.message);
   }
 };
 
