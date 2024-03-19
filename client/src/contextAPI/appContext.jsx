@@ -5,7 +5,7 @@ import axios from "axios";
 async function showState() {
   try {
     const response = await axios.get(`/api/user/loginCheck`);
-    console.log(response.data);
+    //console.log(response.data);
     if (response.status === 201) {
       return { show: false, user: response.data };
     } else return { show: true, user: {} };
