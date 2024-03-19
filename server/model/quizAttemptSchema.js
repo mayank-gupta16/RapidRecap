@@ -37,6 +37,10 @@ const quizAttemptSchema = new mongoose.Schema({
   userPercentile: {
     type: Number,
   },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 const QuizAttempt = mongoose.model("QUIZ_ATTEMPT", quizAttemptSchema);

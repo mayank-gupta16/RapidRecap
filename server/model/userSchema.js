@@ -41,12 +41,9 @@ const userSchema = new mongoose.Schema(
     },
     googleId: {
       type: String,
-      default: null,
     },
     googleEmail: {
       type: String,
-      default: null,
-      unique: true,
     },
     quizAttempts: [
       {
@@ -63,6 +60,25 @@ const userSchema = new mongoose.Schema(
       required: true,
       default:
         "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg",
+    },
+    bio: {
+      type: String,
+      default: "",
+    },
+    inGameName: {
+      type: String,
+      default: "",
+      unique: true,
+    },
+    dailyIQScores: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "DailyIQ",
+      },
+    ],
+    createdAt: {
+      type: Date,
+      default: Date.now,
     },
   },
   { collection: "Users" }
