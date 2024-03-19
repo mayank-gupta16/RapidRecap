@@ -92,7 +92,7 @@ const IQLineGraph = () => {
         ctx.lineTo(x, bottomY);
         //console.log(ctx);
         ctx.lineWidth = 1;
-        ctx.strokeStyle = "#ff9800";
+        ctx.strokeStyle = "#B3A492";
         ctx.stroke();
         ctx.restore();
 
@@ -114,8 +114,8 @@ const IQLineGraph = () => {
     datasets: [
       {
         data: contestData.map((entry) => entry.IQScore),
-        borderColor: "#ff9800", // Orangish color for the line
-        pointBorderColor: "white",
+        borderColor: "#F2D8D8", // Orangish color for the line
+        pointBorderColor: "#FFF6F6",
         pointBackgroundColor: (context) => {
           return context.dataIndex === contestData.length - 2 && !isHovering
             ? "white"
@@ -234,7 +234,7 @@ const IQLineGraph = () => {
     >
       <Flex justifyContent={"space-between"}>
         <Flex flexDirection={"column"}>
-          <Text textAlign={"left"} color={"#eff2f699"} p={0} m={0}>
+          <Text textAlign={"left"} color={"#9CAFAA"} p={0} m={0}>
             IQ Score
           </Text>
           <Text textAlign={"left"} fontSize={"1.5rem"}>
@@ -242,7 +242,7 @@ const IQLineGraph = () => {
           </Text>
         </Flex>
         <Flex flexDirection={"column"}>
-          <Text textAlign={"left"} color={"#eff2f699"} p={0} m={0}>
+          <Text textAlign={"left"} color={"#9CAFAA"} p={0} m={0}>
             Date
           </Text>
           <Text textAlign={"left"}>
@@ -250,7 +250,7 @@ const IQLineGraph = () => {
           </Text>
         </Flex>
         <Flex flexDirection={"column"}>
-          <Text textAlign={"left"} color={"#eff2f699"} p={0} m={0}>
+          <Text textAlign={"left"} color={"#9CAFAA"} p={0} m={0}>
             Daily Rank
           </Text>
           <Text textAlign={"left"}>{hoveredData?.dailyRank}</Text>

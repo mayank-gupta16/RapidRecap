@@ -14,24 +14,24 @@ const LeftProfileBox = () => {
           src={state.user.pic}
           alt="Profile"
           borderRadius="10%"
-          width="100px"
-          height="100px"
+          width="80px"
+          height="80px"
           marginRight="20px"
         />
         <Box margin={"5px"}>
           <Heading as="h4" size={"md"}>
             {state.user.firstName} {state.user.lastName}
           </Heading>
-          <Heading as="h6" fontSize={"14px"}>
+          <Heading as="h6" fontSize={"12px"}>
             syntax_terminator_2704
           </Heading>
-          <Heading as="h6" fontSize={"14px"}>
+          <Heading as="h6" fontSize={"12px"}>
             Rank : 1,21,145
           </Heading>
         </Box>
       </Flex>
-      <Box marginTop={"20px"}>
-        <Text>
+      <Box marginTop={"10px"}>
+        <Text align={"justify"}>
           An ambitious student pursuing B.Tech in Communication and Computer
           Engineering, I possess a strong skill set in Data Structures and
           Algorithms (DSA), full-stack web development (MERN Stack) and
@@ -42,10 +42,18 @@ const LeftProfileBox = () => {
         </Text>
         <Button
           size="md"
-          height="38px"
-          width="150px"
-          border="3px"
+          height="35px"
+          width="280px"
+          border="5px"
           borderColor="green.200"
+          backgroundColor="#F2D8D8" // Initial background color
+          color="#374259" // Initial text color
+          css={{
+            "&:hover": {
+              backgroundColor: "#316B83", // Change background color to green on hover
+              color: "#11324D", // Change text color to white on hover
+            },
+          }}
         >
           Edit Profile
         </Button>

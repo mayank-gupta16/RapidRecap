@@ -87,7 +87,7 @@ const DailyActivity = () => {
     }
 
     return (
-      <Flex direction="column" width="80px" key={month}>
+      <Flex direction="column" width="100px" key={month}>
         <Grid
           templateColumns={`repeat(${DAYS_IN_WEEK}, 1fr)`}
           h={"80px"}

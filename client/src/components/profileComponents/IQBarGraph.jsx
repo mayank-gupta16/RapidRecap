@@ -113,7 +113,7 @@ const IQBarGraph = () => {
             : "rgba(84, 62, 122, 0.9)";
         }),
         borderColor: "#1a1527",
-        borderRadius: 8,
+        borderRadius: "5",
         minBarLength: "15",
       },
     ],
@@ -173,8 +173,8 @@ const IQBarGraph = () => {
     },
     layout: {
       padding: {
-        left: 20,
-        right: 20,
+        left: 5,
+        right: 5,
       },
     },
     onHover: handleHover,
@@ -232,8 +232,8 @@ const IQBarGraph = () => {
             USER_IQ >= lowerBound &&
             !isHovering) ||
             idx === hoveredIndex
-            ? "rgba(255, 152, 0, 0.8)"
-            : "rgba(84, 62, 122, 0.9)";
+            ? "#776B5D"
+            : "#DED0B6";
         }),
       })),
     }));
@@ -247,8 +247,8 @@ const IQBarGraph = () => {
       alignItems={"center"}
     >
       <Flex width={"100%"}>
-        <Flex marginStart={"17px"} flexDirection={"column"}>
-          <Text textAlign={"left"} color={"#eff2f699"} p={0} m={0}>
+        <Flex marginStart={"15px"} flexDirection={"column"}>
+          <Text textAlign={"left"} color={"#9CAFAA"} p={0} m={0}>
             Top
           </Text>
           <Text textAlign={"left"} fontSize={"1.5rem"}>
@@ -257,7 +257,7 @@ const IQBarGraph = () => {
         </Flex>
         {currentData ? (
           <Flex marginLeft={"40px"} flexDirection={"column"}>
-            <Text textAlign={"left"} color={"#eff2f699"} p={0} m={0}>
+            <Text textAlign={"left"} color={"#9CAFAA"} p={0} m={0}>
               {currentData.range}
             </Text>
             {currentData.count && (

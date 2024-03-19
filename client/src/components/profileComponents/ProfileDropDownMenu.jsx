@@ -24,17 +24,24 @@ const ProfileDropDownMenu = ({ handleLogout, toProfile, refProfile }) => {
         as={Button}
         rightIcon={<ChevronDownIcon marginLeft={"0"} color={"white"} />}
       >
-        <Avatar src={state.user.pic} h={"50px"} w={"50px"} rounded={"50%"} />
+        <Avatar src={state.user.pic} h={"35px"} w={"35px"} rounded={"50%"} />
       </MenuButton>
-      <MenuList zIndex={"3000"} bg={"purple.300"} color={"white"} p={"0"}>
-        <NavLink w={"100%"} to={toProfile} ref={refProfile}>
+      <MenuList
+        zIndex={"3000"}
+        bg={"#9DB2BF"}
+        color={"white"}
+        p={"0"}
+        borderColor={"#27374D"} // Set border color to black
+        borderRadius={"0px"} // Set border radius to 10px
+      >
+        <NavLink w={"75px"} to={toProfile} ref={refProfile}>
           <MenuItem
             as="div"
             display={"flex"}
             justifyContent={"center"}
-            p={"10px"}
-            _hover={{ bg: "green.300" }}
-            bg={"purple.300"}
+            p={"7px"}
+            _hover={{ bg: "#27374D" }}
+            bg={"#526D82"}
           >
             View Profile
           </MenuItem>
@@ -44,9 +51,9 @@ const ProfileDropDownMenu = ({ handleLogout, toProfile, refProfile }) => {
           as="div"
           display={"flex"}
           justifyContent={"center"}
-          p={"10px"}
-          _hover={{ bg: "red.300" }}
-          bg={"purple.300"}
+          p={"7px"}
+          _hover={{ bg: "#27374D" }}
+          bg={"#526D82"}
           onClick={() => handleLogout()}
         >
           Logout

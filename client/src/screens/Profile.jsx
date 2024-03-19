@@ -17,10 +17,10 @@ export default function Profile() {
 
   return (
     <>
-      <Box display="flex" marginTop="20px" marginInline={"5%"}>
+      <Box display="flex" marginTop="20px" marginInline={"6.5%"}>
         <Flex
           margin="20px"
-          padding="20px"
+          padding="15px"
           borderRadius="10px"
           flexDirection="column"
           w={"25%"}
@@ -37,12 +37,12 @@ export default function Profile() {
         <Flex
           w={"75%"}
           flexDirection="column"
-          margin="20px"
+          margin="12px"
           borderRadius="10px"
         >
           <Box
             margin="10px"
-            padding="15px"
+            padding="20px"
             borderRadius="10px"
             display={"flex"}
             flexDirection={"row"}
@@ -97,7 +97,7 @@ export default function Profile() {
       </Box>
       <Box
         p={"20px"}
-        marginInline={"6.5%"}
+        marginInline={"7.5%"}
         borderRadius="10px"
         style={{
           backgroundColor: "#0f0d15",
