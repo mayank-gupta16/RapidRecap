@@ -388,7 +388,7 @@ const calculateUserIQScores = async (req, res) => {
 // Controller function to get user's IQ score history
 const getUserIQScoreHistory = async (req, res) => {
   try {
-    const userId = req.params.userId; // Assuming you pass userId in the URL parameters
+    const userId = req.user._id; // Assuming you pass userId in the URL parameters
 
     // Find the user by ID
     const user = await User.findById(userId);
@@ -398,7 +398,7 @@ const getUserIQScoreHistory = async (req, res) => {
     }
 
     // Populate the dailyIQScores array to get the actual IQ score documents
-    await user.populate("dailyIQScores").execPopulate();
+    await user.populate("dailyIQScores");
 
     // Extract relevant information from the populated array
     const iqScoresHistory = user.dailyIQScores.map((score) => ({
