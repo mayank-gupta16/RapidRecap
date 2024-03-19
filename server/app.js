@@ -13,7 +13,7 @@ require("./db/conn");
 
 // -----Testings-----
 //require("./test/conn.test");
-// require("./test/index");
+//require("./test/index");
 // ------------------
 app.use(express.json());
 require("./scheduler/userIQScoreScheduler");
