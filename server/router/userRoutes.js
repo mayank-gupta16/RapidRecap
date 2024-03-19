@@ -9,6 +9,8 @@ const {
   resendOTP,
   forgotPassword,
   handleGoogleLogin,
+  getUserIQScoreHistory,
+  calculateUserIQScores,
 } = require("../controllers/user");
 const Authenticate = require("../middleware/authenticate");
 
@@ -20,5 +22,8 @@ router.route("/loginCheck").get(Authenticate, loginCheck);
 router.route("/resendOTP").post(resendOTP);
 router.route("/forgotPassword").post(forgotPassword);
 router.route("/handleGoogleLogin").post(handleGoogleLogin);
-
+router
+  .route("/getUserIQScoreHistory/:userId")
+  .get(Authenticate, getUserIQScoreHistory);
+router.route("/calculateUserIQScores").get(calculateUserIQScores);
 module.exports = router;
