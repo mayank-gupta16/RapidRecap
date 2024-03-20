@@ -58,17 +58,17 @@ const getArticle = async (req, res) => {
         throw new Error("Quiz not found, Please try again.");
       }
       //console.log(fullQuiz.createdAt.getTime() + 24 * 60 * 60 * 1000);
-      if (fullQuiz.createdAt.getTime() + 24 * 60 * 60 * 1000 < Date.now()) {
-        //console.log("quiz expired");
-        //console.log(fullQuiz);
-        if (fullQuiz.isActive) {
-          //console.log("deactivating quiz");
-          await updatePercentilesOnQuizDeactivation({ id: article._id });
-          fullQuiz.isActive = false;
-          await fullQuiz.save();
-        }
-        quizExpired = true;
-      }
+      // if (fullQuiz.createdAt.getTime() + 24 * 60 * 60 * 1000 < Date.now()) {
+      //   //console.log("quiz expired");
+      //   //console.log(fullQuiz);
+      //   if (fullQuiz.isActive) {
+      //     //console.log("deactivating quiz");
+      //     await updatePercentilesOnQuizDeactivation({ id: article._id });
+      //     fullQuiz.isActive = false;
+      //     await fullQuiz.save();
+      //   }
+      //   quizExpired = true;
+      // }
     }
     //console.log(article.mainText);
     //console.log(article);
@@ -105,14 +105,14 @@ const getQuiz = async (req, res) => {
         await article.save();
         throw new Error("Quiz not found, Please try again.");
       }
-      if (fullQuiz.createdAt.getTime() + 24 * 60 * 60 * 1000 < Date.now()) {
-        if (fullQuiz.isActive) {
-          await updatePercentilesOnQuizDeactivation({ id: article._id });
-          fullQuiz.isActive = false;
-          await fullQuiz.save();
-        }
-        return res.status(200).json({ expired: true, message: "Quiz expired" });
-      }
+      // if (fullQuiz.createdAt.getTime() + 24 * 60 * 60 * 1000 < Date.now()) {
+      //   if (fullQuiz.isActive) {
+      //     await updatePercentilesOnQuizDeactivation({ id: article._id });
+      //     fullQuiz.isActive = false;
+      //     await fullQuiz.save();
+      //   }
+      //   return res.status(200).json({ expired: true, message: "Quiz expired" });
+      // }
       return res.status(200).json({
         expired: false,
         message: "Quiz Questions generated successfully",
