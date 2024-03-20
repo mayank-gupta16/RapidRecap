@@ -11,7 +11,7 @@ async function generateFakeUsers() {
       lastName: faker.person.lastName(),
       email: `dummy${i}@mail.com`,
       phone: "9876543210",
-      password: faker.internet.password(),
+      password: "12345678",
       verified: true,
       pic: "https://via.placeholder.com/150",
       bio: faker.lorem.sentences(),

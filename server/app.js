@@ -15,6 +15,14 @@ require("./db/conn");
 //require("./test/conn.test");
 //require("./test/index");
 // ------------------
+
+// ------Deleteion utils------
+//require("./utils/deletion.utils/removeUser.del");
+// ---------------------------
+
+// -----Update Collection-----
+//require("./utils/update.utils/quizActiveStatus.update");
+// ---------------------------
 app.use(express.json());
 require("./scheduler/userIQScoreScheduler");
 const PORT = process.env.PORT;

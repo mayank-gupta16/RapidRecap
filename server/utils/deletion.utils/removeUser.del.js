@@ -1,6 +1,7 @@
 const User = require("../../model/userSchema");
 const QuizAttempt = require("../../model/quizAttemptSchema");
 const DailyIQ = require("../../model/dailyIQSchema");
+const Article = require("../../model/articleSchema");
 
 // Function to delete a user and related records
 async function deleteUserAndRelatedRecords(userId) {
@@ -14,6 +15,12 @@ async function deleteUserAndRelatedRecords(userId) {
     await DailyIQ.deleteMany({ user: userId });
     console.log("DailyIQ records for the user deleted successfully.");
     // Delete the user
+    console.log("Removing userQuizStatus from articles...");
+    await Article.updateMany(
+      { "userQuizStatus.userId": userId },
+      { $pull: { userQuizStatus: { userId } } }
+    );
+    console.log("userQuizStatus removed from articles successfully.");
     console.log("Deleting the user...");
     await User.findByIdAndDelete(userId);
 
@@ -24,5 +31,5 @@ async function deleteUserAndRelatedRecords(userId) {
 }
 
 // Example usage:
-const userIdToDelete = "user_id_to_delete";
+const userIdToDelete = "65f6aa8f6f1f4e5477f1ab27";
 deleteUserAndRelatedRecords(userIdToDelete);
