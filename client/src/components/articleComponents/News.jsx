@@ -50,6 +50,7 @@ const News = () => {
               maxWidth: "100%",
               transition: "background-color 0.3s, color 0.3s",
             }}
+            onClick={() => dispatch({ type: "showModal", payloadModal: false })}
           >
             Read More
           </Button>
