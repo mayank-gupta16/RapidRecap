@@ -46,18 +46,18 @@ const data = labels.map((threshold) => {
 });
 
 const filteredLabels = [];
-const filteredData = [];
+const filteredIQData = [];
 for (let i = 0; i < labels.length; i++) {
   if (data[i] !== 0) {
     filteredLabels.push(`${labels[i] - 10}-${labels[i]}`);
-    filteredData.push(data[i]);
+    filteredIQData.push(data[i]);
   }
 }
 
 const calculatePercentilesOfEachBar = (
   IQScores,
   filteredLabels,
-  filteredData
+  filteredIQData
 ) => {
   const percentiles = [];
 
@@ -76,7 +76,7 @@ const calculatePercentilesOfEachBar = (
       lowerBound,
       upperBound,
       percentile,
-      count: filteredData[i],
+      count: filteredIQData[i],
     });
   }
 
@@ -86,7 +86,7 @@ const calculatePercentilesOfEachBar = (
 const percentileData = calculatePercentilesOfEachBar(
   IQScores,
   filteredLabels,
-  filteredData
+  filteredIQData
 );
 
 const IQBarGraph = () => {
@@ -95,13 +95,13 @@ const IQBarGraph = () => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [currentData, setCurrentData] = useState(null);
 
-  //console.log(filteredLabels, filteredData);
+  //console.log(filteredLabels, filteredIQData);
   const [chartData, setChartData] = useState({
     labels: filteredLabels,
     datasets: [
       {
         label: "Number of People",
-        data: filteredData,
+        data: filteredIQData,
         backgroundColor: filteredLabels.map((threshold) => {
           const [lowerBound, upperBound] = threshold.split("-").map(Number);
 
