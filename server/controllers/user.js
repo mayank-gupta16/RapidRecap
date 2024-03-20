@@ -13,6 +13,11 @@ const jwt = require("jsonwebtoken");
 const { updatePercentilesOnQuizDeactivation } = require("../utils/quiz");
 const { formatDate } = require("../utils/date");
 const { progressBar } = require("../utils/progress");
+const {
+  calculateTopPercent,
+  calculateLabelsAndData,
+  calculatePercentilesOfEachBar,
+} = require("../utils/user");
 
 const registerUser = async (req, res) => {
   //console.log(req.body);
@@ -301,14 +306,12 @@ const calculateUserIQScores = async (req, res) => {
     // Array to store user scores
     const userScores = [];
     let sumOfUserScores = 0;
-    const updateProgress1 = progressBar(users.length);
     // Fetch quiz attempts concurrently for each user
     const fetchQuizAttemptsPromises = users.map(async (user) => {
       const quizAttempts = await QuizAttempt.find({ user: user._id }).populate({
         path: "article",
         populate: { path: "quiz" },
       });
-      updateProgress1();
       return { user, quizAttempts };
     });
 
@@ -316,7 +319,7 @@ const calculateUserIQScores = async (req, res) => {
     console.log("\nFetched quiz attempts.\n");
     // Iterate through each user's quiz attempts
     console.log("\nCalculating user scores...\n");
-    const updateProgress2 = progressBar(userQuizAttempts.length);
+    const updateProgress1 = progressBar(userQuizAttempts.length);
     for (const { user, quizAttempts } of userQuizAttempts) {
       let userScore = 0;
 
@@ -347,7 +350,7 @@ const calculateUserIQScores = async (req, res) => {
       sumOfUserScores += userScore;
       // Add user score to the array
       userScores.push({ user, userScore });
-      updateProgress2();
+      updateProgress1();
     }
 
     // Calculate mean and standard deviation
@@ -360,7 +363,7 @@ const calculateUserIQScores = async (req, res) => {
 
     // Calculate and update IQ scores for each user
     console.log("\nCalculating IQ scores...\n");
-    const updateProgress3 = progressBar(userScores.length);
+    const updateProgress2 = progressBar(userScores.length);
     for (const user of userScores) {
       if (!user || !user.user) {
         console.error("Invalid user data.");
@@ -373,7 +376,7 @@ const calculateUserIQScores = async (req, res) => {
       const updatedUser = await User.findById(user.user._id);
       updatedUser.IQ_score = Math.round(IQScore);
       await updatedUser.save();
-      updateProgress3();
+      updateProgress2();
     }
 
     // Send success response
@@ -414,6 +417,30 @@ const getUserIQScoreHistory = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+// Controller function to Current Percentile in IQ Scores
+const currentTopPercentOfUser = async (req, res) => {
+  try {
+    const userID = req.user._id;
+    const users = await User.find({});
+    const user = await User.findById(userID);
+    const USER_IQ = user.IQ_score;
+    const IQScores = users.filter((u) => u.IQ_score > 0).map((u) => u.IQ_score);
+    const Top_Percentage = calculateTopPercent(USER_IQ, IQScores);
+    const { filteredLabels, filteredIQData } = calculateLabelsAndData(IQScores);
+    const percentileData = calculatePercentilesOfEachBar(
+      IQScores,
+      filteredLabels,
+      filteredIQData
+    );
+
+    res
+      .status(200)
+      .json({ Top_Percentage, percentileData, filteredLabels, filteredIQData });
+  } catch (error) {
+    console.error("Error fetching user IQ score history:", error);
+  }
+};
 //module.exports = router;
 module.exports = {
   registerUser,
@@ -426,4 +453,5 @@ module.exports = {
   handleGoogleLogin,
   calculateUserIQScores,
   getUserIQScoreHistory,
+  currentTopPercentOfUser,
 };
