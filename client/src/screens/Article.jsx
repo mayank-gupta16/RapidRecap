@@ -366,7 +366,13 @@ const Article = () => {
                   </Flex>
                 </>
               ) : onGoingQuiz ? (
-                <Heading size="md" margin={"5px"} mb={5} height={"100px"} color={"red"}>
+                <Heading
+                  size="md"
+                  margin={"5px"}
+                  mb={5}
+                  height={"100px"}
+                  color={"red"}
+                >
                   Quiz is Already going on in some other tab or device
                 </Heading>
               ) : quizExpired ? (

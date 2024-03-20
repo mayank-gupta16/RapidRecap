@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Timeline from "../components/homeComponents/Timeline";
 import axios from "axios";
 import Loading from "../components/miscellaneous/Loading";
@@ -19,6 +19,7 @@ const Home = () => {
       const response = await axios.get(`/api/articles?page=${page}&pageSize=9`);
 
       setItems((prev) => [...prev, ...response.data]);
+
       setLoad(false);
     } catch (error) {
       // Handle errors
@@ -33,6 +34,7 @@ const Home = () => {
         document.documentElement.scrollHeight
       ) {
         setLoad(true);
+
         setPage((ele) => ele + 1);
       }
     } catch (error) {
@@ -57,6 +59,7 @@ const Home = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
   return (
     <div
       onMouseDown={startDrag}
@@ -79,4 +82,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default React.memo(Home);
