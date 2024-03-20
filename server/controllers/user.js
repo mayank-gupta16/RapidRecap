@@ -335,13 +335,13 @@ const calculateUserIQScores = async (req, res) => {
         //   attempt.article.quiz.createdAt.getTime() + 24 * 60 * 60 * 1000 <
         //   Date.now()
         // ) {
-        if (attempt.article.quiz.isActive) {
-          await updatePercentilesOnQuizDeactivation({
-            id: attempt.article._id,
-          });
-          attempt.article.quiz.isActive = false;
-          await attempt.article.quiz.save();
-        }
+        //if (attempt.article.quiz.isActive) {
+        await updatePercentilesOnQuizDeactivation({
+          id: attempt.article._id,
+        });
+        //   attempt.article.quiz.isActive = false;
+        //   await attempt.article.quiz.save();
+        // }
         // Calculate score for the quiz attempt (Wi * Pi)
         const quizScore = attempt.articleDifficulty * attempt.userPercentile;
         userScore += quizScore;
