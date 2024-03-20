@@ -10,71 +10,60 @@ const Countdown = ({
   setTimeTaken,
 }) => {
   const [timer, setTimer] = useState(initialTimer);
-  const [loadingPercent, setLoadingPercent] = useState(0);
-  const [dot, setDot] = useState(360);
-  const [text, setText] = useState(timer >= 10 ? timer : `0${timer}`);
-  const [isPulsating, setPulsating] = useState(false);
 
   useEffect(() => {
-    if (!start) return;
+    if (!start || submitted || timer === 0) return;
+
     const intervalId = setInterval(() => {
       setTimer((prevTimer) => {
         const newTimer = prevTimer - 1;
-        const currentLoadingPercent = calculateLoadingPercent(newTimer);
-        setLoadingPercent(currentLoadingPercent);
-        setDot(calculateDot(newTimer));
-        setText(newTimer >= 10 ? newTimer : `0${newTimer}`);
-
-        // Enable pulsating effect when less than 10 seconds
-        setPulsating(newTimer <= 10);
         setTimeTaken((prevTimeTaken) => prevTimeTaken + 1);
+        if (newTimer === 0) {
+          clearInterval(intervalId);
+          onTimerExhausted();
+        }
         return newTimer;
       });
     }, 1000);
 
-    if (timer === 0) {
-      onTimerExhausted();
-      clearInterval(intervalId);
-    }
-    if (submitted) {
-      clearInterval(intervalId);
-    }
-    // Clear the interval when the component unmounts or when the timer reaches 0
     return () => clearInterval(intervalId);
-  }, [timer, start, submitted, onTimerExhausted]);
+  }, [timer, start, submitted, onTimerExhausted, setTimeTaken]);
 
-  const calculateLoadingPercent = (secs) => {
-    return 440 - 440 * (secs / initialTimer);
-  };
-
-  const calculateDot = (secs) => {
-    return 360 * (secs / initialTimer);
+  const dynamicStyles = {
+    dotRotation: `rotate(${(360 * timer) / initialTimer}deg)`,
+    loadingPercent: `${100 - (timer / initialTimer) * 100}%`,
+    fontSize: timer > 9 ? "40px" : "30px",
+    color: timer > 0 ? "#000000" : "#FF0000", // Change color when timer runs out
   };
 
   return (
     <>
       {timer && !submitted ? (
-        <div className={`container-timer ${isPulsating ? "pulsate" : ""}`}>
-          <div className={`text-timer ${isPulsating ? "pulsate" : ""}`}>
-            {text}
-          </div>
+        <div
+          className="container-timer"
+          style={{ fontSize: dynamicStyles.fontSize }}
+        >
+          <div className="text-timer">{timer > 9 ? timer : `0${timer}`}</div>
           <div
-            style={{ transform: `rotate(${dot}deg)` }}
-            className={`dot-timer ${isPulsating ? "pulsate" : ""}`}
+            className="dot-timer"
+            style={{ transform: dynamicStyles.dotRotation }}
           ></div>
           <svg>
             <circle cx="70" cy="70" r="70" />
-            <circle strokeDashoffset={loadingPercent} cx="70" cy="70" r="70" />
+            <circle
+              strokeDashoffset={dynamicStyles.loadingPercent}
+              cx="70"
+              cy="70"
+              r="70"
+            />
           </svg>
         </div>
-      ) : timer === 0 ? (
-        <Text fontWeight={"50px"} fontSize={"40px"} color={"#000000"} mt={5}>
-          !! Time's Up !!
-        </Text>
       ) : (
-        <Box marginTop={"20px"}>
-          <Heading as="h6" fontSize={"30px"} color={"#000000"}>
-            Submitted in {`${initialTimer - timer} Secs`}
+        <Box marginTop="20px">
+          <Heading as="h6" fontSize="30px" color={dynamicStyles.color}>
+            {timer > 0
+              ? `Submitted in ${initialTimer - timer} Secs`
+              : "!! Time's Up !!"}
           </Heading>
         </Box>
       )}
