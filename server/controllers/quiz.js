@@ -1,8 +1,6 @@
 const User = require("../model/userSchema");
 const Article = require("../model/articleSchema");
 const QuizAttempt = require("../model/quizAttemptSchema");
-const mongoose = require("mongoose");
-const { Types } = mongoose;
 
 const saveAttempt = async (req, res) => {
   const { articleId, userResponses, quizData, timeTaken } = req.body;
@@ -20,6 +18,13 @@ const saveAttempt = async (req, res) => {
       throw new Error("User has already attempted the quiz for the article.");
     }
     const article = await Article.findById(articleId).populate("quiz");
+    if (!article) {
+      throw new Error("Article not found");
+    }
+
+    if (!article.userQuizStatus) {
+      throw new Error("No quiz status found for this article");
+    }
     const foundStatus = article.userQuizStatus.find(
       (status) => status.userId.toString() === userId
     );
