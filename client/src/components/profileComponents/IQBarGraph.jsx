@@ -241,10 +241,21 @@ const IQBarGraph = () => {
 
   return (
     <Flex
+      w={"100%"}
+      padding={{ base: "20px", xl: "0" }}
       flexDirection={"column"}
-      style={{ width: "100%" }}
+      flex={1}
       justifyContent={"center"}
       alignItems={"center"}
+      backgroundColor={{ base: "#0f0d15", xl: "transparent" }}
+      backgroundImage={{
+        xl: "none",
+        base: "linear-gradient(-180deg, #1a1527, #0e0c16 88%, #0e0c16 99%)",
+      }}
+      boxShadow={{
+        xl: "none",
+        base: "0px 4px 8px rgba(0, 0, 0, 0.3), 0px 8px 16px rgba(0, 0, 0, 0.3), 0px 12px 24px rgba(0, 0, 0, 0.3)",
+      }}
     >
       <Flex width={"100%"}>
         <Flex marginStart={"15px"} flexDirection={"column"}>
