@@ -1,15 +1,12 @@
 import { Box, Button, Flex, Heading, Image, Text } from "@chakra-ui/react";
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { AppContext } from "../../contextAPI/appContext";
 
 const LeftProfileBox = () => {
   const { state, dispatch } = useContext(AppContext);
-  useEffect(() => {
-    console.log(state.user);
-  }, []);
   return (
     <>
-      <Flex>
+      <Flex w={"100%"}>
         <Image
           src={state.user.pic}
           alt="Profile"
@@ -30,7 +27,7 @@ const LeftProfileBox = () => {
           </Heading>
         </Box>
       </Flex>
-      <Box marginTop={"10px"}>
+      <Box marginTop={"10px"} w={{ lg: "300px", base: "100%" }}>
         <Text align={"justify"}>
           An ambitious student pursuing B.Tech in Communication and Computer
           Engineering, I possess a strong skill set in Data Structures and
@@ -43,7 +40,7 @@ const LeftProfileBox = () => {
         <Button
           size="md"
           height="35px"
-          width="280px"
+          width="90%"
           border="5px"
           borderColor="green.200"
           backgroundColor="#F2D8D8" // Initial background color
