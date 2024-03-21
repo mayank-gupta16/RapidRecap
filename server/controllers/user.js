@@ -409,9 +409,14 @@ const getUserIQScoreHistory = async (req, res) => {
       IQScore: score.IQ_score,
       dailyRank: score.dailyRank,
     }));
-
+    const sortedIQScoresHistory = iqScoresHistory.sort((a, b) => {
+      // Convert the date strings to Date objects for comparison
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
+      return dateA - dateB; // dates are equal
+    });
     // Send the IQ score history to the frontend
-    res.status(200).json({ IQ_score_history: iqScoresHistory });
+    res.status(200).json({ IQ_score_history: sortedIQScoresHistory });
   } catch (error) {
     console.error("Error fetching user IQ score history:", error);
     res.status(500).json({ message: "Internal server error" });
@@ -441,6 +446,35 @@ const currentTopPercentOfUser = async (req, res) => {
     console.error("Error fetching user IQ score history:", error);
   }
 };
+
+const solvedQuizzesCount = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const quizAttempts = await QuizAttempt.find({ user: userId });
+    let easyQuizzesCount = 0;
+    let mediumQuizzesCount = 0;
+    let hardQuizzesCount = 0;
+
+    for (let i = 0; i < quizAttempts.length; i++) {
+      if (quizAttempts[i].articleDifficulty < 0.4) {
+        easyQuizzesCount++;
+      } else if (quizAttempts[i].articleDifficulty < 0.7) {
+        mediumQuizzesCount++;
+      } else {
+        hardQuizzesCount++;
+      }
+    }
+    res.status(200).json({
+      solvedQuizzesCount: quizAttempts.length,
+      easyQuizzesCount,
+      mediumQuizzesCount,
+      hardQuizzesCount,
+    });
+  } catch (error) {
+    console.error("Error fetching user IQ score history:", error.message);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
 //module.exports = router;
 module.exports = {
   registerUser,
@@ -454,4 +488,5 @@ module.exports = {
   calculateUserIQScores,
   getUserIQScoreHistory,
   currentTopPercentOfUser,
+  solvedQuizzesCount,
 };
