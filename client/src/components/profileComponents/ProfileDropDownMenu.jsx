@@ -32,10 +32,10 @@ const ProfileDropDownMenu = ({ handleLogout, toProfile, refProfile }) => {
         color={"white"}
         p={"0"}
         borderColor={"#27374D"} // Set border color to black
-        borderRadius={"0px"} // Set border radius to 10px
       >
         <NavLink w={"75px"} to={toProfile} ref={refProfile}>
           <MenuItem
+
             as="div"
             display={"flex"}
             justifyContent={"center"}

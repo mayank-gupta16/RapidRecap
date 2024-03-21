@@ -8,19 +8,21 @@ const SolvedQuizzes = () => {
       borderRadius="10px"
       w={"100%"}
       flexDirection={"column"}
-      gap={3}
+      gap={6}
+      mt={4}
+      mr={10}
     >
-      <Box flexDirection={"column"} width={"100%"}>
-        <Text textAlign={"left"} color={"#eff2f699"} p={0} m={0}>
+      <Box flexDirection={"column"} width={"100%"} marginStart={"15px"}>
+        <Text textAlign={"left"} color={"#9CAFAA"} p={0} m={0}>
           Solved Quizzes
         </Text>
       </Box>
       <Flex width={"100%"}>
         <Flex w={"80%"} justifyContent={"center"} alignItems={"center"}>
           <Flex
-            borderWidth={"4px"}
+            borderWidth={"5px"}
             borderRadius={"50%"}
-            borderColor={"green.300"}
+            borderColor={"#FFE7E7"}
             w={"100px"}
             h={"100px"}
           >
@@ -36,15 +38,16 @@ const SolvedQuizzes = () => {
                 fontSize={"1.5rem"}
                 marginTop={"2px"}
                 fontWeight={"semibold"}
+                color={"#B47B84"}
               >
                 200
               </Text>
               <Text
                 marginBottom={0}
                 marginTop={"1px"}
-                color={"#eff2f699"}
+                color={"#B47B84"}
                 fontWeight={"light"}
-                fontSize={"0.8rem"}
+                fontSize={"0.9rem"}
               >
                 Solved
               </Text>
@@ -53,7 +56,7 @@ const SolvedQuizzes = () => {
         </Flex>
         <Flex
           w={"100%"}
-          paddingLeft={5}
+          paddingLeft={1}
           justifyContent={"center"}
           alignItems={"center"}
         >
@@ -63,7 +66,7 @@ const SolvedQuizzes = () => {
                 <Text
                   marginBottom={0}
                   marginTop={"1px"}
-                  color={"#eff2f699"}
+                  color={"#FFE7E7"}
                   fontWeight={"light"}
                   fontSize={"0.8rem"}
                   textAlign={"left"}
@@ -73,17 +76,17 @@ const SolvedQuizzes = () => {
                 <Text
                   marginBottom={0}
                   marginTop={"1px"}
-                  color={"#eff2f699"}
+                  color={"#FFE7E7"}
                   fontWeight={"light"}
                   fontSize={"0.8rem"}
                   textAlign={"left"}
                 >
-                  86 solved
+                  86 Solved
                 </Text>
                 <Text
                   marginBottom={0}
                   marginTop={"1px"}
-                  color={"#eff2f699"}
+                  color={"#FFE7E7"}
                   fontWeight={"light"}
                   fontSize={"0.8rem"}
                   textAlign={"left"}
@@ -92,11 +95,11 @@ const SolvedQuizzes = () => {
                 </Text>
               </Flex>
               <Progress
-                backgroundColor={"transparent"}
+                backgroundColor={"#AAD9BB"}
                 colorScheme="teal"
-                size="md"
-                value={40}
-                borderRadius={"3px"}
+                size="sm"
+                value={50}
+                borderRadius={"5px"}
               />
             </Box>
             <Box>
@@ -105,7 +108,7 @@ const SolvedQuizzes = () => {
                   textAlign={"left"}
                   marginBottom={0}
                   marginTop={"1px"}
-                  color={"#eff2f699"}
+                  color={"#FFE7E7"}
                   fontWeight={"light"}
                   fontSize={"0.8rem"}
                 >
@@ -114,17 +117,17 @@ const SolvedQuizzes = () => {
                 <Text
                   marginBottom={0}
                   marginTop={"1px"}
-                  color={"#eff2f699"}
+                  color={"#FFE7E7"}
                   fontWeight={"light"}
                   fontSize={"0.8rem"}
                   textAlign={"left"}
                 >
-                  86 solved
+                  86 Solved
                 </Text>
                 <Text
                   marginBottom={0}
                   marginTop={"1px"}
-                  color={"#eff2f699"}
+                  color={"#FFE7E7"}
                   fontWeight={"light"}
                   fontSize={"0.8rem"}
                   textAlign={"left"}
@@ -134,10 +137,10 @@ const SolvedQuizzes = () => {
               </Flex>
               <Progress
                 colorScheme="yellow"
-                size="md"
+                size="sm"
                 value={60}
-                borderRadius={"3px"}
-                backgroundColor={"transparent"}
+                borderRadius={"5px"}
+                backgroundColor={"#FFCF81"}
               />
             </Box>
             <Box>
@@ -146,7 +149,7 @@ const SolvedQuizzes = () => {
                   textAlign={"left"}
                   marginBottom={0}
                   marginTop={"1px"}
-                  color={"#eff2f699"}
+                  color={"#FFE7E7"}
                   fontWeight={"light"}
                   fontSize={"0.8rem"}
                 >
@@ -155,17 +158,17 @@ const SolvedQuizzes = () => {
                 <Text
                   marginBottom={0}
                   marginTop={"1px"}
-                  color={"#eff2f699"}
+                  color={"#FFE7E7"}
                   fontWeight={"light"}
                   fontSize={"0.8rem"}
                   textAlign={"left"}
                 >
-                  86 solved
+                  86 Solved
                 </Text>
                 <Text
                   marginBottom={0}
                   marginTop={"1px"}
-                  color={"#eff2f699"}
+                  color={"#FFE7E7"}
                   fontWeight={"light"}
                   fontSize={"0.8rem"}
                   textAlign={"left"}
@@ -174,11 +177,11 @@ const SolvedQuizzes = () => {
                 </Text>
               </Flex>
               <Progress
-                backgroundColor={"transparent"}
+                backgroundColor={"#D37676"}
                 colorScheme="red"
-                size="md"
+                size="sm"
                 value={20}
-                borderRadius={"3px"}
+                borderRadius={"5px"}
               />
             </Box>
           </Stack>

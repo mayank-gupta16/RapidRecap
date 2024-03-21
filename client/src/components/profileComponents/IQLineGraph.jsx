@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Line } from "react-chartjs-2";
-import { Flex, Text, useToast } from "@chakra-ui/react";
+import { Flex, Image, Text, useToast } from "@chakra-ui/react";
 import Chart from "chart.js/auto";
 import moment from "moment";
 import "chartjs-adapter-date-fns";
@@ -114,6 +114,9 @@ const IQLineGraph = () => {
     try {
       const response = await axios.get(`/api/user/getUserIQScoreHistory`);
       //console.log(response.data);
+      if (response.data.IQ_score_history.length === 0) {
+        return;
+      }
       const dateString =
         response.data.IQ_score_history[
           response.data.IQ_score_history.length - 1
@@ -317,6 +320,23 @@ const IQLineGraph = () => {
     >
       {isLoading ? (
         <Text>...Loading</Text>
+      ) : IQScoreHistory.length === 0 ? (
+        <Flex
+          w={"100%"}
+          justifyContent={"center"}
+          alignItems={"center"}
+          flexDirection={"column"}
+        >
+          <Text m={0}>
+            Give 10 Quizzes to get the IQ score and enter the ranking
+          </Text>
+          <Image
+            h={"200px"}
+            w={"200px"}
+            background={"transparent"}
+            src="/images/lock.png"
+          />
+        </Flex>
       ) : (
         <>
           <Flex justifyContent={"space-between"}>
