@@ -25,9 +25,17 @@ const AnimatedAvatar = motion(Avatar);
 
 const RankAndSociety = () => {
   return (
-    <Flex margin="10px" w={"100%"} flexDirection={"column"} position="relative">
+    <Flex
+      margin="10px"
+      w={"100%"}
+      flexDirection={"column"}
+      position="relative"
+      mt={4}
+      mr={1}
+      ml={6}
+    >
       <Box flexDirection={"column"} width={"100%"}>
-        <Text textAlign={"left"} color={"#eff2f699"} p={0} m={0}>
+        <Text textAlign={"left"} color={"#9CAFAA"} p={0} m={0}>
           Society and Circle
         </Text>
       </Box>
@@ -63,7 +71,7 @@ const RankAndSociety = () => {
             width={"80%"}
             alignItems={"center"}
             justifyContent={"center"}
-            marginTop={"2rem"}
+            marginTop={"1.5rem"}
           >
             <Image
               w={"70px"}
@@ -82,13 +90,13 @@ const RankAndSociety = () => {
               top={"2.7rem"}
               right={"0.5rem"}
             >
-              <Text color={"#eff2f699"} fontSize={"0.8rem"} p={0} m={0}>
+              <Text color={"#9CAFAA"} fontSize={"0.8rem"} p={0} m={0}>
                 120
               </Text>
-              <Text color={"#eff2f699"} fontSize={"0.8rem"} p={0} m={0}>
+              <Text color={"#9CAFAA"} fontSize={"0.8rem"} p={0} m={0}>
                 to
               </Text>
-              <Text color={"#eff2f699"} fontSize={"0.8rem"} p={0} m={0}>
+              <Text color={"#9CAFAA"} fontSize={"0.8rem"} p={0} m={0}>
                 130 IQ
               </Text>
             </Flex>
@@ -117,7 +125,7 @@ const RankAndSociety = () => {
             textAlign="center"
             fontSize="lg"
             fontWeight="bold"
-            color="#48BB78"
+            color="#436850"
             textShadow="2px 2px 4px rgba(0,0,0,0.4)" // Add text shadow for depth
           >
             Mavericks Society
@@ -126,7 +134,7 @@ const RankAndSociety = () => {
             textAlign="center"
             fontSize="lg"
             fontWeight="bold"
-            color="#48BB78"
+            color="#436850"
             textShadow="2px 2px 4px rgba(0,0,0,0.4)" // Add text shadow for depth
           >
             Scholars Circle

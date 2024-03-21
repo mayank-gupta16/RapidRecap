@@ -92,6 +92,7 @@ const DailyActivity = () => {
           templateColumns={`repeat(${DAYS_IN_WEEK}, 1fr)`}
           h={"80px"}
           mb={3}
+          
         >
           {allDays.map((dayObj, index) => (
             <Box key={index} textAlign="center" m={0} p={0}>

@@ -14,7 +14,7 @@ h6 {
 .r-container {
   position: relative;
   width: 45rem;
-  bottom: 45px;
+  bottom: 75px;
 }
 .form-container {
   border: 1px solid hsla(0, 0%, 65%, 0.158);
@@ -22,7 +22,7 @@ h6 {
   border-radius: 10px;
   backdrop-filter: blur(20px);
   z-index: 99;
-  padding: 2rem;
+  padding: 1.5rem;
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
   -ms-border-radius: 10px;
