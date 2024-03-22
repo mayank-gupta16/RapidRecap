@@ -441,7 +441,13 @@ const currentTopPercentOfUser = async (req, res) => {
 
     res
       .status(200)
-      .json({ Top_Percentage, percentileData, filteredLabels, filteredIQData });
+      .json({
+        Top_Percentage,
+        percentileData,
+        filteredLabels,
+        filteredIQData,
+        USER_IQ,
+      });
   } catch (error) {
     console.error("Error fetching user IQ score history:", error);
   }
