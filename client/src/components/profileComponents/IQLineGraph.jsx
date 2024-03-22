@@ -5,54 +5,6 @@ import Chart from "chart.js/auto";
 import moment from "moment";
 import "chartjs-adapter-date-fns";
 import axios from "axios";
-import { set } from "lodash";
-
-let IQScoreHistory = [
-  { date: null, IQScore: null, dailyRank: null },
-  { date: "2024:01:15", IQScore: 100, dailyRank: "1000/6000" },
-  { date: "2024:01:16", IQScore: 99, dailyRank: "2424/6024" },
-  { date: "2024:01:17", IQScore: 98, dailyRank: "1212/6026" },
-  { date: "2024:01:18", IQScore: 97, dailyRank: "3030/6030" },
-  { date: "2024:01:19", IQScore: 96, dailyRank: "1616/6035" },
-  { date: "2024:01:20", IQScore: 95, dailyRank: "727/6036" },
-  { date: "2024:01:21", IQScore: 94, dailyRank: "858/6041" },
-  { date: "2024:01:22", IQScore: 93, dailyRank: "1818/6045" },
-  { date: "2024:01:23", IQScore: 92, dailyRank: "1717/6048" },
-  { date: "2024:01:24", IQScore: 91, dailyRank: "3030/6050" },
-  { date: "2024:01:25", IQScore: 90, dailyRank: "555/6052" },
-  { date: "2024:01:26", IQScore: 91, dailyRank: "3737/6055" },
-  { date: "2024:01:27", IQScore: 92, dailyRank: "989/6060" },
-  { date: "2024:01:28", IQScore: 93, dailyRank: "2929/6063" },
-  { date: "2024:01:29", IQScore: 94, dailyRank: "505/6065" },
-  { date: "2024:01:30", IQScore: 95, dailyRank: "2222/6066" },
-  { date: "2024:01:31", IQScore: 96, dailyRank: "303/6067" },
-  { date: "2024:02:01", IQScore: 97, dailyRank: "4343/6070" },
-  { date: "2024:02:02", IQScore: 98, dailyRank: "111/6075" },
-  { date: "2024:02:03", IQScore: 99, dailyRank: "222/6080" },
-  { date: "2024:02:04", IQScore: 100, dailyRank: "7676/6083" },
-  { date: "2024:02:05", IQScore: 99, dailyRank: "888/6085" },
-  { date: "2024:02:06", IQScore: 98, dailyRank: "2828/6088" },
-  { date: "2024:02:07", IQScore: 97, dailyRank: "2121/6090" },
-  { date: "2024:02:08", IQScore: 96, dailyRank: "3737/6095" },
-  { date: "2024:02:09", IQScore: 95, dailyRank: "5656/6097" },
-  { date: "2024:02:10", IQScore: 94, dailyRank: "909/6100" },
-  { date: "2024:02:11", IQScore: 93, dailyRank: "2222/6103" },
-  { date: "2024:02:12", IQScore: 92, dailyRank: "505/6106" },
-  { date: "2024:02:13", IQScore: 91, dailyRank: "4343/6110" },
-  { date: "2024:02:14", IQScore: 90, dailyRank: "3838/6115" },
-  { date: "2024:02:15", IQScore: 91, dailyRank: "555/6120" },
-  { date: "2024:02:16", IQScore: 92, dailyRank: "4949/6123" },
-  { date: "2024:02:17", IQScore: 93, dailyRank: "6767/6125" },
-  { date: "2024:02:18", IQScore: 94, dailyRank: "7979/6128" },
-  { date: "2024:02:19", IQScore: 95, dailyRank: "3838/6130" },
-  { date: "2024:02:20", IQScore: 96, dailyRank: "2929/6133" },
-  { date: "2024:02:21", IQScore: 97, dailyRank: "3434/6135" },
-  { date: "2024:02:22", IQScore: 98, dailyRank: "4949/6138" },
-  { date: "2024:02:23", IQScore: 99, dailyRank: "8383/6140" },
-  { date: "2024:02:24", IQScore: 100, dailyRank: "7373/6145" },
-  { date: "2024:02:25", IQScore: 99, dailyRank: "5959/6150" },
-  { date: "2024:02:26", IQScore: null, dailyRank: null },
-];
 
 const IQLineGraph = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -110,6 +62,31 @@ const IQLineGraph = () => {
   }, [hoveredIndex]);
   const [chartData, setChartData] = useState(null);
 
+  const nextDateFunc = (dateString) => {
+    // Split the date string into year, month, and day
+    const [yearStr, monthStr, dayStr] = dateString.split(":");
+
+    // Parse the year, month, and day as integers
+    const year = parseInt(yearStr);
+    const month = parseInt(monthStr) - 1; // Months are 0-indexed
+    const day = parseInt(dayStr);
+
+    // Create a new Date object
+    const dateObject = new Date(year, month, day);
+
+    // Add one day to the date
+    dateObject.setDate(dateObject.getDate() + 1);
+
+    // Get the updated year, month, and day
+    const newYear = dateObject.getFullYear();
+    const newMonth = dateObject.getMonth() + 1; // Adding 1 to adjust for 0-indexed months
+    const newDay = dateObject.getDate();
+
+    return `${newYear}:${newMonth.toString().padStart(2, "0")}:${newDay
+      .toString()
+      .padStart(2, "0")}`;
+  };
+
   const fetchIQData = async () => {
     try {
       const response = await axios.get(`/api/user/getUserIQScoreHistory`);
@@ -122,29 +99,7 @@ const IQLineGraph = () => {
           response.data.IQ_score_history.length - 1
         ].date; // Assuming the date format is "YYYY:MM:DD"
 
-      // Split the date string into year, month, and day
-      const [yearStr, monthStr, dayStr] = dateString.split(":");
-
-      // Parse the year, month, and day as integers
-      const year = parseInt(yearStr);
-      const month = parseInt(monthStr) - 1; // Months are 0-indexed
-      const day = parseInt(dayStr);
-
-      // Create a new Date object
-      const dateObject = new Date(year, month, day);
-
-      // Add one day to the date
-      dateObject.setDate(dateObject.getDate() + 1);
-
-      // Get the updated year, month, and day
-      const newYear = dateObject.getFullYear();
-      const newMonth = dateObject.getMonth() + 1; // Adding 1 to adjust for 0-indexed months
-      const newDay = dateObject.getDate();
-
-      // Format the new date string
-      const newDateString = `${newYear}:${newMonth
-        .toString()
-        .padStart(2, "0")}:${newDay.toString().padStart(2, "0")}`;
+      const newDateString = nextDateFunc(dateString);
       setIQScoreHistory((prev) => [
         { date: null, IQScore: null, dailyRank: null },
         ...response.data.IQ_score_history,
@@ -227,7 +182,7 @@ const IQLineGraph = () => {
             ticks: {
               stepSize: 0.5,
             },
-            min: minimumIQ - 20 >= 0 ? minIQ - 20 : 0,
+            min: minimumIQ - 20 >= 0 ? minimumIQ - 20 : 0,
             max: maximumIQ + 10,
           },
         },
