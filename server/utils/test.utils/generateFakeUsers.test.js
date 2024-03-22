@@ -13,7 +13,6 @@ async function generateFakeUsers() {
       phone: "9876543210",
       password: "12345678",
       verified: true,
-      pic: "https://via.placeholder.com/150",
       bio: faker.lorem.sentences(),
       inGameName: "dummy" + i,
     });

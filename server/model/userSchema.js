@@ -67,7 +67,6 @@ const userSchema = new mongoose.Schema(
     },
     inGameName: {
       type: String,
-      default: "",
       unique: true,
     },
     dailyIQScores: [
@@ -76,6 +75,18 @@ const userSchema = new mongoose.Schema(
         ref: "DailyIQ",
       },
     ],
+    easyQuizCount: {
+      type: Number,
+      default: 0,
+    },
+    mediumQuizCount: {
+      type: Number,
+      default: 0,
+    },
+    hardQuizCount: {
+      type: Number,
+      default: 0,
+    },
     createdAt: {
       type: Date,
       default: Date.now,

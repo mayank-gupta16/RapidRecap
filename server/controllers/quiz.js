@@ -74,6 +74,9 @@ const saveAttempt = async (req, res) => {
     await newQuizAttempt.save();
     const user = await User.findById(userId);
     user.quizAttempts.push(newQuizAttempt._id);
+    if (articleDifficulty < 0.4) user.easyQuizCount++;
+    else if (articleDifficulty < 0.7) user.mediumQuizCount++;
+    else user.hardQuizCount++;
     await user.save();
     res.status(201).json({ message: "Attempt saved successfully", RQM_score });
   } catch (error) {

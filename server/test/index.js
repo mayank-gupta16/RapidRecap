@@ -6,8 +6,8 @@ const generateIQScoreHistory = require("../utils/test.utils/generateIQScoreHisto
 //     console.log("IQ scores history generated successfully");
 //   })
 //   .catch((err) => console.error(err));
-generateArticlesQuizzesAndQuizAttempts()
-  .then(() => {
-    console.log("Articles, quizzes, and quiz attempts generated successfully");
-  })
-  .catch((err) => console.error(err));
+// generateArticlesQuizzesAndQuizAttempts()
+//   .then(() => {
+//     console.log("Articles, quizzes, and quiz attempts generated successfully");
+//   })
+//   .catch((err) => console.error(err));

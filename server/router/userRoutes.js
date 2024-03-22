@@ -12,7 +12,7 @@ const {
   getUserIQScoreHistory,
   currentTopPercentOfUser,
   solvedQuizzesCount,
-  //calculateUserIQScores,
+  // calculateUserIQScores,
 } = require("../controllers/user");
 const Authenticate = require("../middleware/authenticate");
 

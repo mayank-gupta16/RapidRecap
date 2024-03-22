@@ -439,15 +439,13 @@ const currentTopPercentOfUser = async (req, res) => {
       filteredIQData
     );
 
-    res
-      .status(200)
-      .json({
-        Top_Percentage,
-        percentileData,
-        filteredLabels,
-        filteredIQData,
-        USER_IQ,
-      });
+    res.status(200).json({
+      Top_Percentage,
+      percentileData,
+      filteredLabels,
+      filteredIQData,
+      USER_IQ,
+    });
   } catch (error) {
     console.error("Error fetching user IQ score history:", error);
   }
@@ -456,25 +454,30 @@ const currentTopPercentOfUser = async (req, res) => {
 const solvedQuizzesCount = async (req, res) => {
   try {
     const userId = req.user._id;
-    const quizAttempts = await QuizAttempt.find({ user: userId });
-    let easyQuizzesCount = 0;
-    let mediumQuizzesCount = 0;
-    let hardQuizzesCount = 0;
-
-    for (let i = 0; i < quizAttempts.length; i++) {
-      if (quizAttempts[i].articleDifficulty < 0.4) {
-        easyQuizzesCount++;
-      } else if (quizAttempts[i].articleDifficulty < 0.7) {
-        mediumQuizzesCount++;
-      } else {
-        hardQuizzesCount++;
-      }
-    }
+    const user = await User.findById(userId);
+    const totalSolvedQuiz = user.quizAttempts.length;
+    const users = await User.find({});
+    const easyQuizzesCount = user.easyQuizCount;
+    const mediumQuizzesCount = user.mediumQuizCount;
+    const hardQuizzesCount = user.hardQuizCount;
+    // number of users solved less than easyQuizzesCount
+    const easyBeatsPercentage =
+      (users.filter((u) => u.easyQuizCount < easyQuizzesCount).length /
+        users.length) *
+      100;
+    const medBeatsPercentage =
+      (users.filter((u) => u.mediumQuizCount < mediumQuizzesCount).length /
+        users.length) *
+      100;
+    const hardBeatsPercentage =
+      (users.filter((u) => u.hardQuizCount < hardQuizzesCount).length /
+        users.length) *
+      100;
     res.status(200).json({
-      solvedQuizzesCount: quizAttempts.length,
-      easyQuizzesCount,
-      mediumQuizzesCount,
-      hardQuizzesCount,
+      solvedQuizzesCount: totalSolvedQuiz,
+      easy: { easyQuizzesCount, easyBeatsPercentage },
+      medium: { mediumQuizzesCount, medBeatsPercentage },
+      hard: { hardQuizzesCount, hardBeatsPercentage },
     });
   } catch (error) {
     console.error("Error fetching user IQ score history:", error.message);

@@ -27,7 +27,8 @@ async function generateArticlesQuizzesAndQuizAttempts() {
   console.log("\nGenerating quiz attempts for selected users...\n");
   const updateProgress2 = progressBar(100);
   for (let i = 0; i < 100; i++) {
-    const selectedUsers = selectRandomUsers(users);
+    const count = Math.floor(Math.random() * 30);
+    const selectedUsers = selectRandomUsers(users, count);
     await generateQuizAttemptsForUsers(
       selectedUsers,
       fakeArticles[i]._id,
