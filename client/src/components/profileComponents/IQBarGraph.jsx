@@ -103,7 +103,7 @@ const IQBarGraph = () => {
   const fetchBarIQData = async () => {
     try {
       const response = await axios.get(`/api/user/currentTopPercentOfUser`);
-      console.log(response.data);
+
       setUSER_IQ(response.data.USER_IQ);
       setTOP_PERCENT(response.data.Top_Percentage);
       setHoveredPercentile(response.data.Top_Percentage);

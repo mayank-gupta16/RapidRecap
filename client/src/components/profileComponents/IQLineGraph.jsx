@@ -137,7 +137,7 @@ const IQLineGraph = () => {
       });
       setMinIQ(minimumIQ);
       setMaxIQ(maximumIQ);
-      console.log(IQData[IQData.length - 2]);
+
       setHoveredData(() => IQData[IQData.length - 2]);
       setChartOptions({
         animation: {
