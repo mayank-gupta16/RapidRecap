@@ -1,123 +1,25 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Bar } from "react-chartjs-2";
-import { Flex, Text } from "@chakra-ui/react";
+import { Flex, Image, Text, useToast } from "@chakra-ui/react";
 import Chart from "chart.js/auto";
-
-const generateIQScores = (mean, sd, count) => {
-  const scores = [];
-  for (let i = 0; i < count; i++) {
-    let score;
-    do {
-      // Generate a random number following a normal distribution
-      score =
-        mean +
-        sd *
-          Math.sqrt(-2 * Math.log(Math.random())) *
-          Math.cos(2 * Math.PI * Math.random());
-    } while (score < 0 || score > 300); // Ensure IQ score is within the desired range (0-300)
-    scores.push(Math.round(score));
-  }
-  return scores;
-};
-
-const USER_IQ = 125;
-
-const IQScores = generateIQScores(100, 15, 1000);
-
-const calculatePercentile = (userIQ, IQScores) => {
-  // Sort the IQ scores in ascending order
-  const sortedScores = IQScores.sort((a, b) => a - b);
-
-  // Find the index of the user's IQ score
-  const index = sortedScores.findIndex((score) => score >= userIQ);
-
-  // Calculate the percentile
-  const percentile = ((index + 1) / sortedScores.length) * 100;
-
-  return percentile;
-};
-const TOP_PERCENT = (100 - calculatePercentile(USER_IQ, IQScores)).toFixed(2);
-
-const labels = Array.from({ length: 30 }, (_, i) => (i + 1) * 10);
-const data = labels.map((threshold) => {
-  return IQScores.filter(
-    (score) => score >= threshold - 10 && score < threshold
-  ).length;
-});
-
-const filteredLabels = [];
-const filteredIQData = [];
-for (let i = 0; i < labels.length; i++) {
-  if (data[i] !== 0) {
-    filteredLabels.push(`${labels[i] - 10}-${labels[i]}`);
-    filteredIQData.push(data[i]);
-  }
-}
-
-const calculatePercentilesOfEachBar = (
-  IQScores,
-  filteredLabels,
-  filteredIQData
-) => {
-  const percentiles = [];
-
-  // Define the function to calculate percentile
-  const calculatePercentile = (iqScore) => {
-    const sortedScores = IQScores.sort((a, b) => a - b);
-    const index = sortedScores.findIndex((score) => score >= iqScore);
-    return index === 0 ? 100 : 100 - ((index + 1) / sortedScores.length) * 100;
-  };
-
-  // Iterate through each data point
-  for (let i = 0; i < filteredLabels.length; i++) {
-    const [lowerBound, upperBound] = filteredLabels[i].split("-").map(Number);
-    const percentile = calculatePercentile(lowerBound).toFixed(2);
-    percentiles.push({
-      lowerBound,
-      upperBound,
-      percentile,
-      count: filteredIQData[i],
-    });
-  }
-
-  return percentiles;
-};
-
-const percentileData = calculatePercentilesOfEachBar(
-  IQScores,
-  filteredLabels,
-  filteredIQData
-);
+import "chartjs-adapter-date-fns";
+import axios from "axios";
 
 const IQBarGraph = () => {
-  const [hoveredPercentile, setHoveredPercentile] = useState(TOP_PERCENT);
+  const [USER_IQ, setUSER_IQ] = useState(null); // [USER_IQ, setUSER_IQ
+  const [TOP_PERCENT, setTOP_PERCENT] = useState(null);
+  const [filteredIQData, setFilteredIQData] = useState(null);
+  const [filteredLabels, setFilteredLabels] = useState(null);
+  const [percentileData, setPercentileData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const toast = useToast();
+  const [hoveredPercentile, setHoveredPercentile] = useState(null);
   const [isHovering, setIsHovering] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [currentData, setCurrentData] = useState(null);
 
   //console.log(filteredLabels, filteredIQData);
-  const [chartData, setChartData] = useState({
-    labels: filteredLabels,
-    datasets: [
-      {
-        label: "Number of People",
-        data: filteredIQData,
-        backgroundColor: filteredLabels.map((threshold) => {
-          const [lowerBound, upperBound] = threshold.split("-").map(Number);
-
-          //console.log(USER_IQ, lowerBound, upperBound);
-
-          // Check if USER_IQ falls within the range
-          return USER_IQ < lowerBound + 10 && USER_IQ >= lowerBound
-            ? "rgba(255, 152, 0, 0.8)"
-            : "rgba(84, 62, 122, 0.9)";
-        }),
-        borderColor: "#1a1527",
-        borderRadius: "5",
-        minBarLength: "15",
-      },
-    ],
-  });
+  const [chartData, setChartData] = useState(null);
 
   const handleHover = (event, array) => {
     setIsHovering(true);
@@ -129,7 +31,7 @@ const IQBarGraph = () => {
       const percentile = percentileData[index].percentile;
 
       setHoveredIndex(index);
-      //console.log(index);
+      //console.log(percentile);
       setHoveredPercentile(percentile);
     } else {
       setHoveredPercentile(TOP_PERCENT);
@@ -140,6 +42,8 @@ const IQBarGraph = () => {
       duration: 0,
     },
     indexAxis: "x",
+    responsive: true,
+    maintainAspectRatio: true,
     scales: {
       y: {
         grid: {
@@ -196,6 +100,56 @@ const IQBarGraph = () => {
     },
   };
   const chartRef = useRef(null);
+  const fetchBarIQData = async () => {
+    try {
+      const response = await axios.get(`/api/user/currentTopPercentOfUser`);
+      console.log(response.data);
+      setUSER_IQ(response.data.USER_IQ);
+      setTOP_PERCENT(response.data.Top_Percentage);
+      setHoveredPercentile(response.data.Top_Percentage);
+      setPercentileData(response.data.percentileData);
+      setFilteredLabels(response.data.filteredLabels);
+      setFilteredIQData(response.data.filteredIQData);
+      setChartData({
+        labels: response.data.filteredLabels,
+        datasets: [
+          {
+            label: "Number of People",
+            data: response.data.filteredIQData,
+            backgroundColor: response.data.filteredLabels.map((threshold) => {
+              const [lowerBound, upperBound] = threshold.split("-").map(Number);
+
+              //console.log(USER_IQ, lowerBound, upperBound);
+
+              // Check if USER_IQ falls within the range
+              return response.data.USER_IQ < lowerBound + 10 &&
+                response.data.USER_IQ >= lowerBound
+                ? "#776B5D"
+                : "#DED0B6";
+            }),
+            borderColor: "#1a1527",
+            borderRadius: "5",
+            minBarLength: "15",
+          },
+        ],
+      });
+    } catch (error) {
+      toast({
+        title: "An error occurred.",
+        description: "Unable to fetch IQ Bar Data. Please try again later.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "top",
+      });
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  useEffect(() => {
+    fetchBarIQData();
+  }, []);
   useEffect(() => {
     const chartCanvas = chartRef.current?.canvas;
     const handleMouseLeave = () => {
@@ -214,29 +168,35 @@ const IQBarGraph = () => {
         chartCanvas.removeEventListener("mouseleave", handleMouseLeave);
       }
     };
-  }, [hoveredPercentile, isHovering]);
+  }, [isHovering]);
 
   useEffect(() => {
-    const count = hoveredIndex ? percentileData[hoveredIndex].count : null;
-    const range = hoveredIndex
-      ? `${percentileData[hoveredIndex].lowerBound}-${percentileData[hoveredIndex].upperBound}`
-      : null;
-    setCurrentData({ range, count });
-    setChartData((prevChartData) => ({
-      ...prevChartData,
-      datasets: prevChartData.datasets.map((dataset) => ({
-        ...dataset,
-        backgroundColor: filteredLabels.map((threshold, idx) => {
-          const [lowerBound, upperBound] = threshold.split("-").map(Number);
-          return (USER_IQ < lowerBound + 10 &&
-            USER_IQ >= lowerBound &&
-            !isHovering) ||
-            idx === hoveredIndex
-            ? "#776B5D"
-            : "#DED0B6";
-        }),
-      })),
-    }));
+    if (percentileData) {
+      const count = percentileData[hoveredIndex]
+        ? percentileData[hoveredIndex].count
+        : null;
+      const range = percentileData[hoveredIndex]
+        ? `${percentileData[hoveredIndex].lowerBound}-${percentileData[hoveredIndex].upperBound}`
+        : null;
+      setCurrentData({ range, count });
+    }
+    if (chartData) {
+      setChartData((prevChartData) => ({
+        ...prevChartData,
+        datasets: prevChartData.datasets.map((dataset) => ({
+          ...dataset,
+          backgroundColor: filteredLabels.map((threshold, idx) => {
+            const [lowerBound, upperBound] = threshold.split("-").map(Number);
+            return (USER_IQ < lowerBound + 10 &&
+              USER_IQ >= lowerBound &&
+              !isHovering) ||
+              idx === hoveredIndex
+              ? "#776B5D"
+              : "#DED0B6";
+          }),
+        })),
+      }));
+    }
   }, [hoveredIndex]);
 
   return (
@@ -257,29 +217,53 @@ const IQBarGraph = () => {
         base: "0px 4px 8px rgba(0, 0, 0, 0.3), 0px 8px 16px rgba(0, 0, 0, 0.3), 0px 12px 24px rgba(0, 0, 0, 0.3)",
       }}
     >
-      <Flex width={"100%"}>
-        <Flex marginStart={"15px"} flexDirection={"column"}>
-          <Text textAlign={"left"} color={"#9CAFAA"} p={0} m={0}>
-            Top
+      {isLoading ? (
+        <Text>...Loading</Text>
+      ) : filteredLabels.length === 0 ? (
+        <Flex
+          w={"100%"}
+          justifyContent={"center"}
+          alignItems={"center"}
+          flexDirection={"column"}
+        >
+          <Text m={0}>
+            Give 10 Quizzes to get the IQ score and Unlock the bar graph
           </Text>
-          <Text textAlign={"left"} fontSize={"1.5rem"}>
-            {hoveredPercentile}%
-          </Text>
+          <Image
+            h={"200px"}
+            w={"200px"}
+            background={"transparent"}
+            src="/images/lock.png"
+          />
         </Flex>
-        {currentData ? (
-          <Flex marginLeft={"40px"} flexDirection={"column"}>
-            <Text textAlign={"left"} color={"#9CAFAA"} p={0} m={0}>
-              {currentData.range}
-            </Text>
-            {currentData.count && (
-              <Text textAlign={"left"}>{currentData.count} users</Text>
+      ) : (
+        <>
+          <Flex width={"100%"}>
+            <Flex marginStart={"15px"} flexDirection={"column"}>
+              <Text textAlign={"left"} color={"#9CAFAA"} p={0} m={0}>
+                Top
+              </Text>
+              <Text textAlign={"left"} fontSize={"1.5rem"}>
+                {hoveredPercentile}%
+              </Text>
+            </Flex>
+            {currentData && currentData.range && currentData.count ? (
+              <Flex marginLeft={"40px"} flexDirection={"column"}>
+                <Text textAlign={"left"} color={"#9CAFAA"} p={0} m={0}>
+                  {currentData.range}
+                </Text>
+
+                <Text textAlign={"left"}>{currentData.count} users</Text>
+              </Flex>
+            ) : null}
+          </Flex>
+          <Flex height={"150px"} width={"100%"} justifyContent={"center"}>
+            {chartData && (
+              <Bar ref={chartRef} data={chartData} options={options} />
             )}
           </Flex>
-        ) : null}
-      </Flex>
-      <Flex height={"150px"} width={"100%"} justifyContent={"center"}>
-        <Bar ref={chartRef} data={chartData} options={options} />
-      </Flex>
+        </>
+      )}
     </Flex>
   );
 };
