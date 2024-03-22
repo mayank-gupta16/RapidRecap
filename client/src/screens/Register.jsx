@@ -13,8 +13,8 @@ export default function Register() {
   const toast = useToast();
   const { state, dispatch } = useContext(AppContext);
   const [data, setData] = useState({
-    firstName: "",
-    lastName: "",
+    name: "",
+    inGameName: "",
     email: "",
     phone: "",
     password: "",
@@ -100,22 +100,22 @@ export default function Register() {
               <div className="row">
                 <div className="col">
                   <input
-                    name="firstName"
+                    name="name"
                     onChange={inputHandler}
                     required
-                    value={data.firstName}
+                    value={data.name}
                     type="text"
-                    placeholder="First Name"
+                    placeholder="Name"
                   />
                 </div>
                 <div className="col">
                   <input
-                    name="lastName"
+                    name="inGameName"
                     onChange={inputHandler}
                     required
-                    value={data.lastName}
+                    value={data.inGameName}
                     type="text"
-                    placeholder="Last Name"
+                    placeholder="In Game Name"
                   />
                 </div>
               </div>

@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect, useCallback } from "react";
+import { useState, useContext, useEffect, useCallback, useRef } from "react";
 import "./Signin.css";
 import axios from "axios";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -18,12 +18,18 @@ export default function Sigin() {
     email: "",
     password: "",
   });
+  const [inGameName, setInGameName] = useState("");
+  const [enterInGameName, setEnterInGameName] = useState(false);
   const [load, setLoad] = useState({
     submitLoad: false,
     forgotLoad: false,
   }); //for loading spinner
   const navigate = useNavigate();
+  const inGameNameRef = useRef(null);
 
+  const inGameNameHandler = (e) => {
+    setInGameName(e.target.value);
+  };
   const inputHandler = (e) => {
     const { name, value } = e.target;
     setData({ ...data, [name]: value });
@@ -33,7 +39,10 @@ export default function Sigin() {
     e.preventDefault();
     try {
       setLoad({ submitLoad: true, forgotLoad: false });
-      const response = await axios.post(`/api/user/login`, data);
+      const response = await axios.post(`/api/user/login`, {
+        data,
+        inGameName,
+      });
       console.log(response);
       if (response.status === 201) {
         dispatch({ type: "UNSHOW" });
@@ -108,6 +117,13 @@ export default function Sigin() {
   };
 
   useEffect(() => {
+    if (enterInGameName) {
+      inGameNameRef.current.focus();
+      setEnterInGameName(false);
+    }
+  }, [enterInGameName]);
+
+  useEffect(() => {
     if (state.show === false) {
       navigate("/");
     }
@@ -154,6 +170,11 @@ export default function Sigin() {
             <h1 className="opacity">LOG-IN</h1>
             <form onSubmit={handleSubmit} onKeyDown={handleKeyPress}>
               <input
+                onFocus={() =>
+                  (inGameNameRef.current.style =
+                    "border-color: #4fd1c5; box-shadow: 0 0 0 3px rgba(79, 209, 197, 0.3); outline: none;")
+                }
+                onBlur={() => (inGameNameRef.current.style = "")}
                 onChange={inputHandler}
                 name="email"
                 value={data.email}
@@ -161,11 +182,29 @@ export default function Sigin() {
                 placeholder="Email ID"
               />
               <input
+                onFocus={() =>
+                  (inGameNameRef.current.style =
+                    "border-color: #4fd1c5; box-shadow: 0 0 0 3px rgba(79, 209, 197, 0.3); outline: none;")
+                }
+                onBlur={() => (inGameNameRef.current.style = "")}
                 onChange={inputHandler}
                 name="password"
                 value={data.password}
                 type="password"
                 placeholder="Password"
+              />
+              <input
+                onFocus={() =>
+                  (inGameNameRef.current.style =
+                    "border-color: #4fd1c5; box-shadow: 0 0 0 3px rgba(79, 209, 197, 0.3); outline: none;")
+                }
+                onBlur={() => (inGameNameRef.current.style = "")}
+                ref={inGameNameRef}
+                onChange={inGameNameHandler}
+                name="inGameName"
+                value={inGameName}
+                type="text"
+                placeholder="In Game Name"
               />
               <Button
                 isLoading={load.submitLoad}
@@ -206,7 +245,7 @@ export default function Sigin() {
                       try {
                         const response = await axios.post(
                           "/api/user/handleGoogleLogin",
-                          credentialResponse
+                          { credentialResponse, inGameName }
                         );
                         console.log(response);
                         if (response.status === 201) {
@@ -223,13 +262,14 @@ export default function Sigin() {
                             position: "top",
                           });
                           navigate("/");
-                        } else {
-                          throw new Error("Login Failed");
                         }
                       } catch (error) {
-                        console.log(error.response.data.error);
+                        console.error(error.response.data.error);
+                        if (error.response.data.EnterInGameName)
+                          setEnterInGameName(true);
                         toast({
                           title: "Login Failed",
+                          description: error.response.data.error,
                           status: "error",
                           duration: 5000,
                           isClosable: true,
