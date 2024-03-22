@@ -1,9 +1,41 @@
-import { Box, Button, Flex, Heading, Image, Text } from "@chakra-ui/react";
-import React, { useContext } from "react";
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Image,
+  Text,
+  useToast,
+} from "@chakra-ui/react";
+import React, { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../contextAPI/appContext";
+import axios from "axios";
 
 const LeftProfileBox = () => {
+  const toast = useToast();
+  const [isLoading, setIsLoading] = useState(false);
+  const [rank, setRank] = useState(null);
   const { state, dispatch } = useContext(AppContext);
+  const fetchRank = async () => {
+    try {
+      const response = await axios.get("/api/user/calculateUserRank");
+      setRank(response.data.rank);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Something went wrong in fetching Rank",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+      console.log(error.response.data.error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  useEffect(() => {
+    fetchRank();
+  }, []);
   return (
     <>
       <Flex w={"100%"}>
@@ -20,23 +52,19 @@ const LeftProfileBox = () => {
             {state.user.firstName} {state.user.lastName}
           </Heading>
           <Heading as="h6" fontSize={"12px"}>
-            syntax_terminator_2704
+            {state.user.inGameName}
           </Heading>
-          <Heading as="h6" fontSize={"12px"}>
-            Rank : 1,21,145
-          </Heading>
+          {isLoading ? (
+            <Text>Loading...</Text>
+          ) : (
+            <Heading as="h6" fontSize={"12px"}>
+              Rank : {rank}
+            </Heading>
+          )}
         </Box>
       </Flex>
       <Box marginTop={"10px"} w={{ lg: "300px", base: "100%" }}>
-        <Text align={"justify"}>
-          An ambitious student pursuing B.Tech in Communication and Computer
-          Engineering, I possess a strong skill set in Data Structures and
-          Algorithms (DSA), full-stack web development (MERN Stack) and
-          excellent problem-solving abilities. Throughout my academic journey, I
-          have gained practical experience in creating efficient and intuitive
-          web applications while also honing my analytical and logical thinking
-          skills.
-        </Text>
+        <Text align={"justify"}>{state.user.bio}</Text>
         <Button
           size="md"
           height="35px"
