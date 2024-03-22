@@ -21,13 +21,18 @@ const {
 
 const registerUser = async (req, res) => {
   //console.log(req.body);
-  const { firstName, lastName, email, phone, password, cpassword } = req.body;
+  const { name, email, phone, password, cpassword, inGameName } = req.body;
 
-  if (!firstName || !email || !phone || !lastName || !password || !cpassword)
+  if (name || !email || !phone || !password || !cpassword || !inGameName)
     return res.status(422).json({ error: "Please fill the required field" });
 
   try {
     const response = await User.findOne({ email: email });
+    const response2 = await User.findOne({ inGameName });
+    if (response2)
+      return res
+        .status(422)
+        .json({ error: "This In Game Name is already Taken" });
     if (response)
       return res.status(422).json({ error: "Email already exists" });
     if (password.length < 8)
@@ -43,8 +48,7 @@ const registerUser = async (req, res) => {
         .json({ error: "Phone no. should be of 10 digits" });
     }
     const user = new User({
-      firstName,
-      lastName,
+      name,
       email,
       phone,
       password,
@@ -79,13 +83,33 @@ const registerUser = async (req, res) => {
 const loginUser = async (req, res) => {
   // Implement login logic here
   //console.log(req.body);
-  const { email, password } = req.body;
-
-  if (!email || !password)
-    return res.status(422).json({ error: "Please fill the required field" });
+  const { email, password } = req.body.data;
+  const inGameName = req.body.inGameName;
+  if (!((email || inGameName) && password)) {
+    return res.status(422).json({ error: "Please fill the required fields" });
+  }
 
   try {
-    const findUser = await User.findOne({ email: email });
+    let findUser;
+    if (email && inGameName) {
+      // Both email and inGameName are provided, check if they belong to the same user
+      const userByEmail = await User.findOne({ email });
+      const userByInGameName = await User.findOne({ inGameName });
+
+      if (
+        !userByEmail ||
+        !userByInGameName ||
+        userByEmail._id !== userByInGameName._id
+      ) {
+        return res.status(422).json({ error: "Invalid Credentials" });
+      }
+
+      findUser = userByEmail;
+    } else if (email) {
+      findUser = await User.findOne({ email });
+    } else {
+      findUser = await User.findOne({ inGameName });
+    }
     //console.log(findUser);
     if (!findUser)
       return res.status(422).json({ error: "Invalid Credentials" });
@@ -233,8 +257,8 @@ const forgotPassword = async (req, res) => {
 };
 
 const handleGoogleLogin = async (req, res) => {
-  const credential = req.body.credential;
-  //console.log(req.body);
+  const { credentialResponse, inGameName } = req.body;
+  const credential = credentialResponse.credential;
   //console.log(credential);
   try {
     const userInfo = jwt.decode(credential);
@@ -247,17 +271,44 @@ const handleGoogleLogin = async (req, res) => {
     });
     //console.log(userInfo);
     if (user) {
+      if (!user.inGameName) {
+        if (!inGameName)
+          return res.status(422).json({
+            EnterInGameName: true,
+            error:
+              "Please provide your chosen In-Game Name for your initial login.",
+          });
+
+        const u = await User.findOne({ inGameName });
+        if (u)
+          return res.status(422).json({
+            error: "This In Game Name is already Taken",
+          });
+      }
+      user.inGameName = inGameName;
       user.googleEmail = userInfo.email;
       user.googleId = userInfo.sub;
       user.verified = true;
     } else {
-      console.log("User not found");
+      if (!inGameName)
+        return res.status(422).json({
+          EnterInGameName: true,
+          error:
+            "Please provide your chosen In-Game Name for your initial login.",
+        });
+
+      const u = await User.findOne({ inGameName });
+      if (u)
+        return res.status(422).json({
+          error: "This In Game Name is already Taken",
+        });
       // If not, create a new user with Google data
       const name = userInfo.name.split(" ");
       user = new User({
         firstName: name[0],
         lastName: name[name.length - 1],
         email: userInfo.email,
+        inGameName,
         // Add other necessary Google fields
         googleId: userInfo.sub,
         googleEmail: userInfo.email,
@@ -419,7 +470,7 @@ const getUserIQScoreHistory = async (req, res) => {
     res.status(200).json({ IQ_score_history: sortedIQScoresHistory });
   } catch (error) {
     console.error("Error fetching user IQ score history:", error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -481,7 +532,7 @@ const solvedQuizzesCount = async (req, res) => {
     });
   } catch (error) {
     console.error("Error fetching user IQ score history:", error.message);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -498,7 +549,28 @@ const dailActivity = async (req, res) => {
     res.status(200).json({ dailyActivity });
   } catch (error) {
     console.error("Error fetching user Daily activity history:", error.message);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+const calculateUserRank = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const users = await User.find({}).sort({ IQ_score: -1 });
+    //console.log(users);
+    const userIndex = users.findIndex(
+      (user) => user._id.toString() === userId.toString()
+    );
+    //console.log(userIndex);
+    if (userIndex === -1) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    const rank = userIndex + 1;
+
+    return res.status(200).json({ rank });
+  } catch (error) {
+    res.status(500).json({ error: "Error calculate the Rank" });
+    console.log(error.message);
   }
 };
 //module.exports = router;
@@ -516,4 +588,5 @@ module.exports = {
   currentTopPercentOfUser,
   solvedQuizzesCount,
   dailActivity,
+  calculateUserRank,
 };
