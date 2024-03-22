@@ -484,6 +484,23 @@ const solvedQuizzesCount = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+const dailActivity = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const user = await User.findById(userId);
+    const quizAttempts = await QuizAttempt.find({ user: userId });
+
+    const dailyActivity = quizAttempts.map((attempt) => ({
+      date: attempt.createdAt,
+    }));
+
+    res.status(200).json({ dailyActivity });
+  } catch (error) {
+    console.error("Error fetching user Daily activity history:", error.message);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
 //module.exports = router;
 module.exports = {
   registerUser,
@@ -498,4 +515,5 @@ module.exports = {
   getUserIQScoreHistory,
   currentTopPercentOfUser,
   solvedQuizzesCount,
+  dailActivity,
 };

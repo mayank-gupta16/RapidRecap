@@ -9,10 +9,10 @@ const cookieParser = require("cookie-parser");
 dotenv.config({ path: "./config.env" });
 const app = express();
 
-//require("./db/conn");
+require("./db/conn");
 
 // -----Testings-----
-require("./test/conn.test");
+//require("./test/conn.test");
 //require("./test/index");
 // ------------------
 
