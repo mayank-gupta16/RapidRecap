@@ -13,6 +13,7 @@ const {
   currentTopPercentOfUser,
   solvedQuizzesCount,
   dailActivity,
+  calculateUserRank,
   // calculateUserIQScores,
 } = require("../controllers/user");
 const Authenticate = require("../middleware/authenticate");
@@ -31,5 +32,6 @@ router
   .get(Authenticate, currentTopPercentOfUser);
 router.route("/solvedQuizzesCount").get(Authenticate, solvedQuizzesCount);
 router.route("/dailyActivity").get(Authenticate, dailActivity);
+router.route("/calculateUserRank").get(Authenticate, calculateUserRank);
 //router.route("/calculateUserIQScores").get(calculateUserIQScores);
 module.exports = router;
