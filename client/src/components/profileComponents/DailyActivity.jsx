@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { Box, Flex, Grid, Text, Tooltip } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
+import { Box, Flex, Grid, Text, Tooltip, useToast } from "@chakra-ui/react";
+import axios from "axios";
 
 const DAYS_IN_WEEK = 7;
 const MONTHS_IN_YEAR = 12;
@@ -19,9 +20,35 @@ const MONTH_NAMES = [
 ];
 
 const DailyActivity = () => {
+  const toast = useToast();
+  const [isLoading, setIsLoading] = useState(true);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
+  const [dailyActivity, setDailyActivity] = useState([]);
+
+  const fetchDailyActivity = async () => {
+    try {
+      const response = await axios.get("/api/user/dailyActivity");
+      //console.log(response.data);
+      const data = response.data.dailyActivity.map((activity) => {
+        return formatDate(new Date(activity.date));
+      });
+      //console.log(data);
+      setDailyActivity(data);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "An error occurred while fetching daily activity",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const getMonthDays = (year, month) => {
     const date = new Date(year, month, 1);
@@ -117,7 +144,6 @@ const DailyActivity = () => {
       year: "numeric",
     });
   }
-
   const calendarData = generateCalendarData(currentYear, currentMonth);
   function renderCalendarBody(month, allDays) {
     return (
@@ -138,29 +164,34 @@ const DailyActivity = () => {
               p={0}
               m={0}
             >
-              {allDays.map((dayObj, index) => (
-                <Box
-                  key={index}
-                  textAlign="center"
-                  p={0}
-                  h={{ base: "5px", md: "7px", lg: "8px" }}
-                  w={{ base: "5px", md: "7px", lg: "8px" }}
-                >
-                  {dayObj.isCurrentMonth ? (
-                    <Tooltip label={dayObj.fullDate}>
-                      <Flex
-                        borderRadius={"1px"}
-                        h={{ base: "5px", md: "7px", lg: "8px" }}
-                        w={{ base: "5px", md: "7px", lg: "8px" }}
-                        p={0}
-                        backgroundColor={"#eff2f699"}
-                        justifyContent={"center"}
-                        alignItems={"center"}
-                      ></Flex>
-                    </Tooltip>
-                  ) : null}
-                </Box>
-              ))}
+              {allDays.map((dayObj, index) => {
+                const backgroundColor = dailyActivity.includes(dayObj.fullDate)
+                  ? "green.500"
+                  : "#eff2f699";
+                return (
+                  <Box
+                    key={index}
+                    textAlign="center"
+                    p={0}
+                    h={{ base: "5px", md: "7px", lg: "8px" }}
+                    w={{ base: "5px", md: "7px", lg: "8px" }}
+                  >
+                    {dayObj.isCurrentMonth ? (
+                      <Tooltip label={dayObj.fullDate}>
+                        <Flex
+                          borderRadius={"1px"}
+                          h={{ base: "5px", md: "7px", lg: "8px" }}
+                          w={{ base: "5px", md: "7px", lg: "8px" }}
+                          p={0}
+                          backgroundColor={backgroundColor}
+                          justifyContent={"center"}
+                          alignItems={"center"}
+                        ></Flex>
+                      </Tooltip>
+                    ) : null}
+                  </Box>
+                );
+              })}
             </Grid>
           </Flex>
         </Flex>
@@ -175,19 +206,27 @@ const DailyActivity = () => {
     );
   }
 
+  useEffect(() => {
+    fetchDailyActivity();
+  }, []);
+
   return (
     <Box m={0} pt={3}>
-      <Flex
-        overflow={"hidden"}
-        p={0}
-        m={0}
-        w={"100%"}
-        justifyContent={"center"}
-      >
-        {calendarData.map((data, id) =>
-          renderCalendarBody(data.month, data.days)
-        )}
-      </Flex>
+      {isLoading ? (
+        <Text>Loading...</Text>
+      ) : (
+        <Flex
+          overflow={"hidden"}
+          p={0}
+          m={0}
+          w={"100%"}
+          justifyContent={"center"}
+        >
+          {calendarData.map((data, id) =>
+            renderCalendarBody(data.month, data.days)
+          )}
+        </Flex>
+      )}
     </Box>
   );
 };
