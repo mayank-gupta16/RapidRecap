@@ -34,6 +34,7 @@ const LeftProfileBox = () => {
     }
   };
   useEffect(() => {
+    //console.log(state.user);
     fetchRank();
   }, []);
   return (
@@ -49,7 +50,7 @@ const LeftProfileBox = () => {
         />
         <Box margin={"5px"}>
           <Heading as="h4" size={"md"}>
-            {state.user.firstName} {state.user.lastName}
+            {state.user.name}
           </Heading>
           <Heading as="h6" fontSize={"12px"}>
             {state.user.inGameName}

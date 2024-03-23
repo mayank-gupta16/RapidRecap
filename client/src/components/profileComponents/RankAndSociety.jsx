@@ -21,7 +21,7 @@ const RankAndSociety = () => {
         data.IQ_Lower <= userIQ &&
         (data.IQ_Upper ? data.IQ_Upper > userIQ : true)
     );
-    console.log(userCircleAndSociety);
+
     setCircleAndSociety(...userCircleAndSociety);
     setIsLoading(false);
   }, []);

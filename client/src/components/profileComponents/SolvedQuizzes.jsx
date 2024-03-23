@@ -136,14 +136,14 @@ const SolvedQuizzes = () => {
                       fontSize={"0.8rem"}
                       textAlign={"left"}
                     >
-                      Beats {easySolved.easyBeatsPercentage}%
+                      Beats {Math.round(easySolved.easyBeatsPercentage)}%
                     </Text>
                   </Flex>
                   <Progress
                     backgroundColor={"#AAD9BB"}
                     colorScheme="teal"
                     size="sm"
-                    value={easySolved.easyBeatsPercentage}
+                    value={Math.round(easySolved.easyBeatsPercentage)}
                     borderRadius={"5px"}
                   />
                 </Box>
@@ -177,13 +177,13 @@ const SolvedQuizzes = () => {
                       fontSize={"0.8rem"}
                       textAlign={"left"}
                     >
-                      Beats {mediumSolved.medBeatsPercentage}%
+                      Beats {Math.round(mediumSolved.medBeatsPercentage)}%
                     </Text>
                   </Flex>
                   <Progress
                     colorScheme="yellow"
                     size="sm"
-                    value={mediumSolved.medBeatsPercentage}
+                    value={Math.round(mediumSolved.medBeatsPercentage)}
                     borderRadius={"5px"}
                     backgroundColor={"#FFCF81"}
                   />
@@ -218,14 +218,14 @@ const SolvedQuizzes = () => {
                       fontSize={"0.8rem"}
                       textAlign={"left"}
                     >
-                      Beats {hardSolved.hardBeatsPercentage}%
+                      Beats {Math.round(hardSolved.hardBeatsPercentage)}%
                     </Text>
                   </Flex>
                   <Progress
                     backgroundColor={"#D37676"}
                     colorScheme="red"
                     size="sm"
-                    value={hardSolved.hardBeatsPercentage}
+                    value={Math.round(hardSolved.hardBeatsPercentage)}
                     borderRadius={"5px"}
                   />
                 </Box>
