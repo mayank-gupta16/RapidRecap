@@ -7,8 +7,7 @@ async function generateFakeUsers() {
   const fakeUsers = [];
   for (let i = 0; i < 100; i++) {
     const fakeUser = new User({
-      firstName: faker.person.firstName(),
-      lastName: faker.person.lastName(),
+      name: faker.person.firstName(),
       email: `dummy${i}@mail.com`,
       phone: "9876543210",
       password: "12345678",

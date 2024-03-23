@@ -25,6 +25,9 @@ const registerUser = async (req, res) => {
 
   if (name || !email || !phone || !password || !cpassword || !inGameName)
     return res.status(422).json({ error: "Please fill the required field" });
+  // inGameName cannot have spaces
+  if (inGameName.includes(" "))
+    return res.status(422).json({ error: "In Game Name cannot have spaces" });
 
   try {
     const response = await User.findOne({ email: email });
@@ -284,11 +287,18 @@ const handleGoogleLogin = async (req, res) => {
           return res.status(422).json({
             error: "This In Game Name is already Taken",
           });
+        // inGameName cannot have spaces
+        if (inGameName.includes(" "))
+          return res
+            .status(422)
+            .json({ error: "In Game Name cannot have spaces" });
+        user.inGameName = inGameName;
       }
-      user.inGameName = inGameName;
+
       user.googleEmail = userInfo.email;
       user.googleId = userInfo.sub;
       user.verified = true;
+      await user.save();
     } else {
       if (!inGameName)
         return res.status(422).json({
@@ -302,11 +312,15 @@ const handleGoogleLogin = async (req, res) => {
         return res.status(422).json({
           error: "This In Game Name is already Taken",
         });
+      // inGameName cannot have spaces
+      if (inGameName.includes(" "))
+        return res
+          .status(422)
+          .json({ error: "In Game Name cannot have spaces" });
       // If not, create a new user with Google data
       const name = userInfo.name.split(" ");
       user = new User({
-        firstName: name[0],
-        lastName: name[name.length - 1],
+        name: name[0] + " " + name[name.length - 1],
         email: userInfo.email,
         inGameName,
         // Add other necessary Google fields
